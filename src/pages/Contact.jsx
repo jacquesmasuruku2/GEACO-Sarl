@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { LeadFormSupabase } from '../components/LeadFormSupabase'
+import { ContactThanksBanner } from '../components/ContactThanksBanner'
 import { SocialFollowBlock } from '../components/SocialFollowBlock'
 
 const GOMA_MAP_SRC =
@@ -31,8 +32,8 @@ export function Contact() {
       <section className="section">
         <div className="container">
           {merci ? (
-            <div className="card" style={{ marginBottom: '1.5rem', borderColor: 'var(--color-green-bright)' }}>
-              <p style={{ margin: 0, color: 'var(--color-green)' }}>{t('contact.thanks')}</p>
+            <div style={{ marginBottom: '1.75rem' }}>
+              <ContactThanksBanner />
             </div>
           ) : null}
 

@@ -1761,3 +1761,113 @@ html.site-header-topbar-hidden .site-topbar {
   color: var(--color-text-muted);
   line-height: 1.55;
 }
+
+/* ——— Blog : partage réseaux ——— */
+.blog-share {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.blog-share__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-vinci-blue-dark);
+}
+
+.blog-share__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.blog-share__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  text-decoration: none;
+  color: #fff;
+  border: none;
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.blog-share__btn:hover {
+  color: #fff;
+  filter: brightness(1.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.blog-share__btn:focus-visible {
+  outline: 2px solid var(--color-vinci-blue);
+  outline-offset: 2px;
+}
+
+.blog-share__btn--whatsapp {
+  background: #25d366;
+}
+
+.blog-share__btn--facebook {
+  background: #1877f2;
+}
+
+.blog-share__btn--linkedin {
+  background: #0a66c2;
+}
+
+.blog-share__icon {
+  flex-shrink: 0;
+  display: block;
+}
+
+/* ——— Contact / partenariat : message de remerciement ——— */
+.contact-thanks {
+  border: 2px solid var(--color-vinci-blue);
+  border-left-width: 6px;
+  border-left-color: var(--color-vinci-red);
+  padding: 1.5rem 1.35rem;
+  background: linear-gradient(180deg, rgba(0, 68, 137, 0.06) 0%, var(--color-surface) 100%);
+  box-shadow: var(--shadow-card);
+}
+
+.contact-thanks__title {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 700;
+  color: var(--color-vinci-blue-dark);
+  line-height: 1.2;
+}
+
+.contact-thanks__body {
+  margin: 0 0 1rem;
+  font-size: clamp(1.05rem, 2.2vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--color-text);
+  max-width: 40rem;
+}
+
+.contact-thanks__closing {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-vinci-blue-dark);
+}
+
+.contact-thanks__brand {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+}

@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { LeadFormSupabase } from '../components/LeadFormSupabase'
+import { ContactThanksBanner } from '../components/ContactThanksBanner'
 import { useSitePartners } from '../hooks/useSitePartners'
 
 export function Partnerships() {
@@ -67,8 +68,8 @@ export function Partnerships() {
         <div className="container split split--2">
           <div>
             {merci ? (
-              <div className="card" style={{ marginBottom: '1rem', borderColor: 'var(--color-green-bright)' }}>
-                <p style={{ margin: 0, color: 'var(--color-green)' }}>{t('contact.thanks')}</p>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <ContactThanksBanner />
               </div>
             ) : null}
             <h2 className="section__title">{t('partnerships.typesTitle')}</h2>

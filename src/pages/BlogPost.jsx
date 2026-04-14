@@ -4,6 +4,7 @@ import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { useBlogPost } from '../hooks/useBlogPost'
 import { formatNavLabel } from '../lib/formatNavLabel'
+import { BlogShareBar } from '../components/BlogShareBar'
 
 export function BlogPost() {
   const { slug } = useParams()
@@ -61,6 +62,7 @@ export function BlogPost() {
               {block}
             </p>
           ))}
+          <BlogShareBar articleTitle={row.title} />
           <p style={{ marginTop: '2rem' }}>
             <Link className="btn btn--outline" to="/blog">
               {t('blog.backToList')}

@@ -428,11 +428,15 @@ export const messages = {
       partnersScrollHint:
         'Faites défiler horizontalement pour parcourir tous les partenaires publiés (souris, trackpad ou glissement au doigt).',
       formTitle: 'Formulaire partenariat',
-      formOrg: 'Organisation',
+      formOrg: 'Organisation représentée ou cadre de soumission',
+      formOrgHint:
+        'Indiquez le nom de la structure dont vous êtes le représentant (coopérative, ONG, entreprise, bailleur, etc.), ou précisez que vous soumettez cette proposition en tant qu’organisation.',
       formName: 'Nom du contact',
       formEmail: 'Email',
       formMessage: 'Proposition de collaboration',
       formSubmit: 'Envoyer la proposition',
+      formValidationError:
+        'Veuillez indiquer l’organisation ou le cadre de soumission, le nom du contact, l’email et un message d’au moins 10 caractères.',
     },
     blog: {
       metaTitle: 'Blog — GEACO SARL',
@@ -444,6 +448,11 @@ export const messages = {
       loading: 'Chargement des articles…',
       readMore: 'Lire la suite',
       backToList: 'Tous les articles',
+      shareNav: 'Partager cet article',
+      shareTitle: 'Partager',
+      shareWhatsapp: 'WhatsApp',
+      shareFacebook: 'Facebook',
+      shareLinkedin: 'LinkedIn',
     },
     personnel: {
       metaTitle: 'Personnel — GEACO SARL',
@@ -504,7 +513,7 @@ export const messages = {
       formTitle: 'Message général',
       formName: 'Nom complet',
       formEmail: 'Email',
-      formPhone: 'Téléphone (optionnel)',
+      formPhone: 'Téléphone',
       formSubject: 'Objet',
       formMessage: 'Message',
       formSubmit: 'Envoyer',
@@ -512,7 +521,13 @@ export const messages = {
       goma: 'Siège social — Goma',
       butembo: 'Agence — Butembo',
       mapTitle: 'Localisation (Goma)',
-      thanks: 'Merci ! Votre message a été transmis. Nous revenons vers vous rapidement.',
+      thanksTitle: 'Message bien reçu',
+      thanksBody:
+        'Nous vous remercions pour votre message. Nous allons l’analyser et vous revenir dans le plus bref délai.',
+      thanksClosing: 'Merci,',
+      thanksBrand: '— GEACO SARL',
+      formValidationError:
+        'Veuillez remplir l’objet, le nom complet, l’email, le téléphone (obligatoire) et un message d’au moins 10 caractères.',
       followTitle: 'Suivre GEACO en ligne',
       followLead:
         'Pour augmenter la visibilité de notre entreprise et renforcer la confiance en ligne, suivez la page Facebook de GEACO ASBL et la page LinkedIn du groupe d’études agronomiques et de construction.',
@@ -572,7 +587,7 @@ export const messages = {
       supabaseNotConfigured:
         'Envoi impossible : le site n’a pas reçu les clés Supabase au moment du build. Sur Vercel, ouvrez le projet → Settings → Environment Variables : ajoutez exactement VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (mêmes noms que dans .env.example), cochez Production, enregistrez puis Redeploy. En local, placez ces lignes dans le fichier .env à la racine de geaco-sarl (pas seulement dans le chat) et relancez npm run dev.',
       formSending: 'Envoi en cours…',
-      formErrorValidation: 'Veuillez remplir correctement tous les champs obligatoires (message : au moins 10 caractères).',
+      formErrorValidation: 'Veuillez remplir correctement tous les champs obligatoires.',
       formErrorSend: 'L’envoi a échoué. Réessayez plus tard ou écrivez-nous directement par email.',
     },
     footer: {
@@ -980,11 +995,15 @@ export const messages = {
       partnersScrollHint:
         'Scroll horizontally to browse all published partners (mouse, trackpad or swipe).',
       formTitle: 'Partnership form',
-      formOrg: 'Organization',
+      formOrg: 'Represented organization or submission context',
+      formOrgHint:
+        'Enter the name of the organization you represent (cooperative, NGO, company, donor, etc.), or state clearly that you are submitting this proposal on behalf of an organization.',
       formName: 'Contact name',
       formEmail: 'Email',
       formMessage: 'Collaboration proposal',
       formSubmit: 'Send proposal',
+      formValidationError:
+        'Please provide the organization or submission context, contact name, email and a message of at least 10 characters.',
     },
     blog: {
       metaTitle: 'Blog — GEACO SARL',
@@ -996,6 +1015,11 @@ export const messages = {
       loading: 'Loading articles…',
       readMore: 'Read more',
       backToList: 'All articles',
+      shareNav: 'Share this article',
+      shareTitle: 'Share',
+      shareWhatsapp: 'WhatsApp',
+      shareFacebook: 'Facebook',
+      shareLinkedin: 'LinkedIn',
     },
     personnel: {
       metaTitle: 'People & organisation — GEACO SARL',
@@ -1056,7 +1080,7 @@ export const messages = {
       formTitle: 'General message',
       formName: 'Full name',
       formEmail: 'Email',
-      formPhone: 'Phone (optional)',
+      formPhone: 'Phone',
       formSubject: 'Subject',
       formMessage: 'Message',
       formSubmit: 'Send',
@@ -1064,7 +1088,13 @@ export const messages = {
       goma: 'Head office — Goma',
       butembo: 'Branch — Butembo',
       mapTitle: 'Map (Goma)',
-      thanks: 'Thank you! Your message was sent. We will get back to you shortly.',
+      thanksTitle: 'Message received',
+      thanksBody:
+        'Thank you for your message. We will review it carefully and get back to you as soon as possible.',
+      thanksClosing: 'Thank you,',
+      thanksBrand: '— GEACO SARL',
+      formValidationError:
+        'Please fill in subject, full name, email, phone (required) and a message of at least 10 characters.',
       followTitle: 'Follow GEACO online',
       followLead:
         'To strengthen visibility and trust, follow the official GEACO ASBL Facebook page and the LinkedIn page of the agronomic studies and construction group.',
@@ -1124,7 +1154,7 @@ export const messages = {
       supabaseNotConfigured:
         'Cannot send: Supabase keys were not available at build time. On Vercel: Project → Settings → Environment Variables — add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (exact names, Production), save, then Redeploy. Locally: put them in .env at the project root and restart npm run dev.',
       formSending: 'Sending…',
-      formErrorValidation: 'Please fill in all required fields (message: at least 10 characters).',
+      formErrorValidation: 'Please fill in all required fields.',
       formErrorSend: 'Sending failed. Please try again later or email us directly.',
     },
     footer: {

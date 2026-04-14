@@ -29,6 +29,17 @@ export function LeadFormSupabase({ source, redirectTo }) {
   const [message, setMessage] = useState('')
   const [gotcha, setGotcha] = useState('')
 
+  function clearForm() {
+    setSubject('')
+    setFullName('')
+    setOrganization('')
+    setEmail('')
+    setPhone('')
+    setMessage('')
+    setGotcha('')
+    setError('')
+  }
+
   if (!isSupabaseConfigured || !supabase) {
     return (
       <div className="admin-card" style={{ padding: '1rem' }}>
@@ -43,12 +54,12 @@ export function LeadFormSupabase({ source, redirectTo }) {
     e.preventDefault()
     setError('')
     if (gotcha.trim() !== '') {
+      clearForm()
       navigate(redirectTo, { replace: false })
       return
     }
     const loc = locale === 'en' ? 'en' : 'fr'
-    const subj =
-      source === 'partnership' ? PARTNERSHIP_SUBJECT : trimOrNull(subject)
+    const subj = source === 'partnership' ? PARTNERSHIP_SUBJECT : trimOrNull(subject)
     const name = trimOrNull(fullName)
     const mail = trimOrNull(email)
     const msg = trimOrNull(message)
@@ -56,11 +67,19 @@ export function LeadFormSupabase({ source, redirectTo }) {
     const tel = source === 'contact' ? trimOrNull(phone) : null
 
     if (!subj || !name || !mail || !msg) {
-      setError(t('forms.formErrorValidation'))
+      setError(t(source === 'contact' ? 'contact.formValidationError' : 'partnerships.formValidationError'))
+      return
+    }
+    if (source === 'contact' && !tel) {
+      setError(t('contact.formValidationError'))
       return
     }
     if (source === 'partnership' && !org) {
-      setError(t('forms.formErrorValidation'))
+      setError(t('partnerships.formValidationError'))
+      return
+    }
+    if (msg.length < 10) {
+      setError(t(source === 'contact' ? 'contact.formValidationError' : 'partnerships.formValidationError'))
       return
     }
 
@@ -81,6 +100,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
       setError(insErr.message || t('forms.formErrorSend'))
       return
     }
+    clearForm()
     navigate(redirectTo, { replace: false })
   }
 
@@ -141,6 +161,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            required
             maxLength={60}
             autoComplete="tel"
           />
@@ -168,7 +189,11 @@ export function LeadFormSupabase({ source, redirectTo }) {
             required
             maxLength={300}
             autoComplete="organization"
+            aria-describedby="lead-org-hint"
           />
+          <p id="lead-org-hint" className="form-note" style={{ marginTop: '0.35rem' }}>
+            {t('partnerships.formOrgHint')}
+          </p>
 
           <label htmlFor="lead-pname">{t('partnerships.formName')}</label>
           <input
