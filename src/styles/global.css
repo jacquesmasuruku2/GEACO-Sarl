@@ -44,6 +44,8 @@
   --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06);
   /* Hauteur approx. topbar + barre logo/nav (header fixe) — ajuster si le menu change */
   --site-header-offset: 6.35rem;
+  /* Quand la topbar est repliée (scroll) : hauteur ≈ barre logo + nav seule */
+  --site-header-offset-compact: 4.38rem;
   --shadow-card: 0 2px 14px rgba(0, 0, 0, 0.06);
 
   --font-body: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
@@ -62,6 +64,10 @@ html {
   scroll-behavior: smooth;
   overflow-x: clip;
   scroll-padding-top: var(--site-header-offset);
+}
+
+html.site-header-topbar-hidden {
+  --site-header-offset: var(--site-header-offset-compact);
 }
 
 body {
@@ -140,6 +146,24 @@ p:last-child {
   background: var(--color-vinci-blue-dark);
   color: #b8c5d4;
   font-size: 0.8125rem;
+  max-height: 5rem;
+  opacity: 1;
+  overflow: hidden;
+  transition:
+    max-height 0.32s ease,
+    opacity 0.22s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-topbar {
+    transition: none;
+  }
+}
+
+html.site-header-topbar-hidden .site-topbar {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .site-topbar__inner {
@@ -460,11 +484,19 @@ p:last-child {
   min-width: 0;
   max-width: 100%;
   padding-top: var(--site-header-offset);
+  transition: padding-top 0.28s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-main {
+    transition: none;
+  }
 }
 
 @media (min-width: 961px) {
   :root {
     --site-header-offset: 6.55rem;
+    --site-header-offset-compact: 4.58rem;
   }
 }
 

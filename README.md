@@ -31,10 +31,23 @@ Le panel vérifie la table Supabase `public.app_admins` (voir migration `supabas
 
 1. Dans le dashboard Supabase : **Settings → API**, copier **service_role** (secret, jamais côté navigateur).
 2. Renseigner `.env` : `SUPABASE_SERVICE_ROLE_KEY`, `VITE_SUPABASE_URL` (déjà utilisé par le site).
-3. Exécuter :
+3. Se placer dans le dossier du projet, puis exécuter :
 
 ```bash
+cd geaco-sarl
 npm run admin:create-user
+```
+
+Sous Windows, si vous restez dans `C:\Users\jacqu` (sans `cd`), npm échoue car il ne trouve pas `package.json`. Alternative sans `cd` :
+
+```bash
+npm run admin:create-user --prefix "C:\Users\jacqu\geaco-sarl"
+```
+
+(Remplacez le chemin par celui de votre clone.) Vous pouvez aussi lancer directement :
+
+```bash
+node "C:\Users\jacqu\geaco-sarl\scripts\create-admin-user.mjs"
 ```
 
 Par défaut le script crée ou met à jour **`jacquesmasuruku2@gmail.com`** avec le mot de passe **`Jacques12`**, confirme l’e-mail, et ajoute l’UUID dans **`app_admins`**. Surcharge possible :

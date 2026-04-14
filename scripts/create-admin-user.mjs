@@ -19,11 +19,16 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { readFileSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+/** Racine du repo (même si la commande est lancée depuis un autre répertoire). */
+const PROJECT_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+process.chdir(PROJECT_ROOT)
 
 function loadDotEnv() {
   try {
-    const p = resolve(process.cwd(), '.env')
+    const p = resolve(PROJECT_ROOT, '.env')
     const raw = readFileSync(p, 'utf8')
     for (const line of raw.split('\n')) {
       const t = line.trim()

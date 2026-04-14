@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useLayoutEffect } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { SERVICE_ROUTES, serviceNavLabel } from '../data/servicesNav'
@@ -16,6 +16,9 @@ const mainLinksAfterServices = [
   { to: '/contact', key: 'nav.contact', end: false },
 ]
 
+/** Au-delà de ce décalage vertical, la topbar (ligne RDC + email/tél.) se replie. */
+const TOPBAR_HIDE_SCROLL_Y = 36
+
 export function Header() {
   const { t, locale, setLocale } = useI18n()
   const [open, setOpen] = useState(false)
@@ -24,6 +27,20 @@ export function Header() {
   const location = useLocation()
   const servicesActive = location.pathname.startsWith('/services')
   const aboutActive = location.pathname.startsWith('/a-propos') || location.pathname === '/faq'
+
+  useLayoutEffect(() => {
+    const sync = () => {
+      document.documentElement.classList.toggle(
+        'site-header-topbar-hidden',
+        window.scrollY > TOPBAR_HIDE_SCROLL_Y,
+      )
+    }
+    sync()
+    window.addEventListener('scroll', sync, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', sync)
+    }
+  }, [location.pathname])
 
   const closeAll = () => {
     setOpen(false)
