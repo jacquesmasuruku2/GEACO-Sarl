@@ -8,14 +8,28 @@ function resolvePath(obj, path) {
   return path.split('.').reduce((acc, key) => (acc != null ? acc[key] : undefined), obj)
 }
 
-export function I18nProvider({ children }) {
-  const [locale, setLocaleState] = useState(() => {
-    if (typeof window === 'undefined') return 'fr'
+function readStoredLocale() {
+  if (typeof window === 'undefined') return 'fr'
+  try {
     return window.localStorage.getItem(STORAGE_KEY) || 'fr'
-  })
+  } catch {
+    return 'fr'
+  }
+}
+
+function writeStoredLocale(locale) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, locale)
+  } catch {
+    /* navigation privée / quota : ignorer */
+  }
+}
+
+export function I18nProvider({ children }) {
+  const [locale, setLocaleState] = useState(() => readStoredLocale())
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, locale)
+    writeStoredLocale(locale)
     document.documentElement.lang = locale
   }, [locale])
 

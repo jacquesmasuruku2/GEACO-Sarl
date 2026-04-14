@@ -11,10 +11,23 @@ npm run dev
 
 ## Déploiement Vercel
 
-1. Pousser le dossier `geaco-sarl` dans un dépôt Git (GitHub, GitLab, etc.).
-2. Importer le projet dans Vercel (framework : Vite, commande de build : `npm run build`, répertoire de sortie : `dist`).
-3. Dans **Settings → Environment Variables**, ajouter `VITE_PUBLIC_SITE_URL` avec l’URL publique du site (ex. `https://geaco.vercel.app`) pour la redirection après envoi des formulaires.
-4. Le fichier `vercel.json` configure la réécriture SPA vers `index.html`.
+1. Pousser le dépôt GitHub et lier le projet dans Vercel.
+2. **Root Directory** : si le dépôt contient plusieurs dossiers, régler sur **`geaco-sarl`** (là où se trouvent `package.json` et `vite.config.js`).
+3. **Framework Preset** : **Vite**. Build : `npm run build`, sortie : **`dist`**.
+4. **Variables d’environnement** (Settings → Environment Variables), pour **Production** (et Preview si besoin) — elles sont injectées **au moment du build** pour les clés `VITE_*` :
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+   - `VITE_PUBLIC_SITE_URL` (URL exacte du site, ex. `https://votre-projet.vercel.app`) pour les formulaires / SEO.
+5. Redéployer après toute modification des variables (`VITE_*`).
+
+Le fichier `vercel.json` renvoie les routes SPA vers `index.html` **sans** intercepter `/assets/*` ni les favicons, afin d’éviter une page blanche (le navigateur doit charger les fichiers `.js` / `.css` du build).
+
+### Page blanche ou « rien » sur mobile / ordinateur
+
+1. Vercel → **Deployments** → dernier déploiement : statut **Ready** ? Ouvrir les **Build Logs** (erreur de build = site vide).
+2. Sur le téléphone, ouvrir les **outils développeur** (Chrome à distance) ou tester l’URL `/` en **navigation privée** (cache).
+3. Vérifier qu’aucune extension ne bloque les scripts ; vérifier la **4G** (le premier chargement du bundle peut prendre quelques secondes).
+4. Confirmer les variables `VITE_*` ci-dessus pour la cible **Production**.
 
 Les formulaires utilisent [FormSubmit](https://formsubmit.co/) vers `geacosarl@gmail.com` : au premier message, FormSubmit envoie un e-mail de vérification à activer.
 
