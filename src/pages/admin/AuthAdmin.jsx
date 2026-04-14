@@ -25,10 +25,21 @@ export function AuthAdmin() {
         <div className="admin-card">
           <h1>Administration</h1>
           <p>
-            Supabase n’est pas configuré. Ajoutez <code>VITE_SUPABASE_URL</code> et{' '}
-            <code>VITE_SUPABASE_ANON_KEY</code> dans un fichier <code>.env</code> local (voir{' '}
-            <code>.env.example</code>), puis appliquez le script SQL dans{' '}
-            <code>supabase/migrations/001_site_content.sql</code>.
+            Supabase n’est pas disponible dans cette version du site : les variables{' '}
+            <code>VITE_SUPABASE_URL</code> et <code>VITE_SUPABASE_ANON_KEY</code> doivent être présentes{' '}
+            <strong>au moment du build</strong> (Vite les intègre dans le bundle).
+          </p>
+          <p className="admin-muted">
+            <strong>En local</strong> : fichier <code>.env</code> à la racine du dossier <code>geaco-sarl</code> (voir{' '}
+            <code>.env.example</code>), puis <code>npm run dev</code>.
+            <br />
+            <strong>Sur Vercel</strong> : Settings → Environment Variables → ajoutez les deux clés pour{' '}
+            <strong>Production</strong>, enregistrez, puis <strong>Redeploy</strong>. Le fichier <code>.env</code> n’est
+            jamais envoyé sur GitHub : le déploiement ne le voit pas.
+          </p>
+          <p className="admin-muted">
+            Ensuite, appliquez les migrations SQL dans Supabase (dont <code>001_site_content.sql</code> pour les
+            admins).
           </p>
           <Link to="/">Retour au site</Link>
         </div>

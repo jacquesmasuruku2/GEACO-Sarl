@@ -20,6 +20,10 @@ npm run dev
    - `VITE_PUBLIC_SITE_URL` (URL exacte du site, ex. `https://votre-projet.vercel.app`) pour les formulaires / SEO.
 5. Redéployer après toute modification des variables (`VITE_*`).
 
+**Projet Supabase GEACO** (réf. `hopqewazhhhqdgprllpw`) : récupérer **Project URL** et la clé **anon public** dans le dashboard → [API / clés](https://supabase.com/dashboard/project/hopqewazhhhqdgprllpw/settings/api). Les mêmes valeurs doivent figurer dans le fichier **`.env` local** (non versionné) et être **recopiées à l’identique** dans Vercel (Production), car Vite les intègre **au build** — le chat ou un e-mail ne configure pas Vercel tout seul.
+
+Après avoir rempli `.env`, lancer **`npm run check:env`** pour valider la présence des variables sans afficher les secrets.
+
 Le fichier `vercel.json` renvoie les routes SPA vers `index.html` **sans** intercepter `/assets/*` ni les favicons, afin d’éviter une page blanche (le navigateur doit charger les fichiers `.js` / `.css` du build).
 
 ### Formulaires Contact & Partenariats
@@ -39,6 +43,7 @@ Les envois passent par **Supabase** (table `public.site_lead_messages`, migratio
 - `npm run build` — build production
 - `npm run preview` — prévisualisation du build
 - `npm run lint` — ESLint
+- `npm run check:env` — vérifie que `.env` contient bien `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` (sans afficher les clés)
 
 ### Compte administrateur du panel (`/auth-admin`)
 

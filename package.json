@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "admin:create-user": "node scripts/create-admin-user.mjs"
+    "admin:create-user": "node scripts/create-admin-user.mjs",
+    "check:env": "node scripts/check-vite-env.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",

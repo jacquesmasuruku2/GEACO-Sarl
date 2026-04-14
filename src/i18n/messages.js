@@ -570,7 +570,7 @@ export const messages = {
       storedInSupabase:
         'Votre message est enregistré de façon sécurisée dans notre base (Supabase) : seule l’équipe habilitée peut le consulter.',
       supabaseNotConfigured:
-        'Envoi impossible : Supabase n’est pas configuré sur ce site (variables VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY).',
+        'Envoi impossible : le site n’a pas reçu les clés Supabase au moment du build. Sur Vercel, ouvrez le projet → Settings → Environment Variables : ajoutez exactement VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (mêmes noms que dans .env.example), cochez Production, enregistrez puis Redeploy. En local, placez ces lignes dans le fichier .env à la racine de geaco-sarl (pas seulement dans le chat) et relancez npm run dev.',
       formSending: 'Envoi en cours…',
       formErrorValidation: 'Veuillez remplir correctement tous les champs obligatoires (message : au moins 10 caractères).',
       formErrorSend: 'L’envoi a échoué. Réessayez plus tard ou écrivez-nous directement par email.',
@@ -1122,7 +1122,7 @@ export const messages = {
       storedInSupabase:
         'Your message is stored securely in our database (Supabase); only authorised staff can read it.',
       supabaseNotConfigured:
-        'Cannot send: Supabase is not configured on this site (VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY).',
+        'Cannot send: Supabase keys were not available at build time. On Vercel: Project → Settings → Environment Variables — add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (exact names, Production), save, then Redeploy. Locally: put them in .env at the project root and restart npm run dev.',
       formSending: 'Sending…',
       formErrorValidation: 'Please fill in all required fields (message: at least 10 characters).',
       formErrorSend: 'Sending failed. Please try again later or email us directly.',
