@@ -22,14 +22,16 @@ npm run dev
 
 Le fichier `vercel.json` renvoie les routes SPA vers `index.html` **sans** intercepter `/assets/*` ni les favicons, afin d’éviter une page blanche (le navigateur doit charger les fichiers `.js` / `.css` du build).
 
+### Formulaires Contact & Partenariats
+
+Les envois passent par **Supabase** (table `public.site_lead_messages`, migration `supabase/migrations/005_site_lead_messages.sql`). Exécuter cette migration sur le projet Supabase après les migrations `001`–`004`. Les messages sont visibles en SQL ou pour une future vue admin (policy `SELECT` réservée aux comptes `app_admins`).
+
 ### Page blanche ou « rien » sur mobile / ordinateur
 
 1. Vercel → **Deployments** → dernier déploiement : statut **Ready** ? Ouvrir les **Build Logs** (erreur de build = site vide).
 2. Sur le téléphone, ouvrir les **outils développeur** (Chrome à distance) ou tester l’URL `/` en **navigation privée** (cache).
 3. Vérifier qu’aucune extension ne bloque les scripts ; vérifier la **4G** (le premier chargement du bundle peut prendre quelques secondes).
 4. Confirmer les variables `VITE_*` ci-dessus pour la cible **Production**.
-
-Les formulaires utilisent [FormSubmit](https://formsubmit.co/) vers `geacosarl@gmail.com` : au premier message, FormSubmit envoie un e-mail de vérification à activer.
 
 ## Scripts
 

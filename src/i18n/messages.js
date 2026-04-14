@@ -567,7 +567,13 @@ export const messages = {
       honeypot: 'Ne pas remplir ce champ',
       privacyNote:
         'En envoyant ce formulaire, vous acceptez que nous utilisions vos coordonnées pour répondre à votre demande. Pas de newsletter sans consentement explicite.',
-      poweredBy: 'Envoi sécurisé via FormSubmit (vérification email à la première utilisation).',
+      storedInSupabase:
+        'Votre message est enregistré de façon sécurisée dans notre base (Supabase) : seule l’équipe habilitée peut le consulter.',
+      supabaseNotConfigured:
+        'Envoi impossible : Supabase n’est pas configuré sur ce site (variables VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY).',
+      formSending: 'Envoi en cours…',
+      formErrorValidation: 'Veuillez remplir correctement tous les champs obligatoires (message : au moins 10 caractères).',
+      formErrorSend: 'L’envoi a échoué. Réessayez plus tard ou écrivez-nous directement par email.',
     },
     footer: {
       tagline: 'Agronomie · Génie civil · Hydraulique rurale — RDC',
@@ -1113,7 +1119,13 @@ export const messages = {
       honeypot: 'Leave this field empty',
       privacyNote:
         'By submitting this form you agree that we use your details to answer your request. No newsletter without explicit consent.',
-      poweredBy: 'Secure delivery via FormSubmit (email verification on first use).',
+      storedInSupabase:
+        'Your message is stored securely in our database (Supabase); only authorised staff can read it.',
+      supabaseNotConfigured:
+        'Cannot send: Supabase is not configured on this site (VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY).',
+      formSending: 'Sending…',
+      formErrorValidation: 'Please fill in all required fields (message: at least 10 characters).',
+      formErrorSend: 'Sending failed. Please try again later or email us directly.',
     },
     footer: {
       tagline: 'Agronomy · Civil engineering · Rural hydraulics — DRC',

@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
-import { ExternalLeadForm } from '../components/ExternalLeadForm'
+import { LeadFormSupabase } from '../components/LeadFormSupabase'
 import { SocialFollowBlock } from '../components/SocialFollowBlock'
 
 const GOMA_MAP_SRC =
@@ -39,26 +39,7 @@ export function Contact() {
           <div className="split split--2">
             <div className="card">
               <h2>{t('contact.formTitle')}</h2>
-              <ExternalLeadForm redirectPath="/contact?merci=1">
-                <label htmlFor="subject">{t('contact.formSubject')}</label>
-                <input id="subject" name="_subject" type="text" required />
-
-                <label htmlFor="cname">{t('contact.formName')}</label>
-                <input id="cname" name="Nom" type="text" required />
-
-                <label htmlFor="cemail">{t('contact.formEmail')}</label>
-                <input id="cemail" name="Email" type="email" required />
-
-                <label htmlFor="cphone">{t('contact.formPhone')}</label>
-                <input id="cphone" name="Téléphone" type="tel" />
-
-                <label htmlFor="cmsg">{t('contact.formMessage')}</label>
-                <textarea id="cmsg" name="Message" required />
-
-                <button className="btn btn--primary" type="submit">
-                  {t('contact.formSubmit')}
-                </button>
-              </ExternalLeadForm>
+              <LeadFormSupabase source="contact" redirectTo="/contact?merci=1" />
             </div>
 
             <div>

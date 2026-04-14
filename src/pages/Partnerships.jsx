@@ -2,7 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
-import { ExternalLeadForm } from '../components/ExternalLeadForm'
+import { LeadFormSupabase } from '../components/LeadFormSupabase'
 import { useSitePartners } from '../hooks/useSitePartners'
 
 export function Partnerships() {
@@ -83,25 +83,7 @@ export function Partnerships() {
 
           <div className="card">
             <h2>{t('partnerships.formTitle')}</h2>
-            <ExternalLeadForm redirectPath="/partenariats?merci=1">
-              <input type="hidden" name="_subject" value="[GEACO] Proposition de partenariat" />
-
-              <label htmlFor="org">{t('partnerships.formOrg')}</label>
-              <input id="org" name="Organisation" type="text" required />
-
-              <label htmlFor="pname">{t('partnerships.formName')}</label>
-              <input id="pname" name="Nom du contact" type="text" required />
-
-              <label htmlFor="pemail">{t('partnerships.formEmail')}</label>
-              <input id="pemail" name="Email" type="email" required />
-
-              <label htmlFor="pmsg">{t('partnerships.formMessage')}</label>
-              <textarea id="pmsg" name="Message" required />
-
-              <button className="btn btn--primary" type="submit">
-                {t('partnerships.formSubmit')}
-              </button>
-            </ExternalLeadForm>
+            <LeadFormSupabase source="partnership" redirectTo="/partenariats?merci=1" />
           </div>
         </div>
       </section>
