@@ -10,9 +10,15 @@ export function Footer() {
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
-        <div>
+        <div className="site-footer__brand">
           <h3>{t('brand.short')}</h3>
           <p>{t('footer.tagline')}</p>
+          <SocialFollowBlock
+            variant="iconsOnly"
+            navLabel={t('footer.socialNav')}
+            facebookLabel={t('footer.followFacebook')}
+            linkedinLabel={t('footer.followLinkedin')}
+          />
         </div>
         <div>
           <h3>{t('footer.expertiseTitle')}</h3>
@@ -69,17 +75,6 @@ export function Footer() {
               <Link to="/contact">{nav('nav.contact')}</Link>
             </li>
           </ul>
-        </div>
-      </div>
-      <div className="site-footer__social">
-        <div className="site-footer__social-inner">
-          <SocialFollowBlock
-            variant="footer"
-            title={t('footer.followTitle')}
-            lead={t('footer.followLead')}
-            facebookLabel={t('footer.followFacebook')}
-            linkedinLabel={t('footer.followLinkedin')}
-          />
         </div>
       </div>
       <div className="footer-bottom">© {new Date().getFullYear()} GEACO SARL — Nord-Kivu, RDC</div>

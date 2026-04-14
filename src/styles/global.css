@@ -1048,46 +1048,18 @@ p:last-child {
   margin-bottom: 0.45rem;
 }
 
-.site-footer__social {
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.2);
-  padding: var(--space-lg) max(var(--space-md), env(safe-area-inset-right, 0px))
-    var(--space-lg) max(var(--space-md), env(safe-area-inset-left, 0px));
+.site-footer__brand .social-follow--icons-only {
+  margin-top: 0.85rem;
 }
 
-.site-footer__social-inner {
-  max-width: var(--max-width);
-  margin: 0 auto;
-}
-
-.site-footer .social-follow--footer .social-follow__title {
+.site-footer .social-icon-btn {
+  text-decoration: none;
   color: #fff;
-  font-size: clamp(1rem, 2.5vw, 1.15rem);
-  margin: 0 0 0.5rem;
 }
 
-.site-footer .social-follow--footer .social-follow__lead {
-  color: #b8c9d9;
-  margin: 0 0 1.1rem;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-  max-width: 40rem;
-}
-
-.site-footer .social-follow--footer .social-follow__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-}
-
-.site-footer .social-btn {
+.site-footer .social-icon-btn:hover {
   text-decoration: none;
-}
-
-.site-footer .social-btn:hover {
-  text-decoration: none;
-  filter: brightness(1.08);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  color: #fff;
 }
 
 .footer-bottom {
@@ -1134,7 +1106,7 @@ p:last-child {
   justify-content: center;
   gap: 0.5rem;
   padding: 0.65rem 1.1rem;
-  border-radius: 8px;
+  border-radius: 0;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.9rem;
@@ -1171,6 +1143,58 @@ p:last-child {
 
 .social-btn--linkedin {
   background: #0a66c2;
+}
+
+/* ——— Icônes réseaux (footer, sous la marque) ——— */
+.social-follow--icons-only {
+  margin: 0;
+}
+
+.social-follow__icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.social-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 0;
+  text-decoration: none;
+  color: #fff;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    filter 0.15s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.social-icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+  filter: brightness(1.06);
+}
+
+.social-icon-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.social-icon-btn--facebook {
+  background: #1877f2;
+}
+
+.social-icon-btn--linkedin {
+  background: #0a66c2;
+}
+
+.social-icon-btn__svg {
+  display: block;
 }
 
 /* ——— Boutons ——— */

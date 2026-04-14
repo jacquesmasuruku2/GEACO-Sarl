@@ -574,11 +574,9 @@ export const messages = {
       contactTitle: 'Contact',
       exploreTitle: 'Navigation',
       expertiseTitle: 'Expertises',
-      followTitle: 'Nous suivre en ligne',
-      followLead:
-        'Restez informés et renforcez la fiabilité de notre organisation : page Facebook GEACO ASBL et page LinkedIn officielle.',
-      followFacebook: 'Page Facebook GEACO ASBL',
-      followLinkedin: 'LinkedIn GEACO',
+      socialNav: 'Réseaux sociaux GEACO',
+      followFacebook: 'Page Facebook GEACO ASBL (nouvel onglet)',
+      followLinkedin: 'Page LinkedIn GEACO (nouvel onglet)',
     },
   },
   en: {
@@ -1122,11 +1120,9 @@ export const messages = {
       contactTitle: 'Contact',
       exploreTitle: 'Explore',
       expertiseTitle: 'Expertise',
-      followTitle: 'Follow us online',
-      followLead:
-        'Stay informed and build trust: official GEACO ASBL Facebook page and GEACO company LinkedIn.',
-      followFacebook: 'GEACO ASBL on Facebook',
-      followLinkedin: 'GEACO on LinkedIn',
+      socialNav: 'GEACO on social media',
+      followFacebook: 'GEACO ASBL Facebook page (opens in new tab)',
+      followLinkedin: 'GEACO LinkedIn page (opens in new tab)',
     },
   },
 }

@@ -24,3 +24,26 @@ Les formulaires utilisent [FormSubmit](https://formsubmit.co/) vers `geacosarl@g
 - `npm run build` — build production
 - `npm run preview` — prévisualisation du build
 - `npm run lint` — ESLint
+
+### Compte administrateur du panel (`/auth-admin`)
+
+Le panel vérifie la table Supabase `public.app_admins` (voir migration `supabase/migrations/001_site_content.sql`).
+
+1. Dans le dashboard Supabase : **Settings → API**, copier **service_role** (secret, jamais côté navigateur).
+2. Renseigner `.env` : `SUPABASE_SERVICE_ROLE_KEY`, `VITE_SUPABASE_URL` (déjà utilisé par le site).
+3. Exécuter :
+
+```bash
+npm run admin:create-user
+```
+
+Par défaut le script crée ou met à jour **`jacquesmasuruku2@gmail.com`** avec le mot de passe **`Jacques12`**, confirme l’e-mail, et ajoute l’UUID dans **`app_admins`**. Surcharge possible :
+
+```bash
+set ADMIN_EMAIL=autre@mail.com
+set ADMIN_PASSWORD=VotreMotDePasse
+set SUPABASE_SERVICE_ROLE_KEY=eyJ...
+npm run admin:create-user
+```
+
+(PowerShell : `$env:ADMIN_EMAIL="..."` etc.) En production, changez le mot de passe après la première connexion et ne commitez pas la clé service_role.
