@@ -21,6 +21,8 @@ export function BlogPost() {
   const [commentText, setCommentText] = useState('')
   const [liked, setLiked] = useState(true)
   const [rating, setRating] = useState(5)
+  const [authorName, setAuthorName] = useState('')
+  const [authorEmail, setAuthorEmail] = useState('')
   const [busy, setBusy] = useState(false)
   const [statusMsg, setStatusMsg] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
@@ -34,6 +36,12 @@ export function BlogPost() {
       'Membre'
     )
   }, [user])
+
+  useEffect(() => {
+    if (!user) return
+    setAuthorName(userDisplayName)
+    setAuthorEmail(String(user.email || '').trim())
+  }, [user, userDisplayName])
 
   useEffect(() => {
     if (!supabase) return
@@ -104,31 +112,27 @@ export function BlogPost() {
     loadEngagement(row.id)
   }, [row?.id, user?.id])
 
-  async function loginWithFacebook() {
-    if (!supabase) return
-    setErrorMsg('')
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: { redirectTo: window.location.href },
-    })
-    if (error) setErrorMsg(error.message)
-  }
-
   async function saveReaction() {
-    if (!supabase || !row?.id || !user) return
+    if (!supabase || !row?.id) return
+    const displayName = String(authorName || userDisplayName || '').trim()
+    const email = String(authorEmail || user?.email || '').trim().toLowerCase()
+    if (displayName.length < 2 || email.length < 3) {
+      setErrorMsg(t('blog.identityRequired'))
+      return
+    }
     setBusy(true)
     setErrorMsg('')
     setStatusMsg('')
     const { error } = await supabase.from('site_blog_post_reactions').upsert(
       {
         post_id: row.id,
-        user_id: user.id,
-        user_display_name: userDisplayName,
-        user_email: user.email || null,
+        user_id: user?.id ?? null,
+        user_display_name: displayName,
+        user_email: email,
         liked: Boolean(liked),
         rating: Math.max(1, Math.min(5, Number(rating) || 5)),
       },
-      { onConflict: 'post_id,user_id' },
+      { onConflict: 'post_id,user_email' },
     )
     setBusy(false)
     if (error) {
@@ -141,7 +145,13 @@ export function BlogPost() {
 
   async function submitComment(event) {
     event.preventDefault()
-    if (!supabase || !row?.id || !user) return
+    if (!supabase || !row?.id) return
+    const displayName = String(authorName || userDisplayName || '').trim()
+    const email = String(authorEmail || user?.email || '').trim().toLowerCase()
+    if (displayName.length < 2 || email.length < 3) {
+      setErrorMsg(t('blog.identityRequired'))
+      return
+    }
     const text = String(commentText ?? '').trim()
     if (text.length < 2) {
       setErrorMsg(t('blog.commentTooShort'))
@@ -152,9 +162,9 @@ export function BlogPost() {
     setStatusMsg('')
     const { error } = await supabase.from('site_blog_post_comments').insert({
       post_id: row.id,
-      user_id: user.id,
-      user_display_name: userDisplayName,
-      user_email: user.email || null,
+      user_id: user?.id ?? null,
+      user_display_name: displayName,
+      user_email: email,
       comment: text,
     })
     setBusy(false)
@@ -219,49 +229,55 @@ export function BlogPost() {
               <strong>{avgRating ? avgRating.toFixed(1) : '0.0'}/5</strong>
             </p>
 
-            {!user ? (
-              <div className="blog-member-login">
-                <p className="admin-muted">{t('blog.memberPrompt')}</p>
-                <button type="button" className="btn btn--primary" onClick={loginWithFacebook}>
-                  {t('blog.connectGoogle')}
+            <div className="blog-member-panel">
+              <p className="admin-muted">{t('blog.guestPrompt')}</p>
+              <div className="blog-member-controls">
+                <label>
+                  {t('blog.commenterNameLabel')}
+                  <input
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    placeholder={t('blog.commenterNamePlaceholder')}
+                  />
+                </label>
+                <label>
+                  {t('blog.commenterEmailLabel')}
+                  <input
+                    type="email"
+                    value={authorEmail}
+                    onChange={(e) => setAuthorEmail(e.target.value)}
+                    placeholder={t('blog.commenterEmailPlaceholder')}
+                  />
+                </label>
+                <label className="admin-check">
+                  <input type="checkbox" checked={liked} onChange={(e) => setLiked(e.target.checked)} />
+                  {t('blog.likeToggle')}
+                </label>
+                <div className="blog-stars-field">
+                  {t('blog.ratingLabel')}
+                  <div className="blog-stars" role="radiogroup" aria-label={t('blog.ratingLabel')}>
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <button
+                        key={value}
+                        type="button"
+                        className={`blog-star ${value <= rating ? 'is-active' : ''}`}
+                        onClick={() => setRating(value)}
+                        role="radio"
+                        aria-checked={rating === value}
+                        aria-label={`${value} sur 5`}
+                        title={`${value}/5`}
+                      >
+                        ★
+                      </button>
+                    ))}
+                    <span className="blog-stars__value">{rating}/5</span>
+                  </div>
+                </div>
+                <button type="button" className="btn btn--dark" onClick={saveReaction} disabled={busy}>
+                  {busy ? t('forms.formSending') : t('blog.saveLikeRating')}
                 </button>
               </div>
-            ) : (
-              <div className="blog-member-panel">
-                <p className="admin-muted">
-                  {t('blog.connectedAs')}: <strong>{userDisplayName}</strong>
-                </p>
-                <div className="blog-member-controls">
-                  <label className="admin-check">
-                    <input type="checkbox" checked={liked} onChange={(e) => setLiked(e.target.checked)} />
-                    {t('blog.likeToggle')}
-                  </label>
-                  <div className="blog-stars-field">
-                    {t('blog.ratingLabel')}
-                    <div className="blog-stars" role="radiogroup" aria-label={t('blog.ratingLabel')}>
-                      {[1, 2, 3, 4, 5].map((value) => (
-                        <button
-                          key={value}
-                          type="button"
-                          className={`blog-star ${value <= rating ? 'is-active' : ''}`}
-                          onClick={() => setRating(value)}
-                          role="radio"
-                          aria-checked={rating === value}
-                          aria-label={`${value} sur 5`}
-                          title={`${value}/5`}
-                        >
-                          ★
-                        </button>
-                      ))}
-                      <span className="blog-stars__value">{rating}/5</span>
-                    </div>
-                  </div>
-                  <button type="button" className="btn btn--dark" onClick={saveReaction} disabled={busy}>
-                    {busy ? t('forms.formSending') : t('blog.saveLikeRating')}
-                  </button>
-                </div>
-              </div>
-            )}
+            </div>
 
             {errorMsg ? (
               <p className="admin-error admin-feedback" role="alert">
@@ -291,22 +307,19 @@ export function BlogPost() {
 
             <div style={{ marginTop: '1.1rem' }}>
               <h3 style={{ marginBottom: '0.5rem' }}>{t('blog.commentsTitle')}</h3>
-              {!user ? <p className="admin-muted">{t('blog.memberToComment')}</p> : null}
-              {user ? (
-                <form onSubmit={submitComment} className="admin-form">
-                  <label htmlFor="blog-comment-text">{t('blog.commentLabel')}</label>
-                  <textarea
-                    id="blog-comment-text"
-                    rows={4}
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    placeholder={t('blog.commentPlaceholder')}
-                  />
-                  <button type="submit" className="btn btn--primary" disabled={busy}>
-                    {busy ? t('forms.formSending') : t('blog.publishComment')}
-                  </button>
-                </form>
-              ) : null}
+              <form onSubmit={submitComment} className="admin-form">
+                <label htmlFor="blog-comment-text">{t('blog.commentLabel')}</label>
+                <textarea
+                  id="blog-comment-text"
+                  rows={4}
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  placeholder={t('blog.commentPlaceholder')}
+                />
+                <button type="submit" className="btn btn--primary" disabled={busy}>
+                  {busy ? t('forms.formSending') : t('blog.publishComment')}
+                </button>
+              </form>
               <div className="blog-comments-list">
                 {comments.map((comment) => (
                   <article key={comment.id} className="blog-comment-item">
