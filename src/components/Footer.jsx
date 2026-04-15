@@ -11,7 +11,7 @@ export function Footer() {
     <footer className="site-footer">
       <div className="site-footer__inner">
         <div className="site-footer__brand">
-          <h3>{t('brand.short')}</h3>
+          <img className="site-footer__logo" src="/geaco-logo.png" alt={t('brand.long')} />
           <p>{t('footer.tagline')}</p>
           <SocialFollowBlock
             variant="iconsOnly"

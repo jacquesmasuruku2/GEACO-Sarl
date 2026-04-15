@@ -64,8 +64,7 @@ export function Header() {
       </div>
       <div className="site-header__inner">
         <NavLink to="/" className="site-logo" onClick={closeAll}>
-          <span className="site-logo__mark">{t('brand.short')}</span>
-          <span className="site-logo__sub">{t('brand.long')}</span>
+          <img className="site-logo__image" src="/geaco-logo.png" alt={t('brand.long')} />
         </NavLink>
 
         <nav className="nav-desktop" aria-label="Principal">
