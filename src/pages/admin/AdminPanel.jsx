@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase'
 import { useAdminAccess } from '../../hooks/useAdminAccess'
@@ -54,6 +54,7 @@ function PanelIcon({ name }) {
 
 export function AdminPanel() {
   const { loading, session, isAdmin, verificationFailed, recheckAdmin } = useAdminAccess()
+  const allowUnloadRef = useRef(false)
   const modules = useMemo(
     () => [
       { id: 'projects', label: 'Projets', description: 'Portefeuille de réalisations et impacts.', render: ProjectsAdmin },
@@ -161,6 +162,40 @@ export function AdminPanel() {
     }
   }, [session, isAdmin, loadDashboard])
 
+  useEffect(() => {
+    if (!session || !isAdmin) return
+
+    function onBeforeUnload(event) {
+      if (allowUnloadRef.current) return
+      event.preventDefault()
+      event.returnValue = ''
+    }
+
+    function onKeyDown(event) {
+      if (allowUnloadRef.current) return
+      const key = String(event.key || '').toLowerCase()
+      const wantsRefresh = key === 'f5' || ((event.ctrlKey || event.metaKey) && key === 'r')
+      if (!wantsRefresh) return
+      event.preventDefault()
+      window.alert('Rafraîchissement bloqué pour éviter de perdre le contenu en cours. Cliquez sur Enregistrer.')
+    }
+
+    window.addEventListener('beforeunload', onBeforeUnload)
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [session, isAdmin])
+
+  function signOutSafely() {
+    allowUnloadRef.current = true
+    supabase.auth.signOut()
+    window.setTimeout(() => {
+      allowUnloadRef.current = false
+    }, 1500)
+  }
+
   if (!isSupabaseConfigured || !supabase) {
     return <Navigate to="/auth-admin" replace />
   }
@@ -216,7 +251,7 @@ export function AdminPanel() {
           <button
             type="button"
             className="btn btn--outline"
-            onClick={() => supabase.auth.signOut()}
+            onClick={signOutSafely}
           >
             Se déconnecter
           </button>
@@ -239,7 +274,7 @@ export function AdminPanel() {
           <Link className="btn btn--ghost" to="/">
             Voir le site
           </Link>
-          <button type="button" className="btn btn--outline" onClick={() => supabase.auth.signOut()}>
+          <button type="button" className="btn btn--outline" onClick={signOutSafely}>
             Déconnexion
           </button>
         </div>

@@ -24,6 +24,20 @@ export function Home() {
   const newsItems = t('home.newsItems')
   const stats = t('home.stats')
 
+  function getInitials(name) {
+    return String(name ?? '')
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((word) => word[0] ?? '')
+      .join('')
+      .toUpperCase()
+  }
+
+  function hasLogoUrl(partner) {
+    return String(partner?.logo_url ?? '').trim().length > 0
+  }
+
   const expertisePanels = [
     {
       id: 'ag',
@@ -262,13 +276,11 @@ export function Home() {
                 {[...partners, ...partners].map((p, index) => (
                   <article className="partners-logo-card" key={`${p.id}-${index}`}>
                     <div className="partners-logo-card__logo" aria-hidden="true">
-                      {String(p.name ?? '')
-                        .trim()
-                        .split(/\s+/)
-                        .slice(0, 2)
-                        .map((word) => word[0] ?? '')
-                        .join('')
-                        .toUpperCase()}
+                      {hasLogoUrl(p) ? (
+                        <img src={String(p.logo_url).trim()} alt="" loading="lazy" decoding="async" />
+                      ) : (
+                        getInitials(p.name)
+                      )}
                     </div>
                     <h3>{p.name}</h3>
                   </article>

@@ -2541,7 +2541,7 @@ html.site-header-topbar-hidden .site-topbar {
 
 .personnel-team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr));
   gap: 1rem;
 }
 
@@ -2560,15 +2560,15 @@ html.site-header-topbar-hidden .site-topbar {
   min-height: 100%;
   text-align: center;
   overflow: hidden;
-  max-width: 220px;
+  max-width: 245px;
   margin-inline: auto;
 }
 
 .personnel-card__media {
   margin: 0;
   width: 100%;
-  aspect-ratio: 16 / 11;
-  max-height: 138px;
+  aspect-ratio: 4 / 3;
+  max-height: 158px;
   border-radius: 0;
   position: relative;
   background: #f1f1f1;
@@ -2579,6 +2579,7 @@ html.site-header-topbar-hidden .site-topbar {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 22%;
   display: block;
 }
 
@@ -2660,7 +2661,7 @@ html.site-header-topbar-hidden .site-topbar {
 
 @media (max-width: 640px) {
   .personnel-team-grid {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 165px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 175px), 1fr));
     gap: 0.75rem;
   }
 
@@ -2669,7 +2670,7 @@ html.site-header-topbar-hidden .site-topbar {
   }
 
   .personnel-card__media {
-    max-height: 128px;
+    max-height: 142px;
   }
 
   .personnel-showcase__head {
@@ -2852,6 +2853,12 @@ html.site-header-topbar-hidden .site-topbar {
   font-weight: 800;
   letter-spacing: 0.03em;
   margin-bottom: 0.65rem;
+}
+
+.partners-logo-card__logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .partners-logo-card h3 {

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
+import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 
 export function PartnersAdmin() {
   const [rows, setRows] = useState([])
@@ -30,6 +31,7 @@ export function PartnersAdmin() {
       .insert({
         name: 'Nouveau partenaire',
         subtitle: '',
+        logo_url: '',
         website_url: '',
         notes: '',
         partnership_motive: '',
@@ -57,6 +59,7 @@ export function PartnersAdmin() {
       .update({
         name: row.name,
         subtitle: row.subtitle || null,
+        logo_url: row.logo_url || null,
         website_url: row.website_url || null,
         notes: row.notes || null,
         partnership_motive: row.partnership_motive || null,
@@ -122,7 +125,7 @@ export function PartnersAdmin() {
             <article className="admin-compact-item" key={row.id}>
               <div className="admin-compact-item__main">
                 <div className="admin-compact-item__avatar" aria-hidden="true">
-                  🤝
+                  {String(row.logo_url ?? '').trim() ? <img src={String(row.logo_url).trim()} alt="" /> : '🤝'}
                 </div>
                 <div className="admin-compact-item__text">
                   <h3>{row.name || 'Partenaire sans nom'}</h3>
@@ -164,6 +167,15 @@ export function PartnersAdmin() {
                     onChange={(e) => updateLocal(row.id, { subtitle: e.target.value })}
                   />
                 </label>
+                <ImagePickerField
+                  label="Logo du partenaire"
+                  value={row.logo_url ?? ''}
+                  onChange={(e) => updateLocal(row.id, { logo_url: e.target.value })}
+                  storageFolder="partners"
+                  previewAlt={`Logo de ${row.name ?? 'partenaire'}`}
+                  icon="🤝"
+                  help="Ajoutez le logo qui sera affiché dans le carrousel des partenaires."
+                />
                 <label className="admin-span-2">
                   Site web (URL)
                   <input

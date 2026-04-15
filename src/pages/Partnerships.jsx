@@ -27,6 +27,10 @@ export function Partnerships() {
       .toUpperCase()
   }
 
+  function hasLogoUrl(partner) {
+    return String(partner?.logo_url ?? '').trim().length > 0
+  }
+
   function openPartnershipForm() {
     setShowForm(true)
     requestAnimationFrame(() => {
@@ -66,7 +70,11 @@ export function Partnerships() {
                 {carouselItems.map((p, index) => (
                   <article className="partners-logo-card" key={`${p.id}-${index}`}>
                     <div className="partners-logo-card__logo" aria-hidden="true">
-                      {getInitials(p.name)}
+                      {hasLogoUrl(p) ? (
+                        <img src={String(p.logo_url).trim()} alt="" loading="lazy" decoding="async" />
+                      ) : (
+                        getInitials(p.name)
+                      )}
                     </div>
                     <h3>{p.name}</h3>
                   </article>
