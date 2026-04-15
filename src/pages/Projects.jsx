@@ -42,6 +42,9 @@ export function Projects() {
   const onlyAgricole = location.pathname.startsWith('/projets/agricoles')
   const showConstruction = !onlyAgricole
   const showAgricole = !onlyConstruction
+  const heroImage = onlyAgricole
+    ? 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80'
+    : 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=1800&q=80'
 
   function renderProjectCard(project) {
     const imageUrl = String(project.imageUrl ?? '').trim()
@@ -78,7 +81,7 @@ export function Projects() {
         ]}
         title={t('projects.title')}
         lead={t('projects.lead')}
-        heroImage="https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=1800&q=80"
+        heroImage={heroImage}
       />
 
       <section className="section">

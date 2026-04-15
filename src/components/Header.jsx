@@ -134,9 +134,6 @@ export function Header() {
               </span>
             </NavLink>
             <div className="nav-dropdown__panel" role="menu">
-              <Link className="nav-dropdown__link" to="/projets" role="menuitem">
-                {navLabel('nav.projects')}
-              </Link>
               <Link className="nav-dropdown__link" to="/projets/construction" role="menuitem">
                 {navLabel('nav.projectsConstruction')}
               </Link>
@@ -242,9 +239,6 @@ export function Header() {
           </button>
           {mobileProjectsOpen ? (
             <div className="nav-mobile__sub">
-              <NavLink to="/projets" onClick={closeAll}>
-                {navLabel('nav.projects')}
-              </NavLink>
               <NavLink to="/projets/construction" onClick={closeAll}>
                 {navLabel('nav.projectsConstruction')}
               </NavLink>
