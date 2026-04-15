@@ -122,8 +122,16 @@ export function PersonnelAdmin() {
           Ajouter une fiche
         </button>
       </div>
-      {message ? <p className="admin-success">{message}</p> : null}
-      {error ? <p className="admin-error">{error}</p> : null}
+      {message ? (
+        <p className="admin-success admin-feedback" role="status" aria-live="polite">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="admin-error admin-feedback" role="alert" aria-live="assertive">
+          {error}
+        </p>
+      ) : null}
       <p className="admin-muted">
         Les cartes partageant le même <strong>ordre de section</strong> (nombre entier) et la même{' '}
         <strong>langue</strong> sont regroupées sous le titre de section (texte de la première fiche du groupe).

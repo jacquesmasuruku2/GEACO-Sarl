@@ -96,8 +96,16 @@ export function ServiceContentAdmin() {
       <div className="admin-section__head">
         <h2>Contenu des pages services (dont Solution Café)</h2>
       </div>
-      {message ? <p className="admin-success">{message}</p> : null}
-      {error ? <p className="admin-error">{error}</p> : null}
+      {message ? (
+        <p className="admin-success admin-feedback" role="status" aria-live="polite">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="admin-error admin-feedback" role="alert" aria-live="assertive">
+          {error}
+        </p>
+      ) : null}
       <p className="admin-muted">
         Si vous laissez un champ vide côté base, le site continue d’afficher le texte défini dans les
         fichiers de traduction — sauf pour les sections : dès qu’une ligne existe en base avec un

@@ -22,6 +22,7 @@ export function ImagePickerField({
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState('')
   const preview = String(value ?? '').trim()
+  const siteLibrary = Array.from({ length: 36 }, (_, index) => `/media/geaco/geaco-${String(index + 1).padStart(2, '0')}.jpeg`)
 
   async function uploadFile(file) {
     if (!file || !supabase) return
@@ -79,6 +80,25 @@ export function ImagePickerField({
             {icon}
           </div>
         )}
+      </div>
+      <div className="image-picker-field__library">
+        <p className="admin-muted image-picker-field__library-title">Bibliotheque du site (images deja utilisees)</p>
+        <div className="image-picker-field__library-grid">
+          {siteLibrary.map((src, idx) => (
+            <button
+              type="button"
+              key={src}
+              className="image-picker-field__library-item"
+              onClick={() => {
+                onChange({ target: { value: src } })
+                setStatus(`Image locale #${idx + 1} selectionnee.`)
+              }}
+              title={`Utiliser image ${idx + 1}`}
+            >
+              <img src={src} alt={`Image du site ${idx + 1}`} loading="lazy" />
+            </button>
+          ))}
+        </div>
       </div>
       {status ? <p className="admin-muted">{status}</p> : null}
     </div>

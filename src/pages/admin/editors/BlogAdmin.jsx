@@ -97,8 +97,16 @@ export function BlogAdmin() {
           Ajouter un article
         </button>
       </div>
-      {message ? <p className="admin-success">{message}</p> : null}
-      {error ? <p className="admin-error">{error}</p> : null}
+      {message ? (
+        <p className="admin-success admin-feedback" role="status" aria-live="polite">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="admin-error admin-feedback" role="alert" aria-live="assertive">
+          {error}
+        </p>
+      ) : null}
       <p className="admin-muted">
         Renseignez un couple unique <strong>slug + langue</strong>. Cochez « Publié » pour afficher
         l’article sur le site. Utilisez la barre d’outils pour un formatage moderne (titres, gras,

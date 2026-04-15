@@ -89,8 +89,16 @@ export function PartnersAdmin() {
           Ajouter un partenaire
         </button>
       </div>
-      {message ? <p className="admin-success">{message}</p> : null}
-      {error ? <p className="admin-error">{error}</p> : null}
+      {message ? (
+        <p className="admin-success admin-feedback" role="status" aria-live="polite">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="admin-error admin-feedback" role="alert" aria-live="assertive">
+          {error}
+        </p>
+      ) : null}
       <p className="admin-muted">
         Cochez <strong>Publié</strong> pour afficher le partenaire sur la page publique Partenariats (sinon il
         reste en brouillon). La colonne est stockée en base (<code>published</code>). Exécutez la migration{' '}
