@@ -1,15 +1,42 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { useBlogPosts } from '../hooks/useBlogPosts'
 import { formatNavLabel } from '../lib/formatNavLabel'
+import { supabase } from '../lib/supabase'
 
 export function Blog() {
   const { t, locale } = useI18n()
   const { rows, loading } = useBlogPosts(locale)
+  const [session, setSession] = useState(null)
   const fallbackCover =
     'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80'
+
+  useEffect(() => {
+    if (!supabase) return
+    let mounted = true
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return
+      setSession(data?.session ?? null)
+    })
+    const { data } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession ?? null)
+    })
+    return () => {
+      mounted = false
+      data.subscription.unsubscribe()
+    }
+  }, [])
+
+  async function loginWithGoogle() {
+    if (!supabase) return
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.href },
+    })
+  }
 
   return (
     <>
@@ -27,6 +54,16 @@ export function Blog() {
 
       <section className="section">
         <div className="container">
+          {!session ? (
+            <div className="card" style={{ marginBottom: '1rem' }}>
+              <p className="admin-muted" style={{ marginTop: 0 }}>
+                {t('blog.memberPrompt')}
+              </p>
+              <button type="button" className="btn btn--primary" onClick={loginWithGoogle}>
+                {t('blog.connectGoogle')}
+              </button>
+            </div>
+          ) : null}
           {loading ? (
             <p style={{ color: 'var(--color-text-muted)' }}>{t('blog.loading')}</p>
           ) : rows.length === 0 ? (
