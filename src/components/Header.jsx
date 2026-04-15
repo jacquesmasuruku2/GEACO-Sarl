@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from 'react'
+import { useState, useLayoutEffect, useEffect } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { SERVICE_ROUTES, serviceNavLabel } from '../data/servicesNav'
@@ -6,7 +6,6 @@ import { formatNavLabel } from '../lib/formatNavLabel'
 
 const mainLinksBeforeServices = [
   { to: '/', key: 'nav.home', end: true },
-  { to: '/personnel', key: 'nav.personnel', end: false },
 ]
 
 const mainLinksAfterServices = [
@@ -22,14 +21,15 @@ const TOPBAR_HIDE_SCROLL_Y = 36
 export function Header() {
   const { t, locale, setLocale } = useI18n()
   const [open, setOpen] = useState(false)
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const location = useLocation()
-  const servicesActive = location.pathname.startsWith('/services')
   const aboutActive =
     location.pathname.startsWith('/a-propos') ||
     location.pathname === '/faq' ||
-    location.pathname.startsWith('/partenariats')
+    location.pathname.startsWith('/personnel') ||
+    location.pathname.startsWith('/partenariats') ||
+    location.pathname.startsWith('/services')
 
   useLayoutEffect(() => {
     const sync = () => {
@@ -45,10 +45,14 @@ export function Header() {
     }
   }, [location.pathname])
 
+  useEffect(() => {
+    setMobileServicesOpen(false)
+  }, [location.pathname])
+
   const closeAll = () => {
     setOpen(false)
-    setMobileServicesOpen(false)
     setMobileAboutOpen(false)
+    setMobileServicesOpen(false)
   }
 
   const navLabel = (key) => formatNavLabel(t(key), locale)
@@ -91,28 +95,32 @@ export function Header() {
               <Link className="nav-dropdown__link" to="/faq" role="menuitem">
                 {navLabel('nav.faq')}
               </Link>
+              <Link className="nav-dropdown__link" to="/personnel" role="menuitem">
+                {navLabel('nav.personnel')}
+              </Link>
               <Link className="nav-dropdown__link" to="/partenariats" role="menuitem">
                 {navLabel('nav.partnerships')}
               </Link>
-            </div>
-          </div>
-
-          <div className={`nav-dropdown${servicesActive ? ' nav-dropdown--active' : ''}`}>
-            <NavLink className="nav-dropdown__trigger" to="/services" end={false}>
-              {navLabel('nav.services')}
-              <span className="nav-dropdown__caret" aria-hidden="true">
-                ▾
-              </span>
-            </NavLink>
-            <div className="nav-dropdown__panel" role="menu">
-              <Link className="nav-dropdown__link" to="/services" role="menuitem">
-                {navLabel('nav.servicesOverview')}
-              </Link>
-              {SERVICE_ROUTES.map(({ slug, detailKey }) => (
-                <Link key={slug} className="nav-dropdown__link" to={`/services/${slug}`} role="menuitem">
-                  {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
+              <div className="nav-dropdown__subgroup" role="none">
+                <Link className="nav-dropdown__link nav-dropdown__link--group" to="/services" role="menuitem">
+                  {navLabel('nav.services')}
+                  <span className="nav-dropdown__caret" aria-hidden="true">
+                    ▸
+                  </span>
                 </Link>
-              ))}
+                <div className="nav-dropdown__nested" role="menu">
+                  {SERVICE_ROUTES.map(({ slug, detailKey }) => (
+                    <Link
+                      key={slug}
+                      className="nav-dropdown__link nav-dropdown__link--nested"
+                      to={`/services/${slug}`}
+                      role="menuitem"
+                    >
+                      {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -168,32 +176,35 @@ export function Header() {
               <NavLink to="/faq" onClick={closeAll}>
                 {navLabel('nav.faq')}
               </NavLink>
+              <NavLink to="/personnel" onClick={closeAll}>
+                {navLabel('nav.personnel')}
+              </NavLink>
               <NavLink to="/partenariats" onClick={closeAll}>
                 {navLabel('nav.partnerships')}
               </NavLink>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="nav-mobile__group">
-          <button
-            type="button"
-            className="nav-mobile__group-toggle"
-            aria-expanded={mobileServicesOpen}
-            onClick={() => setMobileServicesOpen((v) => !v)}
-          >
-            {navLabel('nav.services')} {mobileServicesOpen ? '▴' : '▾'}
-          </button>
-          {mobileServicesOpen ? (
-            <div className="nav-mobile__sub">
-              <NavLink to="/services" onClick={closeAll}>
-                {navLabel('nav.servicesOverview')}
-              </NavLink>
-              {SERVICE_ROUTES.map(({ slug, detailKey }) => (
-                <NavLink key={slug} to={`/services/${slug}`} onClick={closeAll}>
-                  {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
-                </NavLink>
-              ))}
+              <div className="nav-mobile__subgroup">
+                <button
+                  type="button"
+                  className="nav-mobile__subgroup-title nav-mobile__subgroup-toggle"
+                  aria-expanded={mobileServicesOpen}
+                  onClick={() => setMobileServicesOpen((v) => !v)}
+                >
+                  {navLabel('nav.services')}
+                  <span aria-hidden="true">{mobileServicesOpen ? '▴' : '▾'}</span>
+                </button>
+                {mobileServicesOpen ? (
+                  <div className="nav-mobile__subgroup-items">
+                    <NavLink to="/services" onClick={closeAll}>
+                      {navLabel('nav.services')}
+                    </NavLink>
+                    {SERVICE_ROUTES.map(({ slug, detailKey }) => (
+                      <NavLink key={slug} to={`/services/${slug}`} onClick={closeAll}>
+                        {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
+                      </NavLink>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             </div>
           ) : null}
         </div>

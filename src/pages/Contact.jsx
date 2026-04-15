@@ -37,28 +37,28 @@ export function Contact() {
             </div>
           ) : null}
 
-          <div className="split split--2">
+          <div className="split split--2 contact-layout">
             <div className="card">
               <h2>{t('contact.formTitle')}</h2>
               <LeadFormSupabase source="contact" redirectTo="/contact?merci=1" />
             </div>
 
-            <div>
+            <div className="contact-details">
               <h2 className="section__title">{t('contact.addressesTitle')}</h2>
-              <div className="card" style={{ marginBottom: '1rem' }}>
+              <div className="card contact-address-card">
                 <h3>{t('contact.goma')}</h3>
                 <p style={{ margin: 0 }}>
                   46, Avenue Erengeti, Quartier Kyeshero, Commune de Goma, Ville de Goma, Nord-Kivu, RDC.
                 </p>
               </div>
-              <div className="card" style={{ marginBottom: '1rem' }}>
+              <div className="card contact-address-card">
                 <h3>{t('contact.butembo')}</h3>
                 <p style={{ margin: 0 }}>
                   275, Cellule MIHAKE, Quartier KAMESI MBONZO, Commune de Bulengera, Ville de Butembo, Nord-Kivu,
                   RDC.
                 </p>
               </div>
-              <p>
+              <p className="contact-meta">
                 <strong>Email :</strong>{' '}
                 <a href="mailto:geacosarl@gmail.com">geacosarl@gmail.com</a>
                 <br />

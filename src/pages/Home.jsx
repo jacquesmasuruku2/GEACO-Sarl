@@ -7,6 +7,10 @@ import { useSitePartners } from '../hooks/useSitePartners'
 export function Home() {
   const { t } = useI18n()
   const { rows: partners } = useSitePartners()
+  const homeGalleryImages = Array.from({ length: 8 }, (_, index) => ({
+    src: `/media/geaco/geaco-${String(index + 1).padStart(2, '0')}.jpeg`,
+    alt: `GEACO terrain ${index + 1}`,
+  }))
 
   const cafeSpot = t('home.solutionCafeSpotlight')
   const hasCafeSpot =
@@ -51,8 +55,7 @@ export function Home() {
       <section
         className="page-hero page-hero--immersive"
         style={{
-          ['--hero-image']:
-            'url("https://images.unsplash.com/photo-1625246333195-78d9c38ad448?auto=format&fit=crop&w=1800&q=80")',
+          ['--hero-image']: 'url("/media/geaco/geaco-01.jpeg")',
         }}
       >
         <div className="page-hero__media" aria-hidden="true" />
@@ -174,8 +177,36 @@ export function Home() {
         </div>
       </section>
 
+      <section className="section section--muted">
+        <div className="container">
+          <div className="section__head">
+            <h2 className="section__title">{t('gallery.title')}</h2>
+            <p>{t('gallery.lead')}</p>
+          </div>
+          <div className="home-gallery-grid">
+            {homeGalleryImages.map((image) => (
+              <Link key={image.src} to="/galerie" className="home-gallery-card" aria-label={t('nav.gallery')}>
+                <img src={image.src} alt={image.alt} loading="lazy" />
+              </Link>
+            ))}
+          </div>
+          <p style={{ marginTop: '1.2rem' }}>
+            <Link className="btn btn--outline" to="/galerie">
+              {t('nav.gallery')}
+            </Link>
+          </p>
+        </div>
+      </section>
+
       <section className="promo-split" aria-labelledby="promo-heading">
-        <div className="promo-split__visual" role="presentation" />
+        <div
+          className="promo-split__visual"
+          role="presentation"
+          style={{
+            backgroundImage:
+              'linear-gradient(105deg, rgba(0, 47, 92, 0.9) 0%, rgba(226, 0, 37, 0.35) 100%), url("/media/geaco/geaco-09.jpeg")',
+          }}
+        />
         <div className="promo-split__content">
           <p className="promo-split__eyebrow" id="promo-eyebrow">
             {t('home.promoEyebrow')}
