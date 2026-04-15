@@ -58,13 +58,17 @@ export function Contact() {
                   RDC.
                 </p>
               </div>
-              <p className="contact-meta">
-                <strong>Email :</strong>{' '}
-                <a href="mailto:geacosarl@gmail.com">geacosarl@gmail.com</a>
-                <br />
-                <strong>Tél. :</strong> <a href="tel:+243808368955">+243 808 368 955</a> ·{' '}
-                <a href="tel:+243977472158">097 747 2158</a>
-              </p>
+              <div className="contact-meta" role="group" aria-label="Coordonnées de contact">
+                <p className="contact-meta__line">
+                  <strong>Email :</strong> <a href="mailto:geacosarl@gmail.com">geacosarl@gmail.com</a>
+                </p>
+                <p className="contact-meta__line">
+                  <strong>Tél. :</strong> <a href="tel:+243808368955">+243 808 368 955</a>
+                </p>
+                <p className="contact-meta__line">
+                  <strong>WhatsApp :</strong> <a href="tel:+243977472158">097 747 2158</a>
+                </p>
+              </div>
 
               <SocialFollowBlock
                 variant="card"

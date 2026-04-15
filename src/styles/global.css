@@ -106,6 +106,15 @@ a:hover {
   overflow-x: clip;
 }
 
+/* Fallback pour navigateurs mobiles qui gèrent mal overflow-x: clip */
+@supports not (overflow: clip) {
+  html,
+  body,
+  #root {
+    overflow-x: hidden;
+  }
+}
+
 h1,
 h2,
 h3 {
@@ -1542,6 +1551,57 @@ html.site-header-topbar-hidden .site-topbar {
   overflow-wrap: anywhere;
 }
 
+.contact-meta__line {
+  margin: 0.3rem 0;
+}
+
+.contact-meta__line strong {
+  color: var(--color-vinci-blue-dark);
+}
+
+@media (max-width: 920px) {
+  .contact-layout {
+    gap: 1rem;
+  }
+
+  .contact-layout .card,
+  .social-follow--card {
+    padding: 0.95rem;
+  }
+
+  .contact-details .section__title {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-layout .card,
+  .social-follow--card {
+    padding: 0.85rem;
+  }
+
+  .contact-address-card h3 {
+    font-size: 1rem;
+  }
+
+  .social-follow__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .social-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.7rem 0.8rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .map-embed {
+    min-height: 210px;
+  }
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -2728,6 +2788,22 @@ html.site-header-topbar-hidden .site-topbar {
 @media (prefers-reduced-motion: reduce) {
   .partners-carousel__track {
     animation: none;
+  }
+}
+
+@media (max-width: 920px) {
+  .partners-carousel {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-inline: 0;
+  }
+
+  .partners-scroller {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0.35rem;
+    padding-right: 0.35rem;
   }
 }
 
