@@ -19,6 +19,7 @@ export const messages = {
       services: 'services',
       projects: 'projets',
       blog: 'blog',
+      gallery: 'galerie',
       partnerships: 'partenariats',
       contact: 'contact',
       legal: 'mentions légales',
@@ -446,7 +447,7 @@ export const messages = {
       activeLead:
         'Organisations avec lesquelles nous collaborons actuellement ou récemment sur des opérations documentées (liste éditoriale).',
       activeEmpty:
-        'Aucun partenaire public pour le moment. Les cartes sont gérées depuis l’espace d’administration (Supabase).',
+        'Aucun partenaire public pour le moment. Revenez prochainement pour découvrir nos collaborations.',
       partnersScrollHint:
         'Faites défiler horizontalement pour parcourir tous les partenaires publiés (souris, trackpad ou glissement au doigt).',
       formTitle: 'Formulaire partenariat',
@@ -475,6 +476,16 @@ export const messages = {
       shareWhatsapp: 'WhatsApp',
       shareFacebook: 'Facebook',
       shareLinkedin: 'LinkedIn',
+    },
+    gallery: {
+      metaTitle: 'Galerie — GEACO SARL',
+      metaDesc: 'Galerie photos des activités, projets et réalisations GEACO.',
+      title: 'Galerie',
+      lead: 'Retrouvez les images publiées depuis le panel d’administration.',
+      loading: 'Chargement de la galerie…',
+      empty: 'Aucune image publiée pour le moment.',
+      loadError: 'Impossible de charger la galerie',
+      untitled: 'Sans titre',
     },
     personnel: {
       metaTitle: 'Personnel — GEACO SARL',
@@ -605,7 +616,7 @@ export const messages = {
       privacyNote:
         'En envoyant ce formulaire, vous acceptez que nous utilisions vos coordonnées pour répondre à votre demande. Pas de newsletter sans consentement explicite.',
       storedInSupabase:
-        'Votre message est enregistré de façon sécurisée dans notre base (Supabase) : seule l’équipe habilitée peut le consulter.',
+        'Votre message est enregistré de façon sécurisée dans notre base des données : seule l’équipe habilitée peut le consulter.',
       supabaseNotConfigured:
         'Envoi impossible : le site n’a pas reçu les clés Supabase au moment du build. Sur Vercel, ouvrez le projet → Settings → Environment Variables : ajoutez exactement VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (mêmes noms que dans .env.example), cochez Production, enregistrez puis Redeploy. En local, placez ces lignes dans le fichier .env à la racine de geaco-sarl (pas seulement dans le chat) et relancez npm run dev.',
       formSending: 'Envoi en cours…',
@@ -637,6 +648,7 @@ export const messages = {
       services: 'services',
       projects: 'projects',
       blog: 'blog',
+      gallery: 'gallery',
       partnerships: 'partnerships',
       contact: 'contact',
       legal: 'legal notice',
@@ -1035,7 +1047,7 @@ export const messages = {
       activeLead:
         'Organisations we currently work with—or have recently worked with—on documented operations (editorial list).',
       activeEmpty:
-        'No public partners yet. Cards are managed from the admin area (Supabase).',
+        'No public partners yet. Please check back soon to discover our collaborations.',
       partnersScrollHint:
         'Scroll horizontally to browse all published partners (mouse, trackpad or swipe).',
       formTitle: 'Partnership form',
@@ -1064,6 +1076,16 @@ export const messages = {
       shareWhatsapp: 'WhatsApp',
       shareFacebook: 'Facebook',
       shareLinkedin: 'LinkedIn',
+    },
+    gallery: {
+      metaTitle: 'Gallery — GEACO SARL',
+      metaDesc: 'Photo gallery of GEACO activities, projects and achievements.',
+      title: 'Gallery',
+      lead: 'Browse images published from the admin panel.',
+      loading: 'Loading gallery…',
+      empty: 'No published images yet.',
+      loadError: 'Could not load gallery',
+      untitled: 'Untitled',
     },
     personnel: {
       metaTitle: 'People & organisation — GEACO SARL',

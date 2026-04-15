@@ -36,6 +36,9 @@ export function Footer() {
               <Link to="/partenariats">{nav('nav.partnerships')}</Link>
             </li>
             <li>
+              <Link to="/galerie">{nav('nav.gallery')}</Link>
+            </li>
+            <li>
               <Link to="/services/solution-cafe">
                 {formatNavLabel(t('services.solutionCafe.navTitle'), locale)}
               </Link>

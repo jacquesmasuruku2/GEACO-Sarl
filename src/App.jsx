@@ -13,6 +13,7 @@ import { Legal } from './pages/Legal'
 import { Blog } from './pages/Blog'
 import { BlogPost } from './pages/BlogPost'
 import { Personnel } from './pages/Personnel'
+import { Gallery } from './pages/Gallery'
 import { AuthAdmin } from './pages/admin/AuthAdmin'
 import { AdminPanel } from './pages/admin/AdminPanel'
 import { NotFound } from './pages/NotFound'
@@ -29,6 +30,8 @@ export default function App() {
           <Route path="/a-propos" element={<About />} />
           <Route path="/faq" element={<Faq />} />
           <Route path="/personnel" element={<Personnel />} />
+          <Route path="/galerie" element={<Gallery />} />
+          <Route path="/gallery" element={<Gallery />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />

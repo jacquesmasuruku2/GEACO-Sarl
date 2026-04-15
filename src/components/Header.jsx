@@ -12,7 +12,7 @@ const mainLinksBeforeServices = [
 const mainLinksAfterServices = [
   { to: '/projets', key: 'nav.projects', end: false },
   { to: '/blog', key: 'nav.blog', end: false },
-  { to: '/partenariats', key: 'nav.partnerships', end: false },
+  { to: '/galerie', key: 'nav.gallery', end: false },
   { to: '/contact', key: 'nav.contact', end: false },
 ]
 
@@ -26,7 +26,10 @@ export function Header() {
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
   const location = useLocation()
   const servicesActive = location.pathname.startsWith('/services')
-  const aboutActive = location.pathname.startsWith('/a-propos') || location.pathname === '/faq'
+  const aboutActive =
+    location.pathname.startsWith('/a-propos') ||
+    location.pathname === '/faq' ||
+    location.pathname.startsWith('/partenariats')
 
   useLayoutEffect(() => {
     const sync = () => {
@@ -87,6 +90,9 @@ export function Header() {
               </Link>
               <Link className="nav-dropdown__link" to="/faq" role="menuitem">
                 {navLabel('nav.faq')}
+              </Link>
+              <Link className="nav-dropdown__link" to="/partenariats" role="menuitem">
+                {navLabel('nav.partnerships')}
               </Link>
             </div>
           </div>
@@ -161,6 +167,9 @@ export function Header() {
               </NavLink>
               <NavLink to="/faq" onClick={closeAll}>
                 {navLabel('nav.faq')}
+              </NavLink>
+              <NavLink to="/partenariats" onClick={closeAll}>
+                {navLabel('nav.partnerships')}
               </NavLink>
             </div>
           ) : null}

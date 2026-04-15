@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { ExpertiseAccordion } from '../components/ExpertiseAccordion'
+import { useSitePartners } from '../hooks/useSitePartners'
 
 export function Home() {
   const { t } = useI18n()
+  const { rows: partners } = useSitePartners()
 
   const cafeSpot = t('home.solutionCafeSpotlight')
   const hasCafeSpot =
@@ -215,13 +217,36 @@ export function Home() {
       </section>
 
       <section className="section section--tight section--muted">
-        <div className="container split split--2" style={{ alignItems: 'center' }}>
-          <div>
-            <h2 className="section__title">{t('home.partnersTeaserTitle')}</h2>
-            <p>{t('home.partnersTeaser')}</p>
+        <div className="container">
+          <div className="partners-showcase__head">
+            <h2 className="partners-showcase__title">
+              <span>Nos </span>
+              <span className="is-accent">Partenaires</span>
+            </h2>
           </div>
-          <div>
-            <Link className="btn btn--primary" to="/partenariats">
+          <p className="partners-showcase__lead">{t('home.partnersTeaser')}</p>
+          {partners.length ? (
+            <div className="partners-carousel" role="region" aria-label={t('home.partnersTeaserTitle')}>
+              <div className="partners-carousel__track">
+                {[...partners, ...partners].map((p, index) => (
+                  <article className="partners-logo-card" key={`${p.id}-${index}`}>
+                    <div className="partners-logo-card__logo" aria-hidden="true">
+                      {String(p.name ?? '')
+                        .trim()
+                        .split(/\s+/)
+                        .slice(0, 2)
+                        .map((word) => word[0] ?? '')
+                        .join('')
+                        .toUpperCase()}
+                    </div>
+                    <h3>{p.name}</h3>
+                  </article>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          <div className="partners-showcase__footer">
+            <Link className="btn btn--primary partners-showcase__cta" to="/partenariats">
               {t('home.partnersCta')}
             </Link>
           </div>
