@@ -5,6 +5,8 @@ export function PartnersAdmin() {
   const [rows, setRows] = useState([])
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [editingId, setEditingId] = useState(null)
+  const [savingId, setSavingId] = useState(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -23,26 +25,32 @@ export function PartnersAdmin() {
 
   async function addRow() {
     if (!supabase) return
-    const { error: insErr } = await supabase.from('site_partners').insert({
-      name: 'Nouveau partenaire',
-      subtitle: '',
-      website_url: '',
-      notes: '',
-      partnership_motive: '',
-      sort_order: (rows[rows.length - 1]?.sort_order ?? 0) + 1,
-      active: false,
-      published: false,
-    })
+    const { data: inserted, error: insErr } = await supabase
+      .from('site_partners')
+      .insert({
+        name: 'Nouveau partenaire',
+        subtitle: '',
+        website_url: '',
+        notes: '',
+        partnership_motive: '',
+        sort_order: (rows[rows.length - 1]?.sort_order ?? 0) + 1,
+        active: false,
+        published: false,
+      })
+      .select('id')
+      .single()
     if (insErr) {
       setError(insErr.message)
       return
     }
     setMessage('Partenaire créé.')
+    setEditingId(inserted?.id ?? null)
     load()
   }
 
   async function saveRow(row) {
     if (!supabase) return
+    setSavingId(row.id)
     const pub = Boolean(row.published)
     const { error: upErr } = await supabase
       .from('site_partners')
@@ -58,9 +66,12 @@ export function PartnersAdmin() {
       })
       .eq('id', row.id)
     if (upErr) {
+      setSavingId(null)
       setError(upErr.message)
       return
     }
+    setSavingId(null)
+    setEditingId(null)
     setMessage('Partenaire enregistré.')
     load()
   }
@@ -84,9 +95,9 @@ export function PartnersAdmin() {
   return (
     <section className="admin-section">
       <div className="admin-section__head">
-        <h2>Partenaires (page « Partenariats »)</h2>
+        <h2>Partenaires ({rows.length})</h2>
         <button type="button" className="btn btn--primary" onClick={addRow}>
-          Ajouter un partenaire
+          + Ajouter
         </button>
       </div>
       {message ? (
@@ -106,72 +117,110 @@ export function PartnersAdmin() {
         carte.
       </p>
       <div className="admin-stack">
-        {rows.map((row) => (
-          <div className="admin-card admin-card--tight" key={row.id}>
-            <div className="admin-grid">
-              <label className="admin-span-2">
-                Nom
-                <input value={row.name} onChange={(e) => updateLocal(row.id, { name: e.target.value })} />
-              </label>
-              <label className="admin-span-2">
-                Sous-titre (optionnel)
-                <input
-                  value={row.subtitle ?? ''}
-                  onChange={(e) => updateLocal(row.id, { subtitle: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Site web (URL)
-                <input
-                  value={row.website_url ?? ''}
-                  onChange={(e) => updateLocal(row.id, { website_url: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Notes (texte court sur la carte)
-                <textarea
-                  rows={2}
-                  value={row.notes ?? ''}
-                  onChange={(e) => updateLocal(row.id, { notes: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Motif du partenariat (visible sur le site)
-                <textarea
-                  rows={2}
-                  value={row.partnership_motive ?? ''}
-                  onChange={(e) => updateLocal(row.id, { partnership_motive: e.target.value })}
-                />
-              </label>
-              <label>
-                Ordre
-                <input
-                  type="number"
-                  value={row.sort_order}
-                  onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
-                />
-              </label>
-              <label className="admin-check">
-                <input
-                  type="checkbox"
-                  checked={Boolean(row.published ?? row.active)}
-                  onChange={(e) =>
-                    updateLocal(row.id, { published: e.target.checked, active: e.target.checked })
-                  }
-                />
-                Publié sur le site public
-              </label>
+        <div className="admin-compact-list">
+          {rows.map((row) => (
+            <article className="admin-compact-item" key={row.id}>
+              <div className="admin-compact-item__main">
+                <div className="admin-compact-item__avatar" aria-hidden="true">
+                  🤝
+                </div>
+                <div className="admin-compact-item__text">
+                  <h3>{row.name || 'Partenaire sans nom'}</h3>
+                  <p>{row.subtitle || 'Sans sous-titre'}</p>
+                  <p className={`admin-status-pill ${row.published ? 'is-live' : 'is-draft'}`}>
+                    {row.published ? 'Publié' : 'Brouillon'}
+                  </p>
+                </div>
+              </div>
+              <div className="admin-compact-item__actions">
+                <button
+                  type="button"
+                  className="btn btn--ghost"
+                  onClick={() => setEditingId((prev) => (prev === row.id ? null : row.id))}
+                >
+                  {editingId === row.id ? 'Fermer' : 'Editer'}
+                </button>
+                <button type="button" className="btn btn--outline" onClick={() => removeRow(row.id)}>
+                  Supprimer
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        {rows
+          .filter((row) => row.id === editingId)
+          .map((row) => (
+            <div className="admin-card admin-card--tight" key={`edit-${row.id}`}>
+              <div className="admin-grid">
+                <label className="admin-span-2">
+                  Nom
+                  <input value={row.name} onChange={(e) => updateLocal(row.id, { name: e.target.value })} />
+                </label>
+                <label className="admin-span-2">
+                  Sous-titre (optionnel)
+                  <input
+                    value={row.subtitle ?? ''}
+                    onChange={(e) => updateLocal(row.id, { subtitle: e.target.value })}
+                  />
+                </label>
+                <label className="admin-span-2">
+                  Site web (URL)
+                  <input
+                    value={row.website_url ?? ''}
+                    onChange={(e) => updateLocal(row.id, { website_url: e.target.value })}
+                  />
+                </label>
+                <label className="admin-span-2">
+                  Notes (texte court sur la carte)
+                  <textarea
+                    rows={2}
+                    value={row.notes ?? ''}
+                    onChange={(e) => updateLocal(row.id, { notes: e.target.value })}
+                  />
+                </label>
+                <label className="admin-span-2">
+                  Motif du partenariat (visible sur le site)
+                  <textarea
+                    rows={2}
+                    value={row.partnership_motive ?? ''}
+                    onChange={(e) => updateLocal(row.id, { partnership_motive: e.target.value })}
+                  />
+                </label>
+                <label>
+                  Ordre
+                  <input
+                    type="number"
+                    value={row.sort_order}
+                    onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
+                  />
+                </label>
+                <label className="admin-check">
+                  <input
+                    type="checkbox"
+                    checked={Boolean(row.published ?? row.active)}
+                    onChange={(e) =>
+                      updateLocal(row.id, { published: e.target.checked, active: e.target.checked })
+                    }
+                  />
+                  Publié sur le site public
+                </label>
+              </div>
+              <div className="admin-actions admin-actions--sticky">
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={() => saveRow(row)}
+                  disabled={savingId === row.id}
+                >
+                  {savingId === row.id ? 'Enregistrement…' : 'Enregistrer'}
+                </button>
+                <button type="button" className="btn btn--ghost" onClick={() => setEditingId(null)}>
+                  Fermer l’édition
+                </button>
+              </div>
             </div>
-            <div className="admin-actions admin-actions--sticky">
-              <button type="button" className="btn btn--primary" onClick={() => saveRow(row)}>
-                Enregistrer
-              </button>
-              <button type="button" className="btn btn--outline" onClick={() => removeRow(row.id)}>
-                Supprimer
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </section>
   )

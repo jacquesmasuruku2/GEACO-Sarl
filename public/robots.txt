@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Ne pas indexer les pages d'administration
+Disallow: /auth-admin
+Disallow: /auth-admin/
+
+# Remplacer le domaine par votre URL de production
+Sitemap: https://votre-domaine.com/sitemap.xml
