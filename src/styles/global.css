@@ -209,18 +209,9 @@ html.site-header-topbar-hidden .site-topbar {
   max-width: 100%;
   background: var(--color-bg);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-}
-
-/* Correctif Android/iframe sur page contact: conserver un header vraiment fixe */
-html.page-contact .site-header {
-  z-index: 1200;
+  z-index: 1400;
   transform: translateZ(0);
   backface-visibility: hidden;
-}
-
-html.page-contact .nav-toggle {
-  position: relative;
-  z-index: 1201;
 }
 
 .site-header__inner {
@@ -347,6 +338,8 @@ html.page-contact .nav-toggle {
     justify-content: center;
     font-size: 1.35rem;
     line-height: 1;
+    position: relative;
+    z-index: 1401;
   }
 
   .nav-desktop {
@@ -361,6 +354,9 @@ html.page-contact .nav-toggle {
       max(var(--space-md), env(safe-area-inset-right, 0px));
     border-bottom: 1px solid var(--color-border);
     background: var(--color-bg-muted);
+    max-height: calc(100dvh - var(--site-header-offset-compact));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .nav-mobile.is-open {

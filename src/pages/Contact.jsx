@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
@@ -15,13 +14,6 @@ export function Contact() {
   const { t } = useI18n()
   const [params] = useSearchParams()
   const merci = params.get('merci') === '1'
-
-  useEffect(() => {
-    document.documentElement.classList.add('page-contact')
-    return () => {
-      document.documentElement.classList.remove('page-contact')
-    }
-  }, [])
 
   return (
     <>
