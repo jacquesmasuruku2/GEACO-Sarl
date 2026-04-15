@@ -63,12 +63,29 @@ export function AuthAdmin() {
     e.preventDefault()
     setError('')
     setBusy(true)
-    const { error: signErr } = await supabase.auth.signInWithPassword({ email, password })
-    setBusy(false)
+    const normalizedEmail = email.trim().toLowerCase()
+    const { error: signErr } = await supabase.auth.signInWithPassword({
+      email: normalizedEmail,
+      password,
+    })
     if (signErr) {
+      setBusy(false)
       setError(signErr.message)
       return
     }
+    const {
+      data: { session: s },
+      error: sessErr,
+    } = await supabase.auth.getSession()
+    if (sessErr || !s) {
+      setBusy(false)
+      setError(
+        sessErr?.message ??
+          'Session non enregistrée. Vérifiez que les cookies / le stockage du navigateur ne sont pas bloqués, puis réessayez.',
+      )
+      return
+    }
+    setBusy(false)
     navigate('/auth-admin/panel', { replace: true })
   }
 

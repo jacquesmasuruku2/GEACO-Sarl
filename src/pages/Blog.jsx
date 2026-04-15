@@ -8,6 +8,8 @@ import { formatNavLabel } from '../lib/formatNavLabel'
 export function Blog() {
   const { t, locale } = useI18n()
   const { rows, loading } = useBlogPosts(locale)
+  const fallbackCover =
+    'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80'
 
   return (
     <>
@@ -30,25 +32,33 @@ export function Blog() {
           ) : rows.length === 0 ? (
             <p style={{ color: 'var(--color-text-muted)' }}>{t('blog.empty')}</p>
           ) : (
-            <div className="card-grid">
+            <div className="blog-cards-grid">
               {rows.map((post) => (
-                <article className="card" key={`${post.slug}-${locale}`}>
-                  <h2 style={{ fontSize: '1.15rem', color: 'var(--color-vinci-blue)' }}>
-                    <Link to={`/blog/${post.slug}`}>{post.title}</Link>
-                  </h2>
-                  {post.published_at ? (
-                    <p className="tag" style={{ display: 'inline-block', marginTop: '0.35rem' }}>
-                      {new Date(post.published_at).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
-                    </p>
-                  ) : null}
-                  {post.excerpt ? (
-                    <p style={{ marginTop: '0.75rem', color: 'var(--color-text-muted)' }}>{post.excerpt}</p>
-                  ) : null}
-                  <p style={{ marginTop: '1rem' }}>
-                    <Link className="btn btn--outline" to={`/blog/${post.slug}`}>
+                <article className="blog-list-card" key={`${post.slug}-${locale}`}>
+                  <Link className="blog-list-card__media" to={`/blog/${post.slug}`}>
+                    <img
+                      src={post.hero_image_url && String(post.hero_image_url).startsWith('http') ? post.hero_image_url : fallbackCover}
+                      alt={post.title}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </Link>
+                  <div className="blog-list-card__body">
+                    <h2 className="blog-list-card__title">
+                      <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+                    </h2>
+                    {post.published_at ? (
+                      <p className="blog-list-card__meta">
+                        {new Date(post.published_at).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
+                      </p>
+                    ) : (
+                      <p className="blog-list-card__meta">Brouillon</p>
+                    )}
+                    {post.excerpt ? <p className="blog-list-card__excerpt">{post.excerpt}</p> : null}
+                    <Link className="btn btn--dark blog-list-card__cta" to={`/blog/${post.slug}`}>
                       {t('blog.readMore')}
                     </Link>
-                  </p>
+                  </div>
                 </article>
               ))}
             </div>

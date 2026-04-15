@@ -47,6 +47,11 @@ export function Partnerships() {
                     <h3 style={{ fontSize: '1.1rem', color: 'var(--color-vinci-blue)' }}>{p.name}</h3>
                     {p.subtitle ? <p className="tag">{p.subtitle}</p> : null}
                     {p.notes ? <p style={{ marginTop: '0.75rem' }}>{p.notes}</p> : null}
+                    {p.partnership_motive ? (
+                      <p style={{ marginTop: '0.75rem' }}>
+                        <strong>Motif du partenariat :</strong> {p.partnership_motive}
+                      </p>
+                    ) : null}
                     {p.website_url ? (
                       <p style={{ marginTop: '0.75rem' }}>
                         <a href={p.website_url} target="_blank" rel="noreferrer noopener">

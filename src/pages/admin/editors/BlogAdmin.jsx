@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
+import { RichTextTextarea } from '../../../components/admin/RichTextTextarea'
+import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 
 export function BlogAdmin() {
   const [rows, setRows] = useState([])
@@ -90,7 +92,7 @@ export function BlogAdmin() {
   return (
     <section className="admin-section">
       <div className="admin-section__head">
-        <h2>Blog (pages /blog)</h2>
+        <h2>Blog (pages /blog) 📓</h2>
         <button type="button" className="btn btn--primary" onClick={addRow}>
           Ajouter un article
         </button>
@@ -99,87 +101,96 @@ export function BlogAdmin() {
       {error ? <p className="admin-error">{error}</p> : null}
       <p className="admin-muted">
         Renseignez un couple unique <strong>slug + langue</strong>. Cochez « Publié » pour afficher
-        l’article sur le site. La date de publication peut être ajustée manuellement.
+        l’article sur le site. Utilisez la barre d’outils pour un formatage moderne (titres, gras,
+        listes, liens).
       </p>
       <div className="admin-stack">
         {rows.map((row) => (
           <div className="admin-card admin-card--tight" key={row.id}>
-            <div className="admin-grid">
-              <label>
-                Slug (URL)
-                <input value={row.slug} onChange={(e) => updateLocal(row.id, { slug: e.target.value })} />
-              </label>
-              <label>
-                Langue
-                <select
-                  value={row.locale}
-                  onChange={(e) => updateLocal(row.id, { locale: e.target.value })}
-                >
-                  <option value="fr">FR</option>
-                  <option value="en">EN</option>
-                </select>
-              </label>
-              <label className="admin-span-2">
-                Titre
-                <input value={row.title} onChange={(e) => updateLocal(row.id, { title: e.target.value })} />
-              </label>
-              <label className="admin-span-2">
-                Chapô / extrait
-                <textarea
-                  rows={2}
-                  value={row.excerpt ?? ''}
-                  onChange={(e) => updateLocal(row.id, { excerpt: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Corps (texte — paragraphes séparés par une ligne vide)
-                <textarea
-                  rows={8}
-                  value={row.body ?? ''}
-                  onChange={(e) => updateLocal(row.id, { body: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Image (URL optionnelle)
-                <input
-                  value={row.hero_image_url ?? ''}
-                  onChange={(e) => updateLocal(row.id, { hero_image_url: e.target.value })}
-                />
-              </label>
-              <label>
-                Ordre
-                <input
-                  type="number"
-                  value={row.sort_order}
-                  onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
-                />
-              </label>
-              <label>
-                Date publication (ISO, si publié)
-                <input
-                  type="datetime-local"
-                  value={
-                    row.published_at
-                      ? String(row.published_at).slice(0, 16)
-                      : ''
-                  }
-                  onChange={(e) =>
-                    updateLocal(row.id, {
-                      published_at: e.target.value ? new Date(e.target.value).toISOString() : null,
-                    })
-                  }
-                />
-              </label>
-              <label className="admin-check admin-span-2">
-                <input
-                  type="checkbox"
-                  checked={row.published}
-                  onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
-                />
-                Publié sur le site
-              </label>
+            <div className="cms-record">
+              <div className="cms-record__main">
+                <div className="admin-grid">
+                  <label className="admin-span-2">
+                    Titre
+                    <input value={row.title} onChange={(e) => updateLocal(row.id, { title: e.target.value })} />
+                  </label>
+                  <label className="admin-span-2">
+                    Chapô / extrait
+                    <textarea
+                      rows={2}
+                      value={row.excerpt ?? ''}
+                      onChange={(e) => updateLocal(row.id, { excerpt: e.target.value })}
+                    />
+                  </label>
+                  <RichTextTextarea
+                    label="Corps de l’article"
+                    rows={12}
+                    storageKey={`blog:${row.id}:body`}
+                    value={row.body ?? ''}
+                    onChange={(e) => updateLocal(row.id, { body: e.target.value })}
+                  />
+                  <ImagePickerField
+                    label="Image de couverture de l’article"
+                    value={row.hero_image_url ?? ''}
+                    onChange={(e) => updateLocal(row.id, { hero_image_url: e.target.value })}
+                    storageFolder="blog"
+                    previewAlt={`Couverture de ${row.title ?? 'article'}`}
+                    icon="📓"
+                  />
+                </div>
+              </div>
+              <aside className="cms-record__side">
+                <div className="admin-grid">
+                  <label className="admin-span-2">
+                    Slug (URL)
+                    <input value={row.slug} onChange={(e) => updateLocal(row.id, { slug: e.target.value })} />
+                  </label>
+                  <label>
+                    Langue
+                    <select
+                      value={row.locale}
+                      onChange={(e) => updateLocal(row.id, { locale: e.target.value })}
+                    >
+                      <option value="fr">FR</option>
+                      <option value="en">EN</option>
+                    </select>
+                  </label>
+                  <label>
+                    Ordre
+                    <input
+                      type="number"
+                      value={row.sort_order}
+                      onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
+                    />
+                  </label>
+                  <label className="admin-span-2">
+                    Date publication (ISO, si publié)
+                    <input
+                      type="datetime-local"
+                      value={
+                        row.published_at
+                          ? String(row.published_at).slice(0, 16)
+                          : ''
+                      }
+                      onChange={(e) =>
+                        updateLocal(row.id, {
+                          published_at: e.target.value ? new Date(e.target.value).toISOString() : null,
+                        })
+                      }
+                    />
+                  </label>
+                  <label className="admin-check admin-span-2">
+                    <input
+                      type="checkbox"
+                      checked={row.published}
+                      onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
+                    />
+                    Publié sur le site
+                  </label>
+                </div>
+              </aside>
             </div>
-            <div className="admin-actions">
+            <div className="admin-actions admin-actions--sticky">
               <button type="button" className="btn btn--primary" onClick={() => saveRow(row)}>
                 Enregistrer
               </button>

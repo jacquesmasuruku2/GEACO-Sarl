@@ -28,6 +28,7 @@ export function PartnersAdmin() {
       subtitle: '',
       website_url: '',
       notes: '',
+      partnership_motive: '',
       sort_order: (rows[rows.length - 1]?.sort_order ?? 0) + 1,
       active: false,
       published: false,
@@ -50,6 +51,7 @@ export function PartnersAdmin() {
         subtitle: row.subtitle || null,
         website_url: row.website_url || null,
         notes: row.notes || null,
+        partnership_motive: row.partnership_motive || null,
         sort_order: Number(row.sort_order) || 0,
         published: pub,
         active: pub,
@@ -125,6 +127,14 @@ export function PartnersAdmin() {
                   onChange={(e) => updateLocal(row.id, { notes: e.target.value })}
                 />
               </label>
+              <label className="admin-span-2">
+                Motif du partenariat (visible sur le site)
+                <textarea
+                  rows={2}
+                  value={row.partnership_motive ?? ''}
+                  onChange={(e) => updateLocal(row.id, { partnership_motive: e.target.value })}
+                />
+              </label>
               <label>
                 Ordre
                 <input
@@ -144,7 +154,7 @@ export function PartnersAdmin() {
                 Publié sur le site public
               </label>
             </div>
-            <div className="admin-actions">
+            <div className="admin-actions admin-actions--sticky">
               <button type="button" className="btn btn--primary" onClick={() => saveRow(row)}>
                 Enregistrer
               </button>

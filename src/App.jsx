@@ -15,6 +15,7 @@ import { BlogPost } from './pages/BlogPost'
 import { Personnel } from './pages/Personnel'
 import { AuthAdmin } from './pages/admin/AuthAdmin'
 import { AdminPanel } from './pages/admin/AdminPanel'
+import { NotFound } from './pages/NotFound'
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/partenariats" element={<Partnerships />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/mentions-legales" element={<Legal />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </>

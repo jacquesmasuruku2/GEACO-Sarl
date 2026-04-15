@@ -58,7 +58,7 @@ export function Header() {
           <span>
             <a href="mailto:geacosarl@gmail.com">geacosarl@gmail.com</a>
             {' · '}
-            <a href="tel:+243808368955">+243 808 368 955</a>
+            <a href="tel:+243836895855">+243836895855</a>
           </span>
         </div>
       </div>

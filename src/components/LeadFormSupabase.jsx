@@ -12,7 +12,7 @@ function trimOrNull(v) {
 }
 
 /**
- * Formulaire contact ou partenariat : enregistrement dans `public.site_lead_messages`.
+ * Contact → `public.site_lead_messages` ; partenariat → `public.site_partnership_messages`.
  * @param {{ source: 'contact' | 'partnership', redirectTo: string }} props
  */
 export function LeadFormSupabase({ source, redirectTo }) {
@@ -84,17 +84,28 @@ export function LeadFormSupabase({ source, redirectTo }) {
     }
 
     setBusy(true)
-    const row = {
-      source,
-      locale: loc,
-      subject: subj,
-      full_name: name,
-      organization: org,
-      email: mail,
-      phone: tel,
-      message: msg,
-    }
-    const { error: insErr } = await supabase.from('site_lead_messages').insert(row)
+    const table = source === 'partnership' ? 'site_partnership_messages' : 'site_lead_messages'
+    const row =
+      source === 'partnership'
+        ? {
+            locale: loc,
+            subject: subj,
+            full_name: name,
+            organization: org,
+            email: mail,
+            message: msg,
+          }
+        : {
+            source: 'contact',
+            locale: loc,
+            subject: subj,
+            full_name: name,
+            organization: org,
+            email: mail,
+            phone: tel,
+            message: msg,
+          }
+    const { error: insErr } = await supabase.from(table).insert(row)
     setBusy(false)
     if (insErr) {
       setError(insErr.message || t('forms.formErrorSend'))

@@ -3,6 +3,7 @@ import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { useSiteProjects } from '../hooks/useSiteProjects'
+import { RichTextContent } from '../components/RichTextContent'
 
 export function Projects() {
   const { t } = useI18n()
@@ -47,11 +48,15 @@ export function Projects() {
               <article className="card" key={project.key}>
                 <span className="tag">{project.tag}</span>
                 <h2 style={{ fontSize: '1.2rem' }}>{project.title}</h2>
-                <p>{project.desc}</p>
-                <p>
-                  <strong style={{ color: 'var(--color-vinci-blue)' }}>{t('projects.impactLabel')} :</strong>{' '}
-                  {project.impact}
-                </p>
+                <RichTextContent value={project.desc} className="projects-rich-text" />
+                {project.impact ? (
+                  <>
+                    <p className="projects-impact-label">
+                      <strong style={{ color: 'var(--color-vinci-blue)' }}>{t('projects.impactLabel')} :</strong>
+                    </p>
+                    <RichTextContent value={project.impact} className="projects-rich-text" />
+                  </>
+                ) : null}
               </article>
             ))}
           </div>

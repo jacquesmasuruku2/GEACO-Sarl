@@ -5,6 +5,7 @@ import { PageHero } from '../components/PageHero'
 import { useBlogPost } from '../hooks/useBlogPost'
 import { formatNavLabel } from '../lib/formatNavLabel'
 import { BlogShareBar } from '../components/BlogShareBar'
+import { RichTextContent } from '../components/RichTextContent'
 
 export function BlogPost() {
   const { slug } = useParams()
@@ -28,8 +29,6 @@ export function BlogPost() {
   if (!row) {
     return <Navigate to="/blog" replace />
   }
-
-  const paragraphs = (row.body || '').split(/\n\n+/).filter(Boolean)
 
   return (
     <>
@@ -57,11 +56,7 @@ export function BlogPost() {
               {new Date(row.published_at).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
             </p>
           ) : null}
-          {paragraphs.map((block, i) => (
-            <p key={i} style={{ marginBottom: '1rem', lineHeight: 1.65 }}>
-              {block}
-            </p>
-          ))}
+          <RichTextContent value={row.body || ''} />
           <BlogShareBar articleTitle={row.title} />
           <p style={{ marginTop: '2rem' }}>
             <Link className="btn btn--outline" to="/blog">

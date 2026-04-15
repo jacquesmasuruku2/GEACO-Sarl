@@ -182,6 +182,28 @@ export const messages = {
         },
       ],
     },
+    notFound: {
+      metaTitle: 'Page introuvable — GEACO SARL',
+      metaDesc:
+        'Cette adresse ne correspond à aucune page du site. Retournez à l’accueil ou consultez nos rubriques principales.',
+      breadcrumb: 'Erreur 404',
+      title: 'Page introuvable',
+      lead:
+        'L’adresse que vous avez saisie ne correspond à aucune page de notre site. Elle a peut-être été déplacée ou le lien est incomplet.',
+      pathLabel: 'Chemin demandé',
+      hint: 'Vérifiez l’orthographe de l’URL ou poursuivez la visite depuis les accès ci-dessous.',
+      homeCta: 'Retour à l’accueil',
+      contactCta: 'Nous contacter',
+      quickTitle: 'Poursuivre sur le site',
+      tileServicesTitle: 'Services',
+      tileServicesDesc: 'Agronomie, génie civil, hydraulique rurale et filières.',
+      tileProjectsTitle: 'Projets',
+      tileProjectsDesc: 'Réalisations et références représentatives.',
+      tileBlogTitle: 'Blog',
+      tileBlogDesc: 'Actualités, articles et regards sur le terrain.',
+      tilePartnersTitle: 'Partenariats',
+      tilePartnersDesc: 'Proposer une collaboration avec GEACO.',
+    },
     services: {
       metaTitle: 'Services — GEACO SARL',
       metaDesc:
@@ -765,6 +787,28 @@ export const messages = {
           a: 'Yes, as part of our assignments: transferring practices to local technicians, farmers and partners.',
         },
       ],
+    },
+    notFound: {
+      metaTitle: 'Page not found — GEACO SARL',
+      metaDesc:
+        'This URL does not match any page on the site. Return home or browse our main sections.',
+      breadcrumb: '404 error',
+      title: 'Page not found',
+      lead:
+        'The address you entered does not match any page on our site. It may have moved or the link may be incomplete.',
+      pathLabel: 'Requested path',
+      hint: 'Check the spelling of the URL or continue from the shortcuts below.',
+      homeCta: 'Back to home',
+      contactCta: 'Contact us',
+      quickTitle: 'Continue on the site',
+      tileServicesTitle: 'Services',
+      tileServicesDesc: 'Agronomy, civil engineering, rural hydraulics and value chains.',
+      tileProjectsTitle: 'Projects',
+      tileProjectsDesc: 'Selected works and field references.',
+      tileBlogTitle: 'Blog',
+      tileBlogDesc: 'News, articles and field perspectives.',
+      tilePartnersTitle: 'Partnerships',
+      tilePartnersDesc: 'Explore collaboration with GEACO.',
     },
     services: {
       metaTitle: 'Services — GEACO SARL',

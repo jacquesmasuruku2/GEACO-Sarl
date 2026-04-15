@@ -16,7 +16,7 @@ export function useSitePartners() {
     setLoading(true)
     supabase
       .from('site_partners')
-      .select('id,name,subtitle,website_url,notes,sort_order')
+      .select('id,name,subtitle,website_url,notes,partnership_motive,sort_order')
       .eq('published', true)
       .order('sort_order', { ascending: true })
       .then(({ data, error: qErr }) => {

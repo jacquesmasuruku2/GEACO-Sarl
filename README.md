@@ -28,7 +28,7 @@ Le fichier `vercel.json` renvoie les routes SPA vers `index.html` **sans** inter
 
 ### Formulaires Contact & Partenariats
 
-Les envois passent par **Supabase** (table `public.site_lead_messages`, migration `supabase/migrations/005_site_lead_messages.sql`). Exécuter cette migration sur le projet Supabase après les migrations `001`–`004`. Les messages sont visibles en SQL ou pour une future vue admin (policy `SELECT` réservée aux comptes `app_admins`).
+Les envois passent par **Supabase** : **contact** dans `public.site_lead_messages` (migration `005_site_lead_messages.sql`), **partenariat** dans `public.site_partnership_messages` (migration `006_site_partnership_messages.sql`). Exécuter `005` puis `006` après `001`–`004`. Les messages sont visibles en SQL ou pour une future vue admin (policies `SELECT` réservées aux comptes `app_admins`).
 
 ### Page blanche ou « rien » sur mobile / ordinateur
 

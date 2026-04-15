@@ -6,7 +6,15 @@ const anonKey = String(import.meta.env.VITE_SUPABASE_ANON_KEY ?? '').trim()
 
 export const isSupabaseConfigured = Boolean(url && anonKey)
 
-export const supabase = isSupabaseConfigured ? createClient(url, anonKey) : null
+export const supabase = isSupabaseConfigured
+  ? createClient(url, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
+  : null
 
 if (import.meta.env.DEV && !isSupabaseConfigured) {
   // eslint-disable-next-line no-console

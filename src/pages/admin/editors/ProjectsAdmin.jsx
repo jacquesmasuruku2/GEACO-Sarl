@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
+import { RichTextTextarea } from '../../../components/admin/RichTextTextarea'
 
 function slugify(title) {
   return title
@@ -107,64 +108,70 @@ export function ProjectsAdmin() {
       <div className="admin-stack">
         {rows.map((row) => (
           <div className="admin-card admin-card--tight" key={row.id}>
-            <div className="admin-grid">
-              <label>
-                Slug
-                <input
-                  value={row.slug}
-                  onChange={(e) => updateLocal(row.id, { slug: e.target.value })}
-                  onBlur={() => {
-                    if (!row.slug.trim() && row.title) {
-                      updateLocal(row.id, { slug: slugify(row.title) })
-                    }
-                  }}
-                />
-              </label>
-              <label>
-                Ordre
-                <input
-                  type="number"
-                  value={row.sort_order}
-                  onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Titre
-                <input
-                  value={row.title}
-                  onChange={(e) => updateLocal(row.id, { title: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Étiquette (ex. Hydraulique)
-                <input value={row.tag} onChange={(e) => updateLocal(row.id, { tag: e.target.value })} />
-              </label>
-              <label className="admin-span-2">
-                Description
-                <textarea
-                  rows={3}
-                  value={row.description}
-                  onChange={(e) => updateLocal(row.id, { description: e.target.value })}
-                />
-              </label>
-              <label className="admin-span-2">
-                Impact
-                <textarea
-                  rows={2}
-                  value={row.impact}
-                  onChange={(e) => updateLocal(row.id, { impact: e.target.value })}
-                />
-              </label>
-              <label className="admin-check">
-                <input
-                  type="checkbox"
-                  checked={row.published}
-                  onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
-                />
-                Publié sur le site
-              </label>
+            <div className="cms-record">
+              <div className="cms-record__main">
+                <div className="admin-grid">
+                  <label className="admin-span-2">
+                    Titre
+                    <input
+                      value={row.title}
+                      onChange={(e) => updateLocal(row.id, { title: e.target.value })}
+                    />
+                  </label>
+                  <label className="admin-span-2">
+                    Étiquette (ex. Hydraulique)
+                    <input value={row.tag} onChange={(e) => updateLocal(row.id, { tag: e.target.value })} />
+                  </label>
+                  <RichTextTextarea
+                    label="Description"
+                    rows={8}
+                    storageKey={`project:${row.id}:description`}
+                    value={row.description}
+                    onChange={(e) => updateLocal(row.id, { description: e.target.value })}
+                  />
+                  <RichTextTextarea
+                    label="Impact"
+                    rows={6}
+                    storageKey={`project:${row.id}:impact`}
+                    value={row.impact}
+                    onChange={(e) => updateLocal(row.id, { impact: e.target.value })}
+                  />
+                </div>
+              </div>
+              <aside className="cms-record__side">
+                <div className="admin-grid">
+                  <label className="admin-span-2">
+                    Slug
+                    <input
+                      value={row.slug}
+                      onChange={(e) => updateLocal(row.id, { slug: e.target.value })}
+                      onBlur={() => {
+                        if (!row.slug.trim() && row.title) {
+                          updateLocal(row.id, { slug: slugify(row.title) })
+                        }
+                      }}
+                    />
+                  </label>
+                  <label className="admin-span-2">
+                    Ordre
+                    <input
+                      type="number"
+                      value={row.sort_order}
+                      onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
+                    />
+                  </label>
+                  <label className="admin-check admin-span-2">
+                    <input
+                      type="checkbox"
+                      checked={row.published}
+                      onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
+                    />
+                    Publié sur le site
+                  </label>
+                </div>
+              </aside>
             </div>
-            <div className="admin-actions">
+            <div className="admin-actions admin-actions--sticky">
               <button type="button" className="btn btn--primary" onClick={() => saveRow(row)}>
                 Enregistrer
               </button>
