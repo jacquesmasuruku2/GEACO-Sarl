@@ -104,11 +104,11 @@ export function BlogPost() {
     loadEngagement(row.id)
   }, [row?.id, user?.id])
 
-  async function loginWithGoogle() {
+  async function loginWithFacebook() {
     if (!supabase) return
     setErrorMsg('')
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: 'facebook',
       options: { redirectTo: window.location.href },
     })
     if (error) setErrorMsg(error.message)
@@ -222,7 +222,7 @@ export function BlogPost() {
             {!user ? (
               <div className="blog-member-login">
                 <p className="admin-muted">{t('blog.memberPrompt')}</p>
-                <button type="button" className="btn btn--primary" onClick={loginWithGoogle}>
+                <button type="button" className="btn btn--primary" onClick={loginWithFacebook}>
                   {t('blog.connectGoogle')}
                 </button>
               </div>

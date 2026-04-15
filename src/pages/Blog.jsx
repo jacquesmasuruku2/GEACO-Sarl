@@ -30,10 +30,10 @@ export function Blog() {
     }
   }, [])
 
-  async function loginWithGoogle() {
+  async function loginWithFacebook() {
     if (!supabase) return
     await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: 'facebook',
       options: { redirectTo: window.location.href },
     })
   }
@@ -59,7 +59,7 @@ export function Blog() {
               <p className="admin-muted" style={{ marginTop: 0 }}>
                 {t('blog.memberPrompt')}
               </p>
-              <button type="button" className="btn btn--primary" onClick={loginWithGoogle}>
+              <button type="button" className="btn btn--primary" onClick={loginWithFacebook}>
                 {t('blog.connectGoogle')}
               </button>
             </div>
