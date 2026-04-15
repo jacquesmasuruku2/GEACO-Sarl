@@ -65,7 +65,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
     const name = trimOrNull(fullName)
     const mail = trimOrNull(email)
     const msg = trimOrNull(message)
-    const org = source === 'partnership' ? trimOrNull(organization) : null
+    const org = trimOrNull(organization)
     const tel = source === 'contact' ? trimOrNull(phone) : null
 
     if (!subj || !name || !mail || !msg) {
@@ -161,6 +161,17 @@ export function LeadFormSupabase({ source, redirectTo }) {
             required
             maxLength={200}
             autoComplete="name"
+          />
+
+          <label htmlFor="lead-org-contact">{t('contact.formOrganization')}</label>
+          <input
+            id="lead-org-contact"
+            type="text"
+            value={organization}
+            onChange={(e) => setOrganization(e.target.value)}
+            maxLength={300}
+            autoComplete="organization"
+            placeholder={t('contact.formOrganizationPlaceholder')}
           />
 
           <label htmlFor="lead-email">{t('contact.formEmail')}</label>
