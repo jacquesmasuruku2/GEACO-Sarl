@@ -28,6 +28,8 @@ export function LeadFormSupabase({ source, redirectTo }) {
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
   const [gotcha, setGotcha] = useState('')
+  const subjectOptions = source === 'contact' ? t('contact.subjectOptions') : []
+  const safeSubjectOptions = Array.isArray(subjectOptions) ? subjectOptions : []
 
   function clearForm() {
     setSubject('')
@@ -134,15 +136,21 @@ export function LeadFormSupabase({ source, redirectTo }) {
       {source === 'contact' ? (
         <>
           <label htmlFor="lead-subject">{t('contact.formSubject')}</label>
-          <input
+          <select
             id="lead-subject"
-            type="text"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
             required
-            maxLength={400}
-            autoComplete="off"
-          />
+          >
+            <option value="" disabled>
+              {t('contact.formSubjectPlaceholder')}
+            </option>
+            {safeSubjectOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
 
           <label htmlFor="lead-name">{t('contact.formName')}</label>
           <input
