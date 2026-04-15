@@ -16,7 +16,7 @@ export function useSiteProjects() {
     setLoading(true)
     supabase
       .from('site_projects')
-      .select('slug,title,tag,description,impact,sort_order')
+      .select('slug,title,tag,project_category,image_url,description,impact,sort_order')
       .eq('published', true)
       .order('sort_order', { ascending: true })
       .then(({ data, error: qErr }) => {

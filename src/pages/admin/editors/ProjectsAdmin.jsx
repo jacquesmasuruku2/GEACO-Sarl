@@ -1,6 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
 import { RichTextTextarea } from '../../../components/admin/RichTextTextarea'
+import { ImagePickerField } from '../../../components/admin/ImagePickerField'
+
+const PROJECT_CATEGORY_OPTIONS = [
+  { value: 'construction', label: 'Projet de construction' },
+  { value: 'agricole', label: 'Projet agricole' },
+]
+
+function projectCategoryLabel(value) {
+  return PROJECT_CATEGORY_OPTIONS.find((option) => option.value === value)?.label ?? 'Projet de construction'
+}
 
 function slugify(title) {
   return title
@@ -44,6 +54,8 @@ export function ProjectsAdmin() {
         slug,
         title: 'Nouveau projet',
         tag: 'Tag',
+        project_category: 'construction',
+        image_url: '',
         description: '',
         impact: '',
         sort_order: (rows[rows.length - 1]?.sort_order ?? 0) + 1,
@@ -69,6 +81,8 @@ export function ProjectsAdmin() {
         slug: row.slug,
         title: row.title,
         tag: row.tag,
+        project_category: row.project_category === 'agricole' ? 'agricole' : 'construction',
+        image_url: row.image_url || null,
         description: row.description,
         impact: row.impact,
         sort_order: Number(row.sort_order) || 0,
@@ -130,11 +144,12 @@ export function ProjectsAdmin() {
             <article className="admin-compact-item" key={row.id}>
               <div className="admin-compact-item__main">
                 <div className="admin-compact-item__avatar" aria-hidden="true">
-                  PJ
+                  {String(row.image_url ?? '').trim() ? <img src={String(row.image_url).trim()} alt="" /> : 'PJ'}
                 </div>
                 <div className="admin-compact-item__text">
                   <h3>{row.title || 'Projet sans titre'}</h3>
                   <p>{row.tag || 'Sans étiquette'}</p>
+                  <p>{projectCategoryLabel(row.project_category)}</p>
                   <p className={`admin-status-pill ${row.published ? 'is-live' : 'is-draft'}`}>
                     {row.published ? 'Publié' : 'Brouillon'}
                   </p>
@@ -174,6 +189,28 @@ export function ProjectsAdmin() {
                       Étiquette (ex. Hydraulique)
                       <input value={row.tag} onChange={(e) => updateLocal(row.id, { tag: e.target.value })} />
                     </label>
+                    <label className="admin-span-2">
+                      Catégorie de projet
+                      <select
+                        value={row.project_category ?? 'construction'}
+                        onChange={(e) => updateLocal(row.id, { project_category: e.target.value })}
+                      >
+                        {PROJECT_CATEGORY_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <ImagePickerField
+                      label="Photo du projet"
+                      value={row.image_url ?? ''}
+                      onChange={(e) => updateLocal(row.id, { image_url: e.target.value })}
+                      storageFolder="projects"
+                      previewAlt={`Photo de ${row.title ?? 'projet'}`}
+                      icon="PJ"
+                      help="Ajoutez une photo de couverture pour la carte du projet."
+                    />
                     <RichTextTextarea
                       label="Description"
                       rows={8}

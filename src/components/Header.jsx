@@ -9,7 +9,6 @@ const mainLinksBeforeServices = [
 ]
 
 const mainLinksAfterServices = [
-  { to: '/projets', key: 'nav.projects', end: false },
   { to: '/blog', key: 'nav.blog', end: false },
   { to: '/galerie', key: 'nav.gallery', end: false },
   { to: '/contact', key: 'nav.contact', end: false },
@@ -22,6 +21,7 @@ export function Header() {
   const { t, locale, setLocale } = useI18n()
   const [open, setOpen] = useState(false)
   const [mobileAboutOpen, setMobileAboutOpen] = useState(false)
+  const [mobileProjectsOpen, setMobileProjectsOpen] = useState(false)
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
   const location = useLocation()
   const aboutActive =
@@ -30,6 +30,7 @@ export function Header() {
     location.pathname.startsWith('/personnel') ||
     location.pathname.startsWith('/partenariats') ||
     location.pathname.startsWith('/services')
+  const projectsActive = location.pathname.startsWith('/projets')
 
   useLayoutEffect(() => {
     const sync = () => {
@@ -52,6 +53,7 @@ export function Header() {
   const closeAll = () => {
     setOpen(false)
     setMobileAboutOpen(false)
+    setMobileProjectsOpen(false)
     setMobileServicesOpen(false)
   }
 
@@ -121,6 +123,26 @@ export function Header() {
                   ))}
                 </div>
               </div>
+            </div>
+          </div>
+
+          <div className={`nav-dropdown${projectsActive ? ' nav-dropdown--active' : ''}`}>
+            <NavLink className="nav-dropdown__trigger" to="/projets" end={false}>
+              {navLabel('nav.projects')}
+              <span className="nav-dropdown__caret" aria-hidden="true">
+                ▾
+              </span>
+            </NavLink>
+            <div className="nav-dropdown__panel" role="menu">
+              <Link className="nav-dropdown__link" to="/projets" role="menuitem">
+                {navLabel('nav.projects')}
+              </Link>
+              <Link className="nav-dropdown__link" to="/projets/construction" role="menuitem">
+                {navLabel('nav.projectsConstruction')}
+              </Link>
+              <Link className="nav-dropdown__link" to="/projets/agricoles" role="menuitem">
+                {navLabel('nav.projectsAgriculture')}
+              </Link>
             </div>
           </div>
 
@@ -205,6 +227,30 @@ export function Header() {
                   </div>
                 ) : null}
               </div>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="nav-mobile__group">
+          <button
+            type="button"
+            className="nav-mobile__group-toggle"
+            aria-expanded={mobileProjectsOpen}
+            onClick={() => setMobileProjectsOpen((v) => !v)}
+          >
+            {navLabel('nav.projects')} {mobileProjectsOpen ? '▴' : '▾'}
+          </button>
+          {mobileProjectsOpen ? (
+            <div className="nav-mobile__sub">
+              <NavLink to="/projets" onClick={closeAll}>
+                {navLabel('nav.projects')}
+              </NavLink>
+              <NavLink to="/projets/construction" onClick={closeAll}>
+                {navLabel('nav.projectsConstruction')}
+              </NavLink>
+              <NavLink to="/projets/agricoles" onClick={closeAll}>
+                {navLabel('nav.projectsAgriculture')}
+              </NavLink>
             </div>
           ) : null}
         </div>
