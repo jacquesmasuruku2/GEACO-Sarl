@@ -11,9 +11,7 @@ function isPhotoUrl(url) {
 
 export function Personnel() {
   const { t, locale } = useI18n()
-  const pillars = t('personnel.pillars')
   const staffGroups = t('personnel.staffGroups')
-  const pillarsList = Array.isArray(pillars) ? pillars : []
   const fallbackGroups = Array.isArray(staffGroups) ? staffGroups : []
   const { groups: dbGroups, loading, error: personnelError } = useSitePersonnel(locale)
 
@@ -70,24 +68,12 @@ export function Personnel() {
         heroImage="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1800&q=80"
       />
 
-      <section className="section">
+      <section className="section personnel-showcase">
         <div className="container">
-          <p style={{ maxWidth: 'var(--max-text)', color: 'var(--color-text-muted)' }}>{t('personnel.intro')}</p>
-
-          <h2 className="section__title" style={{ marginTop: '2rem' }}>
-            {t('personnel.pillarsTitle')}
-          </h2>
-          <ul style={{ margin: 0, paddingLeft: '1.1rem', maxWidth: 'var(--max-text)' }}>
-            {pillarsList.map((line) => (
-              <li key={line} style={{ marginBottom: '0.45rem', color: 'var(--color-text-muted)' }}>
-                {line}
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="section__title" style={{ marginTop: '2.5rem' }}>
-            {t('personnel.staffTitle')}
-          </h2>
+          <header className="personnel-showcase__head">
+            <h2 className="personnel-showcase__title">{t('personnel.expertsTitle')}</h2>
+            <p className="personnel-showcase__lead">{t('personnel.expertsLead')}</p>
+          </header>
 
           {loading ? (
             <p style={{ color: 'var(--color-text-muted)' }}>{t('personnel.loadingStaff')}</p>
@@ -102,9 +88,9 @@ export function Personnel() {
               {displayGroups.map((group) => (
                 <div className="personnel__group" key={group.key}>
                   <h3 className="personnel__group-title">{group.title}</h3>
-                  <div className="card-grid">
+                  <div className="personnel-team-grid">
                     {group.members.map((member) => (
-                      <article className="card personnel-card" key={member.key}>
+                      <article className="personnel-card personnel-card--modern" key={member.key}>
                         {isPhotoUrl(member.photo_url) ? (
                           <div className="personnel-card__media">
                             <img
@@ -113,20 +99,21 @@ export function Personnel() {
                               loading="lazy"
                               decoding="async"
                             />
+                            <PersonnelCardLinks
+                              email={member.email}
+                              facebookUrl={member.facebook_url}
+                              linkedinUrl={member.linkedin_url}
+                              labels={linkLabels}
+                              className="personnel-card__links--overlay"
+                            />
                           </div>
                         ) : null}
                         <div className="personnel-card__body">
                           <h3 className="personnel-card__name">{member.name}</h3>
                           <p className="personnel-card__role">{member.role}</p>
                           {member.focus ? <p className="personnel-card__focus">{member.focus}</p> : null}
-                          <p className="personnel-card__bio">{member.bio}</p>
+                          {member.bio ? <p className="personnel-card__bio">{member.bio}</p> : null}
                         </div>
-                        <PersonnelCardLinks
-                          email={member.email}
-                          facebookUrl={member.facebook_url}
-                          linkedinUrl={member.linkedin_url}
-                          labels={linkLabels}
-                        />
                       </article>
                     ))}
                   </div>

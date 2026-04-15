@@ -15,7 +15,7 @@ export const messages = {
     nav: {
       home: 'accueil',
       about: 'à propos',
-      personnel: 'personnel',
+      personnel: 'notre equipe',
       services: 'services',
       projects: 'projets',
       blog: 'blog',
@@ -488,9 +488,11 @@ export const messages = {
       untitled: 'Sans titre',
     },
     personnel: {
-      metaTitle: 'Personnel — GEACO SARL',
+      metaTitle: 'Notre Equipe — GEACO SARL',
       metaDesc: 'Organisation, compétences et culture projet de l’équipe GEACO.',
-      title: 'Personnel',
+      title: 'Notre Equipe',
+      expertsTitle: 'NOTRE EQUIPE D’EXPERTS',
+      expertsLead: 'Une equipe passionnee, dediee a l’innovation et a la reussite de vos projets.',
       lead: 'Une structure agile qui associe bureau d’études, encadrement terrain et pilotage de projets intégrés.',
       intro:
         'GEACO SARL s’appuie sur des profils complémentaires — agronomie, génie civil, hydraulique, logistique et filières agricoles — pour répondre aux appels d’offres, aux bailleurs et aux collectivités, avec une exigence de conformité et de sécurité sur les chantiers.',
@@ -500,7 +502,7 @@ export const messages = {
         'Montée en compétences continue et transfert vers les partenaires locaux',
         'Respect des standards techniques et des délais convenus avec le maître d’ouvrage',
       ],
-      staffTitle: 'Équipe : cartes par fonction',
+      staffTitle: 'Notre Equipe',
       loadingStaff: 'Chargement de l’équipe…',
       loadError: 'Impossible de charger l’équipe depuis la base',
       sourceDb: 'Équipe affichée depuis la base de données (modifiable dans l’administration).',
@@ -1091,6 +1093,8 @@ export const messages = {
       metaTitle: 'People & organisation — GEACO SARL',
       metaDesc: 'Team skills, roles and how we deliver integrated projects.',
       title: 'Staff',
+      expertsTitle: 'OUR TEAM OF EXPERTS',
+      expertsLead: 'A passionate team dedicated to innovation and the success of your projects.',
       lead: 'Complementary profiles combining design office, field supervision and integrated project management.',
       intro:
         'GEACO SARL brings together agronomy, civil engineering, hydraulics, logistics and agricultural value chains to serve tenders, donors and local authorities, with strong compliance and site safety requirements.',

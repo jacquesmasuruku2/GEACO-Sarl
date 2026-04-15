@@ -59,7 +59,7 @@ export function AdminPanel() {
       { id: 'projects', label: 'Projets', description: 'Portefeuille de réalisations et impacts.', render: ProjectsAdmin },
       { id: 'partners', label: 'Partenaires', description: 'Cartes partenaires et publication.', render: PartnersAdmin },
       { id: 'blog', label: 'Blog', description: 'Articles, mises en forme et dates.', render: BlogAdmin },
-      { id: 'personnel', label: 'Personnel', description: 'Fiches équipe, rôles et réseaux.', render: PersonnelAdmin },
+      { id: 'personnel', label: 'Notre Equipe', description: 'Fiches équipe, rôles et réseaux.', render: PersonnelAdmin },
       { id: 'gallery', label: 'Galerie', description: 'Photos de galerie et albums.', render: GalleryAdmin },
       { id: 'services', label: 'Pages services', description: 'Contenu éditorial des pages métier.', render: ServiceContentAdmin },
     ],
@@ -285,7 +285,7 @@ export function AdminPanel() {
               <span>Projets: {dashboard.data.projects.published}</span>
               <span>Blog: {dashboard.data.blog.published}</span>
               <span>Partenaires: {dashboard.data.partners.published}</span>
-              <span>Personnel: {dashboard.data.personnel.published}</span>
+              <span>Notre Equipe: {dashboard.data.personnel.published}</span>
             </div>
             {dashboardOpen ? (
               <>
@@ -308,7 +308,7 @@ export function AdminPanel() {
                     <p>{dashboard.data.partners.published} publies</p>
                   </article>
                   <article className="admin-kpi-card">
-                    <h3>Personnel</h3>
+                    <h3>Notre Equipe</h3>
                     <p>{dashboard.data.personnel.total} total</p>
                     <p>{dashboard.data.personnel.published} publies</p>
                   </article>
@@ -333,7 +333,7 @@ export function AdminPanel() {
 
           <p className="admin-muted" style={{ marginBottom: '1rem' }}>
             Les modifications sont enregistrées dans Supabase et s’affichent sur le site public lorsque les
-            lignes sont publiées (projets / partenaires / blog / personnel) ou lorsque le contenu service est
+            lignes sont publiées (projets / partenaires / blog / notre equipe) ou lorsque le contenu service est
             renseigné.
           </p>
           {modules.map((module) => {

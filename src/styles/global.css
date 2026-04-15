@@ -2430,7 +2430,31 @@ html.site-header-topbar-hidden .site-topbar {
   }
 }
 
-/* ——— Page Personnel ——— */
+/* ——— Page Notre Equipe ——— */
+.personnel-showcase {
+  background: #efefef;
+}
+
+.personnel-showcase__head {
+  text-align: center;
+  margin: 0 auto 2rem;
+  max-width: 760px;
+}
+
+.personnel-showcase__title {
+  margin: 0;
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+  letter-spacing: 0.02em;
+  color: #2d2d2d;
+  text-transform: uppercase;
+}
+
+.personnel-showcase__lead {
+  margin-top: 0.55rem;
+  color: #656565;
+  font-size: 1.05rem;
+}
+
 .personnel__group {
   margin-top: 2.25rem;
 }
@@ -2440,115 +2464,149 @@ html.site-header-topbar-hidden .site-topbar {
 }
 
 .personnel__group-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
-  font-weight: 600;
-  color: var(--color-vinci-blue-dark);
-  margin: 0 0 var(--space-md);
-  padding-bottom: var(--space-sm);
-  border-bottom: 2px solid var(--color-accent-line);
+  font-size: 0.95rem;
+  color: #707070;
+  margin: 0 0 0.8rem;
+  padding: 0;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .personnel__source-note {
   font-size: 0.875rem;
-  color: var(--color-text-muted);
+  color: #666;
   margin: 0 0 1rem;
+}
+
+.personnel-team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+  gap: 1rem;
 }
 
 .personnel-card {
   border-top: none;
-  border-radius: 0;
-  background: #2697cf;
-  color: #fff;
-  box-shadow: none;
+}
+
+.personnel-card--modern {
+  border: 1px solid #d8d8d8;
+  border-radius: 10px;
+  background: #fff;
+  color: #252525;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   min-height: 100%;
   text-align: center;
+  overflow: hidden;
 }
 
 .personnel-card__media {
-  margin: 0 auto 0.95rem;
-  width: 118px;
-  height: 118px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.2);
-  border: 3px solid rgba(255, 255, 255, 0.28);
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+  position: relative;
+  background: #f1f1f1;
+  border-bottom: 1px solid #ddd;
 }
 
 .personnel-card__media img {
   width: 100%;
   height: 100%;
-  aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
 }
 
 .personnel-card__name {
-  margin: 0 0 0.35rem;
-  font-size: clamp(1.05rem, 2vw, 1.2rem);
-  color: #fff;
+  margin: 0;
+  font-size: 1.3rem;
+  color: #2c2c2c;
   line-height: 1.25;
   text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .personnel-card__role {
-  margin: 0 0 0.4rem;
-  font-family: var(--font-display);
-  font-size: 0.98rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #5f5f5f;
   line-height: 1.35;
+  text-transform: uppercase;
 }
 
 .personnel-card__focus {
-  margin: 0 0 0.85rem;
-  font-size: 0.9rem;
+  margin: 0.45rem 0 0;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
+  color: #7a7a7a;
   line-height: 1.4;
+  text-transform: uppercase;
 }
 
 .personnel-card__body {
-  flex: 1;
-  min-height: 0;
+  padding: 0.85rem 0.7rem 0.95rem;
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
 }
 
 .personnel-card__bio {
-  margin: 0;
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.92);
-  line-height: 1.55;
-  flex: 1;
+  display: none;
 }
 
 .personnel-card__links {
-  margin-top: auto;
-  padding-top: 0.85rem;
-  margin-inline: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.65rem;
+  align-items: center;
   justify-content: center;
+  gap: 0.55rem;
 }
 
 .personnel-card__link {
-  font-size: 0.875rem;
-  font-weight: 600;
   text-decoration: none;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  padding: 0.28rem 0.55rem;
 }
 
-.personnel-card__link:hover {
+.personnel-card__link--icon {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 600;
   color: #fff;
-  text-decoration: none;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(0, 68, 137, 0.72);
+  border: none;
+}
+
+.personnel-card__links--overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(96, 144, 175, 0.78), rgba(128, 181, 154, 0.78));
+  padding: 0.45rem;
+}
+
+.personnel-card__link--icon:hover {
+  background: rgba(0, 68, 137, 0.9);
+}
+
+@media (max-width: 640px) {
+  .personnel-showcase__head {
+    margin-bottom: 1.35rem;
+  }
+
+  .personnel-showcase__title {
+    font-size: clamp(1.28rem, 7vw, 1.65rem);
+  }
+
+  .personnel-showcase__lead {
+    font-size: 0.95rem;
+  }
 }
 
 /* ——— Partenaires : bandeau horizontal défilant ——— */

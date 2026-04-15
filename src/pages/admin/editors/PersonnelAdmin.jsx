@@ -117,7 +117,7 @@ export function PersonnelAdmin() {
   return (
     <section className="admin-section">
       <div className="admin-section__head">
-        <h2>Personnel (page /personnel) 👤</h2>
+        <h2>Notre Equipe (page /personnel) 👤</h2>
         <button type="button" className="btn btn--primary" onClick={addRow}>
           Ajouter une fiche
         </button>
