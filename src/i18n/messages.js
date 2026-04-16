@@ -122,6 +122,14 @@ export const messages = {
       ctaBandText:
         'Vous souhaitez contribuer à des chantiers de développement à fort impact et gagner en compétence sur le terrain ? Parlons-en.',
       ctaBandBtn: 'Nous rejoindre',
+      legalInfoTitle: 'Informations légales essentielles',
+      legalInfoLead: 'Extraits des statuts de la société (siège social et informations administratives).',
+      rccmLabel: 'RCCM',
+      rccmValue: 'RCCM et numéro Impôt en cours de négociation',
+      hqLabel: 'Siège social',
+      hqValue: 'Goma, RDC — Province du Nord-Kivu, Avenue Erengeti, N°46, Quartier Kyeshero, Commune de Goma.',
+      branchLabel: 'Adresse complémentaire',
+      branchValue: 'Ville de Butembo, N°275, Cellule Mihake, Quartier Kamesi Mbonzo.',
     },
     about: {
       metaTitle: 'À propos — GEACO SARL',
@@ -432,6 +440,55 @@ export const messages = {
       note: 'Pour une étude de cas ou un dossier technique, contactez-nous : nous documentons volontiers nos références selon les appels d’offres.',
       impactLabel: 'Impact',
       constructionTitle: 'Projets de construction',
+      constructionHeroTitle: 'Nos chantiers de construction en image',
+      constructionHeroLead:
+        'Un aperçu terrain de nos interventions en génie civil, avec un focus visuel fort sur la qualité d’exécution et la sécurité de nos équipes.',
+      partnersStoryTitle: 'Des projets exécutés avec l’appui de partenaires',
+      partnersStoryLead:
+        'GEACO SARL exécute des projets de construction financés par plusieurs partenaires techniques et institutionnels, avec une approche de proximité et de résultat.',
+      partnersStoryBody:
+        'Par exemple, à Bukavu, un projet financé par UNICEF a été exécuté par GEACO SARL. Nous y avons assuré la mise en œuvre des travaux avec rigueur, transparence et respect des engagements envers les communautés bénéficiaires.',
+      partnersStoryBody2:
+        'Au-delà de l’exécution technique, nos équipes accompagnent chaque étape : préparation du site, coordination locale, contrôle qualité et remise d’ouvrages fonctionnels. Notre priorité est de livrer des infrastructures utiles, durables et réellement appropriées par les usagers.',
+      partnersStoryBullets: [
+        'Planification claire avec les partenaires et les communautés',
+        'Suivi de chantier quotidien, sécurité et conformité des travaux',
+        'Livraison progressive avec contrôle de la qualité avant réception',
+      ],
+      constructionStory: {
+        steps: [
+          {
+            stage: 'Étape 1 — Études & conception',
+            title: 'Visualisation 3D du futur bâtiment',
+            desc: 'Nous validons d’abord l’implantation, les volumes et la circulation du site pour sécuriser la phase d’exécution.',
+            image: '/media/geaco/construction-project-03.png',
+          },
+          {
+            stage: 'Étape 2 — Projection d’ensemble',
+            title: 'Lecture globale du projet avant travaux',
+            desc: 'Cette vue permet d’aligner les attentes des partenaires, des techniciens et des bénéficiaires avant le lancement du chantier.',
+            image: '/media/geaco/construction-project-04.png',
+          },
+          {
+            stage: 'Étape 3 — Exécution terrain',
+            title: 'Montage de la charpente et gros œuvre',
+            desc: 'Les travaux avancent avec une supervision rapprochée, le respect des normes et une attention constante à la sécurité.',
+            image: '/media/geaco/construction-project-05.png',
+          },
+          {
+            stage: 'Étape 4 — Finitions',
+            title: 'Mise en service d’un premier bloc',
+            desc: 'Après les finitions techniques, le bâtiment est rendu propre, fonctionnel et prêt à être utilisé par la communauté.',
+            image: '/media/geaco/construction-project-01.png',
+          },
+          {
+            stage: 'Étape 5 — Ouvrage livré',
+            title: 'Infrastructure finalisée et opérationnelle',
+            desc: 'Le projet est livré avec un niveau de qualité élevé pour assurer une exploitation durable et un impact concret.',
+            image: '/media/geaco/construction-project-02.png',
+          },
+        ],
+      },
       agricultureTitle: 'Projets agricoles',
     },
     partnerships: {
@@ -790,6 +847,14 @@ export const messages = {
       ctaBandText:
         'Want to contribute to high-impact development works and strengthen field skills? Let’s talk.',
       ctaBandBtn: 'Join us',
+      legalInfoTitle: 'Key legal information',
+      legalInfoLead: 'Extracts from the company statutes (registered office and administrative details).',
+      rccmLabel: 'RCCM',
+      rccmValue: 'RCCM and tax number under negotiation',
+      hqLabel: 'Registered office',
+      hqValue: 'Goma, DRC — North Kivu Province, Avenue Erengeti, No. 46, Kyeshero District, Commune of Goma.',
+      branchLabel: 'Additional address',
+      branchValue: 'Butembo city, No. 275, Mihake Cell, Kamesi Mbonzo District.',
     },
     about: {
       metaTitle: 'About — GEACO SARL',
@@ -1083,6 +1148,55 @@ export const messages = {
       note: 'For detailed references tailored to tenders, contact us—we document assignments as required.',
       impactLabel: 'Impact',
       constructionTitle: 'Construction projects',
+      constructionHeroTitle: 'Our construction works in focus',
+      constructionHeroLead:
+        'A field snapshot of our civil engineering interventions, highlighting execution quality and team safety on site.',
+      partnersStoryTitle: 'Projects delivered with partner support',
+      partnersStoryLead:
+        'GEACO SARL delivers construction projects funded by several technical and institutional partners, with a field-driven and results-oriented approach.',
+      partnersStoryBody:
+        'For example, in Bukavu, a project funded by UNICEF was executed by GEACO SARL. We delivered the works with rigor, transparency and full commitment to beneficiary communities.',
+      partnersStoryBody2:
+        'Beyond technical execution, our teams support every phase: site preparation, local coordination, quality control and handover of fully functional facilities. Our priority is to deliver useful, durable infrastructure truly owned by end users.',
+      partnersStoryBullets: [
+        'Clear planning with partners and communities',
+        'Daily site supervision, safety and compliance',
+        'Progressive delivery with quality checks before handover',
+      ],
+      constructionStory: {
+        steps: [
+          {
+            stage: 'Step 1 — Design studies',
+            title: '3D visualization of the future building',
+            desc: 'We first validate siting, volumes and circulation to secure the execution phase.',
+            image: '/media/geaco/construction-project-03.png',
+          },
+          {
+            stage: 'Step 2 — Global projection',
+            title: 'Full project overview before works',
+            desc: 'This view aligns partner, technical and beneficiary expectations before site mobilization.',
+            image: '/media/geaco/construction-project-04.png',
+          },
+          {
+            stage: 'Step 3 — Field execution',
+            title: 'Structural frame and shell works',
+            desc: 'Works progress under close supervision, with standard compliance and constant attention to safety.',
+            image: '/media/geaco/construction-project-05.png',
+          },
+          {
+            stage: 'Step 4 — Finishing phase',
+            title: 'Commissioning of a first block',
+            desc: 'After technical finishing, the facility is clean, functional and ready for community use.',
+            image: '/media/geaco/construction-project-01.png',
+          },
+          {
+            stage: 'Step 5 — Delivered asset',
+            title: 'Finalized and operational infrastructure',
+            desc: 'The project is handed over with high quality standards for durable operation and concrete impact.',
+            image: '/media/geaco/construction-project-02.png',
+          },
+        ],
+      },
       agricultureTitle: 'Agricultural projects',
     },
     partnerships: {

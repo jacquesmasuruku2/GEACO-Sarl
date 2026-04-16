@@ -44,7 +44,12 @@ export function Projects() {
   const showAgricole = !onlyConstruction
   const heroImage = onlyAgricole
     ? 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80'
-    : 'https://images.unsplash.com/photo-1590674899484-d5640e854abe?auto=format&fit=crop&w=1800&q=80'
+    : '/media/geaco/geaco-construction-hero.png'
+  const constructionStory = t('projects.constructionStory')
+  const constructionStorySteps =
+    constructionStory && typeof constructionStory === 'object' && Array.isArray(constructionStory.steps)
+      ? constructionStory.steps
+      : []
 
   function renderProjectCard(project) {
     const imageUrl = String(project.imageUrl ?? '').trim()
@@ -88,10 +93,57 @@ export function Projects() {
         <div className="container">
           {showConstruction ? (
             <>
-              <div className="section__head">
-                <h2 className="section__title">{t('projects.constructionTitle')}</h2>
+              <div
+                className="section__head"
+                style={{
+                  borderRadius: '1rem',
+                  overflow: 'hidden',
+                  marginBottom: '1.25rem',
+                  background:
+                    'linear-gradient(95deg, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.32) 58%, rgba(0, 0, 0, 0.12) 100%), url("/media/geaco/geaco-construction-hero.png") center/cover no-repeat',
+                  minHeight: '52vh',
+                  display: 'flex',
+                  alignItems: 'end',
+                }}
+              >
+                <div style={{ padding: '1.25rem 1.25rem 1.5rem', color: 'white', maxWidth: '700px' }}>
+                  <p className="tag" style={{ backgroundColor: 'rgba(255, 255, 255, 0.16)', color: 'white' }}>
+                    {t('projects.constructionTitle')}
+                  </p>
+                  <h2 className="section__title" style={{ color: 'white', marginTop: '0.75rem' }}>
+                    {t('projects.constructionHeroTitle')}
+                  </h2>
+                  <p style={{ margin: '0.6rem 0 0', color: 'rgba(255, 255, 255, 0.92)' }}>
+                    {t('projects.constructionHeroLead')}
+                  </p>
+                </div>
               </div>
               <div className="card-grid">{categorized.construction.map((project) => renderProjectCard(project))}</div>
+              <div className="projects-partners-note card" style={{ marginTop: '1.2rem' }}>
+                <h3 style={{ marginBottom: '0.55rem' }}>{t('projects.partnersStoryTitle')}</h3>
+                <p>{t('projects.partnersStoryLead')}</p>
+                <p>{t('projects.partnersStoryBody')}</p>
+                <p>{t('projects.partnersStoryBody2')}</p>
+                <ul className="projects-partners-note__list">
+                  {t('projects.partnersStoryBullets').map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="projects-story-gallery" style={{ marginTop: '1rem' }}>
+                {constructionStorySteps.map((step) => (
+                  <article className="gallery-card projects-story-card" key={step.image}>
+                    <div className="gallery-card__media projects-story-card__media">
+                      <img src={step.image} alt={step.title} loading="lazy" />
+                      <span className="projects-story-card__stage">{step.stage}</span>
+                    </div>
+                    <div className="gallery-card__body">
+                      <h2>{step.title}</h2>
+                      <p>{step.desc}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </>
           ) : null}
 

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { ExpertiseAccordion } from '../components/ExpertiseAccordion'
@@ -7,6 +8,8 @@ import { useSitePartners } from '../hooks/useSitePartners'
 export function Home() {
   const { t } = useI18n()
   const { rows: partners } = useSitePartners()
+  const heroSlides = ['/media/geaco/geaco-home-hero-02.png', '/media/geaco/geaco-01.jpeg']
+  const [activeHeroSlide, setActiveHeroSlide] = useState(0)
   const homeGalleryImages = Array.from({ length: 8 }, (_, index) => ({
     src: `/media/geaco/geaco-${String(index + 1).padStart(2, '0')}.jpeg`,
     alt: `GEACO terrain ${index + 1}`,
@@ -23,6 +26,14 @@ export function Home() {
   const strengths = t('home.strengths')
   const newsItems = t('home.newsItems')
   const stats = t('home.stats')
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActiveHeroSlide((current) => (current + 1) % heroSlides.length)
+    }, 3000)
+
+    return () => window.clearInterval(intervalId)
+  }, [heroSlides.length])
 
   function getInitials(name) {
     return String(name ?? '')
@@ -66,31 +77,57 @@ export function Home() {
     <>
       <Seo title={t('home.metaTitle')} description={t('home.metaDesc')} path="/" />
 
-      <section
-        className="page-hero page-hero--immersive"
-        style={{
-          ['--hero-image']: 'url("/media/geaco/geaco-01.jpeg")',
-        }}
-      >
-        <div className="page-hero__media" aria-hidden="true" />
-        <div className="page-hero__inner">
+      <section className="home-hero-card-section">
+        <div className="container">
           <nav className="breadcrumb" aria-label="Fil d’Ariane">
             <Link to="/">{t('home.breadcrumbParent')}</Link>
             <span className="breadcrumb__sep">›</span>
             <span aria-current="page">{t('home.breadcrumbCurrent')}</span>
           </nav>
-          <h1>{t('home.heroTitle')}</h1>
-          <p className="page-hero__lead">{t('home.heroLead')}</p>
-          <div className="page-hero__actions">
-            <Link className="btn btn--primary" to="/contact">
-              {t('home.ctaQuote')}
-            </Link>
-            <Link className="btn btn--ghost" to="/contact">
-              {t('home.ctaContact')}
-            </Link>
-            <Link className="btn btn--dark" to="/projets">
-              {t('home.ctaProjects')}
-            </Link>
+
+          <div className="home-hero-card">
+            <div className="home-hero-card__media">
+              <img
+                src={heroSlides[activeHeroSlide]}
+                alt={t('home.heroTitle')}
+                loading="eager"
+                decoding="async"
+                key={heroSlides[activeHeroSlide]}
+              />
+            </div>
+            <div className="home-hero-card__content">
+              <h1>{t('home.heroTitle')}</h1>
+              <p className="page-hero__lead">{t('home.heroLead')}</p>
+              <div className="page-hero__actions">
+                <Link className="btn btn--primary" to="/contact">
+                  {t('home.ctaQuote')}
+                </Link>
+                <Link className="btn btn--ghost" to="/contact">
+                  {t('home.ctaContact')}
+                </Link>
+                <Link className="btn btn--dark" to="/projets">
+                  {t('home.ctaProjects')}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--tight">
+        <div className="container">
+          <div className="card home-legal-card">
+            <h2 className="section__title">{t('home.legalInfoTitle')}</h2>
+            <p>{t('home.legalInfoLead')}</p>
+            <p className="home-legal-card__line">
+              <strong>{t('home.rccmLabel')}:</strong> {t('home.rccmValue')}
+            </p>
+            <p className="home-legal-card__line">
+              <strong>{t('home.hqLabel')}:</strong> {t('home.hqValue')}
+            </p>
+            <p className="home-legal-card__line">
+              <strong>{t('home.branchLabel')}:</strong> {t('home.branchValue')}
+            </p>
           </div>
         </div>
       </section>
