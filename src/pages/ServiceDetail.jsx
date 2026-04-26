@@ -99,8 +99,11 @@ export function ServiceDetail() {
             <Link className="btn btn--outline" to="/services">
               {t('services.hub.backToHub')}
             </Link>{' '}
-            <Link className="btn btn--primary" to="/contact">
+            <Link className="btn btn--ghost" to="/contact">
               {t('services.hub.contactCta')}
+            </Link>{' '}
+            <Link className="btn btn--primary" to="/devis">
+              {t('services.hub.quoteCta')}
             </Link>
           </p>
         </div>

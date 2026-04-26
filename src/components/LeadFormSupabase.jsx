@@ -12,8 +12,8 @@ function trimOrNull(v) {
 }
 
 /**
- * Contact → `public.site_lead_messages` ; partenariat → `public.site_partnership_messages`.
- * @param {{ source: 'contact' | 'partnership', redirectTo: string }} props
+ * Contact / devis → `public.site_lead_messages` ; partenariat → `public.site_partnership_messages`.
+ * @param {{ source: 'contact' | 'partnership' | 'quote', redirectTo: string }} props
  */
 export function LeadFormSupabase({ source, redirectTo }) {
   const { t, locale } = useI18n()
@@ -22,17 +22,26 @@ export function LeadFormSupabase({ source, redirectTo }) {
   const [error, setError] = useState('')
 
   const [subject, setSubject] = useState('')
+  const [quoteKind, setQuoteKind] = useState('')
+  const [siteLocation, setSiteLocation] = useState('')
+  const [timeline, setTimeline] = useState('')
   const [fullName, setFullName] = useState('')
   const [organization, setOrganization] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
   const [gotcha, setGotcha] = useState('')
+
   const subjectOptions = source === 'contact' ? t('contact.subjectOptions') : []
   const safeSubjectOptions = Array.isArray(subjectOptions) ? subjectOptions : []
+  const quoteProjectTypes = source === 'quote' ? t('quote.projectTypes') : []
+  const safeQuoteTypes = Array.isArray(quoteProjectTypes) ? quoteProjectTypes : []
 
   function clearForm() {
     setSubject('')
+    setQuoteKind('')
+    setSiteLocation('')
+    setTimeline('')
     setFullName('')
     setOrganization('')
     setEmail('')
@@ -61,53 +70,93 @@ export function LeadFormSupabase({ source, redirectTo }) {
       return
     }
     const loc = locale === 'en' ? 'en' : 'fr'
-    const subj = source === 'partnership' ? PARTNERSHIP_SUBJECT : trimOrNull(subject)
     const name = trimOrNull(fullName)
     const mail = trimOrNull(email)
     const msg = trimOrNull(message)
     const org = trimOrNull(organization)
-    const tel = source === 'contact' ? trimOrNull(phone) : null
 
-    if (!subj || !name || !mail || !msg) {
-      setError(t(source === 'contact' ? 'contact.formValidationError' : 'partnerships.formValidationError'))
+    if (source === 'partnership') {
+      const subj = PARTNERSHIP_SUBJECT
+      if (!org || !name || !mail || !msg) {
+        setError(t('partnerships.formValidationError'))
+        return
+      }
+      if (msg.length < 10) {
+        setError(t('partnerships.formValidationError'))
+        return
+      }
+      setBusy(true)
+      const { error: insErr } = await supabase.from('site_partnership_messages').insert({
+        locale: loc,
+        subject: subj,
+        full_name: name,
+        organization: org,
+        email: mail,
+        message: msg,
+      })
+      setBusy(false)
+      if (insErr) {
+        setError(insErr.message || t('forms.formErrorSend'))
+        return
+      }
+      clearForm()
+      navigate(redirectTo, { replace: false })
       return
     }
-    if (source === 'contact' && !tel) {
-      setError(t('contact.formValidationError'))
+
+    const tel = trimOrNull(phone)
+    if (!tel) {
+      setError(t(source === 'quote' ? 'quote.formValidationError' : 'contact.formValidationError'))
       return
     }
-    if (source === 'partnership' && !org) {
-      setError(t('partnerships.formValidationError'))
-      return
+
+    let finalSubject = ''
+    let finalMessage = ''
+
+    if (source === 'contact') {
+      finalSubject = trimOrNull(subject)
+      finalMessage = msg
+      if (!finalSubject || !name || !mail || !finalMessage) {
+        setError(t('contact.formValidationError'))
+        return
+      }
+    } else {
+      const kind = trimOrNull(quoteKind)
+      if (!kind || !name || !mail || !msg) {
+        setError(t('quote.formValidationError'))
+        return
+      }
+      const prefix = String(t('quote.subjectPrefix')).trim()
+      finalSubject = `${prefix} — ${kind}`.slice(0, 400)
+      const locLabel = trimOrNull(siteLocation) || '—'
+      const timeLabel = trimOrNull(timeline) || '—'
+      finalMessage = [
+        `${String(t('quote.blockProjectType')).trim()}: ${kind}`,
+        `${String(t('quote.blockSite')).trim()}: ${locLabel}`,
+        `${String(t('quote.blockTimeline')).trim()}: ${timeLabel}`,
+        '',
+        `${String(t('quote.blockDetails')).trim()}:`,
+        msg,
+      ].join('\n')
     }
-    if (msg.length < 10) {
-      setError(t(source === 'contact' ? 'contact.formValidationError' : 'partnerships.formValidationError'))
+
+    if (!finalMessage || finalMessage.length < 10) {
+      setError(t(source === 'quote' ? 'quote.formValidationError' : 'contact.formValidationError'))
       return
     }
 
     setBusy(true)
-    const table = source === 'partnership' ? 'site_partnership_messages' : 'site_lead_messages'
-    const row =
-      source === 'partnership'
-        ? {
-            locale: loc,
-            subject: subj,
-            full_name: name,
-            organization: org,
-            email: mail,
-            message: msg,
-          }
-        : {
-            source: 'contact',
-            locale: loc,
-            subject: subj,
-            full_name: name,
-            organization: org,
-            email: mail,
-            phone: tel,
-            message: msg,
-          }
-    const { error: insErr } = await supabase.from(table).insert(row)
+    const row = {
+      source: source === 'quote' ? 'quote' : 'contact',
+      locale: loc,
+      subject: finalSubject,
+      full_name: name,
+      organization: org,
+      email: mail,
+      phone: tel,
+      message: finalMessage.slice(0, 8000),
+    }
+    const { error: insErr } = await supabase.from('site_lead_messages').insert(row)
     setBusy(false)
     if (insErr) {
       setError(insErr.message || t('forms.formErrorSend'))
@@ -117,8 +166,19 @@ export function LeadFormSupabase({ source, redirectTo }) {
     navigate(redirectTo, { replace: false })
   }
 
+  const submitLabel =
+    busy
+      ? t('forms.formSending')
+      : source === 'contact'
+        ? t('contact.formSubmit')
+        : source === 'quote'
+          ? t('quote.formSubmit')
+          : t('partnerships.formSubmit')
+
+  const formClassName = source === 'quote' ? 'form form--quote-premium' : 'form'
+
   return (
-    <form className="form" onSubmit={onSubmit} noValidate>
+    <form className={formClassName} onSubmit={onSubmit} noValidate>
       <label className="visually-hidden" htmlFor="lead-gotcha">
         {t('forms.honeypot')}
       </label>
@@ -136,12 +196,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
       {source === 'contact' ? (
         <>
           <label htmlFor="lead-subject">{t('contact.formSubject')}</label>
-          <select
-            id="lead-subject"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            required
-          >
+          <select id="lead-subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
             <option value="" disabled>
               {t('contact.formSubjectPlaceholder')}
             </option>
@@ -208,7 +263,127 @@ export function LeadFormSupabase({ source, redirectTo }) {
             autoComplete="off"
           />
         </>
-      ) : (
+      ) : null}
+
+      {source === 'quote' ? (
+        <>
+          <div className="quote-form__section">
+            <h3 className="quote-form__section-title">{t('quote.sectionProject')}</h3>
+            <div className="quote-form__field">
+              <label htmlFor="lead-quote-kind">{t('quote.formProjectType')}</label>
+              <select id="lead-quote-kind" value={quoteKind} onChange={(e) => setQuoteKind(e.target.value)} required>
+                <option value="" disabled>
+                  {t('quote.formProjectPlaceholder')}
+                </option>
+                {safeQuoteTypes.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="quote-form__grid quote-form__grid--2">
+              <div className="quote-form__field">
+                <label htmlFor="lead-quote-site">{t('quote.formSite')}</label>
+                <input
+                  id="lead-quote-site"
+                  type="text"
+                  value={siteLocation}
+                  onChange={(e) => setSiteLocation(e.target.value)}
+                  maxLength={400}
+                  autoComplete="street-address"
+                  placeholder={t('quote.formSitePlaceholder')}
+                />
+              </div>
+              <div className="quote-form__field">
+                <label htmlFor="lead-quote-timeline">{t('quote.formTimeline')}</label>
+                <input
+                  id="lead-quote-timeline"
+                  type="text"
+                  value={timeline}
+                  onChange={(e) => setTimeline(e.target.value)}
+                  maxLength={200}
+                  autoComplete="off"
+                  placeholder={t('quote.formTimelinePlaceholder')}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="quote-form__section">
+            <h3 className="quote-form__section-title">{t('quote.sectionContact')}</h3>
+            <div className="quote-form__grid quote-form__grid--2">
+              <div className="quote-form__field">
+                <label htmlFor="lead-quote-name">{t('quote.formName')}</label>
+                <input
+                  id="lead-quote-name"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                  maxLength={200}
+                  autoComplete="name"
+                />
+              </div>
+              <div className="quote-form__field">
+                <label htmlFor="lead-quote-email">{t('quote.formEmail')}</label>
+                <input
+                  id="lead-quote-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  maxLength={254}
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+            <div className="quote-form__field">
+              <label htmlFor="lead-quote-org">{t('quote.formOrganization')}</label>
+              <input
+                id="lead-quote-org"
+                type="text"
+                value={organization}
+                onChange={(e) => setOrganization(e.target.value)}
+                maxLength={300}
+                autoComplete="organization"
+                placeholder={t('quote.formOrganizationPlaceholder')}
+              />
+            </div>
+            <div className="quote-form__field">
+              <label htmlFor="lead-quote-phone">{t('quote.formPhone')}</label>
+              <input
+                id="lead-quote-phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                maxLength={60}
+                autoComplete="tel"
+              />
+            </div>
+          </div>
+
+          <div className="quote-form__section">
+            <h3 className="quote-form__section-title">{t('quote.sectionDetails')}</h3>
+            <div className="quote-form__field">
+              <label htmlFor="lead-quote-message">{t('quote.formMessage')}</label>
+              <textarea
+                id="lead-quote-message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                minLength={10}
+                maxLength={8000}
+                rows={6}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+        </>
+      ) : null}
+
+      {source === 'partnership' ? (
         <>
           <label htmlFor="lead-org">{t('partnerships.formOrg')}</label>
           <input
@@ -259,16 +434,33 @@ export function LeadFormSupabase({ source, redirectTo }) {
             autoComplete="off"
           />
         </>
-      )}
+      ) : null}
 
-      {error ? <p className="admin-error">{error}</p> : null}
+      {error ? (
+        <p className={source === 'quote' ? 'admin-error quote-form__error' : 'admin-error'} role="alert">
+          {error}
+        </p>
+      ) : null}
 
-      <button className="btn btn--primary" type="submit" disabled={busy}>
-        {busy ? t('forms.formSending') : source === 'contact' ? t('contact.formSubmit') : t('partnerships.formSubmit')}
+      <button
+        className={source === 'quote' ? 'btn btn--primary btn--quote-submit' : 'btn btn--primary'}
+        type="submit"
+        disabled={busy}
+      >
+        {submitLabel}
       </button>
 
-      <p className="form-note">{t('forms.privacyNote')}</p>
-      <p className="form-note">{t('forms.storedInSupabase')}</p>
+      {source === 'quote' ? (
+        <div className="quote-form__legal">
+          <p className="form-note">{t('forms.privacyNote')}</p>
+          <p className="form-note">{t('forms.storedInSupabase')}</p>
+        </div>
+      ) : (
+        <>
+          <p className="form-note">{t('forms.privacyNote')}</p>
+          <p className="form-note">{t('forms.storedInSupabase')}</p>
+        </>
+      )}
     </form>
   )
 }

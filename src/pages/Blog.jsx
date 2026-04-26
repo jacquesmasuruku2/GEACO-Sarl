@@ -8,8 +8,12 @@ import { formatNavLabel } from '../lib/formatNavLabel'
 export function Blog() {
   const { t, locale } = useI18n()
   const { rows, loading } = useBlogPosts(locale)
-  const fallbackCover =
-    'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1200&q=80'
+  const recentPosts = rows.slice(0, 5)
+
+  function formatDate(dateValue) {
+    if (!dateValue) return 'Brouillon'
+    return new Date(dateValue).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')
+  }
 
   return (
     <>
@@ -32,35 +36,48 @@ export function Blog() {
           ) : rows.length === 0 ? (
             <p style={{ color: 'var(--color-text-muted)' }}>{t('blog.empty')}</p>
           ) : (
-            <div className="blog-cards-grid">
-              {rows.map((post) => (
-                <article className="blog-list-card" key={`${post.slug}-${locale}`}>
-                  <Link className="blog-list-card__media" to={`/blog/${post.slug}`}>
-                    <img
-                      src={post.hero_image_url && String(post.hero_image_url).startsWith('http') ? post.hero_image_url : fallbackCover}
-                      alt={post.title}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </Link>
-                  <div className="blog-list-card__body">
-                    <h2 className="blog-list-card__title">
+            <div className="blog-wada-shell">
+              <div className="blog-wada-main">
+                {rows.map((post) => (
+                  <article className="blog-wada-item" key={`${post.slug}-${locale}`}>
+                    <h2 className="blog-wada-item__title">
                       <Link to={`/blog/${post.slug}`}>{post.title}</Link>
                     </h2>
-                    {post.published_at ? (
-                      <p className="blog-list-card__meta">
-                        {new Date(post.published_at).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
-                      </p>
-                    ) : (
-                      <p className="blog-list-card__meta">Brouillon</p>
-                    )}
-                    {post.excerpt ? <p className="blog-list-card__excerpt">{post.excerpt}</p> : null}
-                    <Link className="btn btn--dark blog-list-card__cta" to={`/blog/${post.slug}`}>
+                    <p className="blog-wada-item__meta">{formatDate(post.published_at)} · GEACO Sarl</p>
+                    {post.excerpt ? <p className="blog-wada-item__excerpt">{post.excerpt}</p> : null}
+                    <Link className="blog-wada-item__cta" to={`/blog/${post.slug}`}>
                       {t('blog.readMore')}
                     </Link>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                ))}
+              </div>
+
+              <aside className="blog-wada-sidebar">
+                <section className="blog-wada-widget">
+                  <h3>Articles recents</h3>
+                  <ul className="blog-wada-widget__list">
+                    {recentPosts.map((post) => (
+                      <li key={`${post.slug}-recent`}>
+                        <Link to={`/blog/${post.slug}`}>
+                          <span>{formatDate(post.published_at)}</span>
+                          <strong>{post.title}</strong>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                <section className="blog-wada-widget blog-wada-widget--contact">
+                  <h3>Contact</h3>
+                  <p>
+                    GEACO collabore avec ses partenaires pour partager des analyses de terrain et des innovations
+                    techniques.
+                  </p>
+                  <Link className="btn btn--primary" to="/contact">
+                    Nous contacter
+                  </Link>
+                </section>
+              </aside>
             </div>
           )}
         </div>

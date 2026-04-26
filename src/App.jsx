@@ -9,6 +9,7 @@ import { ServiceDetail } from './pages/ServiceDetail'
 import { Projects } from './pages/Projects'
 import { Partnerships } from './pages/Partnerships'
 import { Contact } from './pages/Contact'
+import { QuoteRequest } from './pages/QuoteRequest'
 import { Legal } from './pages/Legal'
 import { Blog } from './pages/Blog'
 import { BlogPost } from './pages/BlogPost'
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/projets/construction" element={<Projects />} />
           <Route path="/projets/agricoles" element={<Projects />} />
           <Route path="/partenariats" element={<Partnerships />} />
+          <Route path="/devis" element={<QuoteRequest />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/mentions-legales" element={<Legal />} />
           <Route path="*" element={<NotFound />} />

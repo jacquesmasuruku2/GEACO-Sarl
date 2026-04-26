@@ -75,6 +75,9 @@ export function Footer() {
               <Link to="/mentions-legales">{nav('nav.legal')}</Link>
             </li>
             <li>
+              <Link to="/devis">{nav('nav.quote')}</Link>
+            </li>
+            <li>
               <Link to="/contact">{nav('nav.contact')}</Link>
             </li>
           </ul>

@@ -87,19 +87,30 @@ export function Home() {
 
           <div className="home-hero-card">
             <div className="home-hero-card__media">
-              <img
-                src={heroSlides[activeHeroSlide]}
-                alt={t('home.heroTitle')}
-                loading="eager"
-                decoding="async"
-                key={heroSlides[activeHeroSlide]}
-              />
+              {heroSlides.map((slide, index) => (
+                <img
+                  key={slide}
+                  src={slide}
+                  alt={t('home.heroTitle')}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className={`home-hero-card__slide ${index === activeHeroSlide ? 'is-active' : ''}`}
+                />
+              ))}
+              <div className="home-hero-card__dots" aria-hidden="true">
+                {heroSlides.map((slide, index) => (
+                  <span
+                    key={`${slide}-dot`}
+                    className={`home-hero-card__dot ${index === activeHeroSlide ? 'is-active' : ''}`}
+                  />
+                ))}
+              </div>
             </div>
             <div className="home-hero-card__content">
               <h1>{t('home.heroTitle')}</h1>
               <p className="page-hero__lead">{t('home.heroLead')}</p>
               <div className="page-hero__actions">
-                <Link className="btn btn--primary" to="/contact">
+                <Link className="btn btn--primary" to="/devis">
                   {t('home.ctaQuote')}
                 </Link>
                 <Link className="btn btn--ghost" to="/contact">
@@ -116,18 +127,30 @@ export function Home() {
 
       <section className="section section--tight">
         <div className="container">
-          <div className="card home-legal-card">
-            <h2 className="section__title">{t('home.legalInfoTitle')}</h2>
-            <p>{t('home.legalInfoLead')}</p>
-            <p className="home-legal-card__line">
-              <strong>{t('home.rccmLabel')}:</strong> {t('home.rccmValue')}
-            </p>
-            <p className="home-legal-card__line">
-              <strong>{t('home.hqLabel')}:</strong> {t('home.hqValue')}
-            </p>
-            <p className="home-legal-card__line">
-              <strong>{t('home.branchLabel')}:</strong> {t('home.branchValue')}
-            </p>
+          <div className="home-wada-intro">
+            <div className="card home-legal-card">
+              <h2 className="section__title">{t('home.legalInfoTitle')}</h2>
+              <p>{t('home.legalInfoLead')}</p>
+              <p className="home-legal-card__line">
+                <strong>{t('home.rccmLabel')}:</strong> {t('home.rccmValue')}
+              </p>
+              <p className="home-legal-card__line">
+                <strong>{t('home.hqLabel')}:</strong> {t('home.hqValue')}
+              </p>
+              <p className="home-legal-card__line">
+                <strong>{t('home.branchLabel')}:</strong> {t('home.branchValue')}
+              </p>
+            </div>
+
+            <aside className="home-wada-intro__focus" aria-label={t('home.missionTitle')}>
+              <p className="tag">{t('home.visionTitle')}</p>
+              <h3>{t('home.missionTitle')}</h3>
+              <ul>
+                {missionItems.slice(0, 3).map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </aside>
           </div>
         </div>
       </section>
@@ -203,12 +226,15 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section home-news-editorial">
         <div className="container">
           <h2 className="section__title">{t('home.newsSectionTitle')}</h2>
           <div className="news-list">
-            {newsItems.map((item) => (
+            {newsItems.map((item, index) => (
               <Link key={item.title} to="/projets" className="news-row">
+                <span className="news-row__index" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
                 <span className="news-row__date">{item.date}</span>
                 <div className="news-row__body">
                   <div className="news-row__cats">{item.cats.join(' · ')}</div>
@@ -235,8 +261,13 @@ export function Home() {
             <p>{t('gallery.lead')}</p>
           </div>
           <div className="home-gallery-grid">
-            {homeGalleryImages.map((image) => (
-              <Link key={image.src} to="/galerie" className="home-gallery-card" aria-label={t('nav.gallery')}>
+            {homeGalleryImages.map((image, index) => (
+              <Link
+                key={image.src}
+                to="/galerie"
+                className={`home-gallery-card ${index === 0 ? 'is-featured' : ''}`}
+                aria-label={t('nav.gallery')}
+              >
                 <img src={image.src} alt={image.alt} loading="lazy" />
               </Link>
             ))}

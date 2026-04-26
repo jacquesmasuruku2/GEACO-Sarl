@@ -11,6 +11,7 @@ const mainLinksBeforeServices = [
 const mainLinksAfterServices = [
   { to: '/blog', key: 'nav.blog', end: false },
   { to: '/galerie', key: 'nav.gallery', end: false },
+  { to: '/devis', key: 'nav.quote', end: false },
   { to: '/contact', key: 'nav.contact', end: false },
 ]
 
