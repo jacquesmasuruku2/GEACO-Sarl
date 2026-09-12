@@ -205,6 +205,22 @@ export function AdminPanel() {
     }
   }, [session, isAdmin])
 
+  useEffect(() => {
+    if (!navOpen) return undefined
+
+    function onKeyDown(event) {
+      if (event.key === 'Escape') setNavOpen(false)
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [navOpen])
+
   function signOutSafely() {
     allowUnloadRef.current = true
     supabase.auth.signOut()
@@ -324,8 +340,9 @@ export function AdminPanel() {
             <button
               type="button"
               className="admin-app__menu-btn"
-              aria-label="Ouvrir le menu"
-              onClick={() => setNavOpen(true)}
+              aria-label={navOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+              aria-expanded={navOpen}
+              onClick={() => setNavOpen((open) => !open)}
             >
               <span />
               <span />
