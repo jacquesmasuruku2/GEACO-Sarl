@@ -4072,6 +4072,13 @@ html.site-header-topbar-hidden .site-topbar {
   font-size: 1rem;
 }
 
+.service-cards-admin__preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: flex-end;
+}
+
 .service-cards-admin__stage {
   overflow: auto;
   padding: 0.35rem;

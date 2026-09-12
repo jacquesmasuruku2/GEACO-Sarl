@@ -1,8 +1,61 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { toPng } from 'html-to-image'
 import { supabase } from '../../../lib/supabase'
 import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 import { ServiceIdCard, resolveServiceCardData } from '../../../components/admin/ServiceIdCard'
 import { SITE_CONTACT } from '../../../data/siteContact'
+
+function slugifyFilename(value) {
+  return (
+    String(value || 'carte')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'carte'
+  )
+}
+
+function isLikelyIos() {
+  if (typeof navigator === 'undefined') return false
+  return (
+    /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  )
+}
+
+/** Enregistre un PNG : partage natif (mobile) ou téléchargement ; repli iOS = ouvrir l’image. */
+async function savePngBlob(blob, filename) {
+  const file = new File([blob], filename, { type: 'image/png' })
+  if (typeof navigator !== 'undefined' && typeof navigator.canShare === 'function') {
+    try {
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Carte de service GEACO',
+        })
+        return 'shared'
+      }
+    } catch (err) {
+      if (err?.name === 'AbortError') return 'cancelled'
+    }
+  }
+
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  a.rel = 'noopener'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+
+  if (isLikelyIos()) {
+    window.open(url, '_blank', 'noopener')
+  }
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  return 'downloaded'
+}
 
 function blankCardFields() {
   return {
@@ -28,6 +81,8 @@ export function ServiceCardsAdmin() {
   const [previewId, setPreviewId] = useState(null)
   const [savingId, setSavingId] = useState(null)
   const [printMode, setPrintMode] = useState('one') // one | all
+  const [exportingPng, setExportingPng] = useState(false)
+  const previewStageRef = useRef(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -131,6 +186,45 @@ export function ServiceCardsAdmin() {
     window.setTimeout(() => window.print(), 80)
   }
 
+  async function exportPreviewPng() {
+    const stage = previewStageRef.current
+    const node = stage?.querySelector('.service-id-card')
+    if (!previewRow || !node) return
+
+    setExportingPng(true)
+    setError('')
+    setMessage('')
+    try {
+      const dataUrl = await toPng(node, {
+        cacheBust: true,
+        pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
+        backgroundColor: '#ffffff',
+      })
+      const blob = await (await fetch(dataUrl)).blob()
+      const filename = `geaco-carte-service-${slugifyFilename(
+        previewRow.card_matricule || previewRow.name,
+      )}.png`
+      const mode = await savePngBlob(blob, filename)
+      if (mode === 'shared') {
+        setMessage('PNG prêt. Choisissez « Enregistrer l’image » ou Partager depuis le menu.')
+      } else if (mode === 'downloaded') {
+        setMessage(
+          isLikelyIos()
+            ? 'PNG ouvert. Appui long sur l’image → Enregistrer dans Photos.'
+            : 'PNG téléchargé sur votre appareil.',
+        )
+      }
+    } catch (err) {
+      setError(
+        err?.message
+          ? `Export PNG impossible : ${err.message}`
+          : 'Export PNG impossible. Vérifiez la photo (CORS) et réessayez.',
+      )
+    } finally {
+      setExportingPng(false)
+    }
+  }
+
   function isPhotoUrl(url) {
     return String(url ?? '').trim().startsWith('http')
   }
@@ -144,6 +238,14 @@ export function ServiceCardsAdmin() {
         <div className="admin-dashboard__actions">
           <button
             type="button"
+            className="btn btn--primary"
+            onClick={exportPreviewPng}
+            disabled={!previewRow || exportingPng}
+          >
+            {exportingPng ? 'PNG…' : 'Télécharger PNG'}
+          </button>
+          <button
+            type="button"
             className="btn btn--outline"
             onClick={() => printCards('one')}
             disabled={!previewRow}
@@ -152,7 +254,7 @@ export function ServiceCardsAdmin() {
           </button>
           <button
             type="button"
-            className="btn btn--primary"
+            className="btn btn--outline"
             onClick={() => printCards('all')}
             disabled={!rows.length}
           >
@@ -173,9 +275,9 @@ export function ServiceCardsAdmin() {
       ) : null}
 
       <p className="admin-muted">
-        Produisez les cartes de service GEACO à partir des fiches équipe. Renseignez noms, prénom,
-        matricule, adresse, signature et date de validité, puis imprimez (ou exportez en PDF via
-        « Imprimer → Enregistrer au format PDF »).
+        Produisez les cartes de service GEACO à partir des fiches équipe. Sur téléphone : utilisez
+        « Télécharger PNG » (partage / enregistrement dans Photos). Sur ordinateur : PNG ou
+        impression / PDF.
       </p>
 
       <div className="service-cards-admin__layout">
@@ -372,13 +474,23 @@ export function ServiceCardsAdmin() {
           <div className="service-cards-admin__preview-head">
             <h3>Aperçu</h3>
             {previewRow ? (
-              <button type="button" className="btn btn--ghost" onClick={() => printCards('one')}>
-                Imprimer
-              </button>
+              <div className="service-cards-admin__preview-actions">
+                <button
+                  type="button"
+                  className="btn btn--primary"
+                  onClick={exportPreviewPng}
+                  disabled={exportingPng}
+                >
+                  {exportingPng ? 'PNG…' : 'PNG'}
+                </button>
+                <button type="button" className="btn btn--ghost" onClick={() => printCards('one')}>
+                  Imprimer
+                </button>
+              </div>
             ) : null}
           </div>
           {previewRow ? (
-            <div className="service-cards-admin__stage">
+            <div className="service-cards-admin__stage" ref={previewStageRef}>
               <ServiceIdCard member={previewRow} />
             </div>
           ) : (

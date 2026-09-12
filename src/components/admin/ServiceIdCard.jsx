@@ -130,13 +130,19 @@ export function ServiceIdCard({ member, className = '' }) {
         <div className="service-id-card__photo-col">
           <div className="service-id-card__photo">
             {data.photoUrl ? (
-              <img src={data.photoUrl} alt="" />
+              <img src={data.photoUrl} alt="" crossOrigin="anonymous" />
             ) : (
               <span className="service-id-card__photo-empty">Photo</span>
             )}
           </div>
           <div className="service-id-card__signature">
-            {data.signatureUrl ? <img src={data.signatureUrl} alt="" /> : null}
+            {data.signatureUrl ? (
+              <img
+                src={data.signatureUrl}
+                alt=""
+                crossOrigin={/^https?:\/\//i.test(data.signatureUrl) ? 'anonymous' : undefined}
+              />
+            ) : null}
           </div>
           <p className="service-id-card__sign-label">Signature autorisée</p>
           <p className="service-id-card__validity">Validité {data.validUntil}</p>
