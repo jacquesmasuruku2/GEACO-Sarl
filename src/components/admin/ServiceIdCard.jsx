@@ -4,12 +4,17 @@ function isHttpUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim())
 }
 
-function formatValidUntil(value) {
+function formatCardDate(value) {
   if (!value) return '—'
   const raw = String(value).slice(0, 10)
   const [y, m, d] = raw.split('-')
   if (!y || !m || !d) return raw
   return `${d}/${m}/${y}`
+}
+
+function textOrDash(value) {
+  const v = String(value ?? '').trim()
+  return v || '—'
 }
 
 /**
@@ -23,9 +28,14 @@ export function resolveServiceCardData(row) {
   return {
     id: row?.id,
     lastName: lastName || displayName || '—',
+    postName: textOrDash(row?.card_post_name),
     firstName: firstName || '—',
+    sex: textOrDash(row?.card_sex),
+    birthPlace: textOrDash(row?.card_birth_place),
+    birthDate: formatCardDate(row?.card_birth_date),
     role: String(row?.role ?? '').trim() || '—',
     matricule: String(row?.card_matricule ?? '').trim() || '—',
+    department: textOrDash(row?.card_department),
     address:
       String(row?.card_address ?? '').trim() ||
       SITE_CONTACT.offices.goma.shortAddress,
@@ -33,10 +43,22 @@ export function resolveServiceCardData(row) {
     signatureUrl: isHttpUrl(row?.card_signature_url)
       ? String(row.card_signature_url).trim()
       : '',
-    validUntil: formatValidUntil(row?.card_valid_until),
+    validUntil: formatCardDate(row?.card_valid_until),
     company: SITE_CONTACT.legalName,
     companyLong: SITE_CONTACT.legalNameLong,
   }
+}
+
+function CardField({ label, value }) {
+  return (
+    <div className="service-id-card__row">
+      <span className="service-id-card__label">{label}</span>
+      <span className="service-id-card__colon" aria-hidden="true">
+        :
+      </span>
+      <span className="service-id-card__value">{value}</span>
+    </div>
+  )
 }
 
 /**
@@ -82,28 +104,17 @@ export function ServiceIdCard({ member, className = '' }) {
         <div className="service-id-card__main">
           <h2 className="service-id-card__title">CARTE DE SERVICE</h2>
 
-          <dl className="service-id-card__fields">
-            <div>
-              <dt>Noms</dt>
-              <dd>{data.lastName}</dd>
-            </div>
-            <div>
-              <dt>Prénom</dt>
-              <dd>{data.firstName}</dd>
-            </div>
-            <div>
-              <dt>Fonction</dt>
-              <dd>{data.role}</dd>
-            </div>
-            <div>
-              <dt>Matricule</dt>
-              <dd>{data.matricule}</dd>
-            </div>
-            <div>
-              <dt>Adresse</dt>
-              <dd>{data.address}</dd>
-            </div>
-          </dl>
+          <div className="service-id-card__fields">
+            <CardField label="Nom" value={data.lastName} />
+            <CardField label="Post-nom" value={data.postName} />
+            <CardField label="Prénom" value={data.firstName} />
+            <CardField label="Sexe" value={data.sex} />
+            <CardField label="Lieu de naissance" value={data.birthPlace} />
+            <CardField label="Date de naissance" value={data.birthDate} />
+            <CardField label="Fonction" value={data.role} />
+            <CardField label="Matricule" value={data.matricule} />
+            <CardField label="Département" value={data.department} />
+          </div>
         </div>
 
         <div className="service-id-card__photo-col">

@@ -7,8 +7,13 @@ import { SITE_CONTACT } from '../../../data/siteContact'
 function blankCardFields() {
   return {
     card_last_name: '',
+    card_post_name: '',
     card_first_name: '',
+    card_sex: '',
+    card_birth_place: '',
+    card_birth_date: '',
     card_matricule: '',
+    card_department: '',
     card_address: SITE_CONTACT.offices.goma.shortAddress,
     card_signature_url: '',
     card_valid_until: '',
@@ -34,7 +39,7 @@ export function ServiceCardsAdmin() {
     if (qErr) {
       setError(
         qErr.message.includes('card_')
-          ? `${qErr.message} — Appliquez la migration 017_site_personnel_service_card.sql dans Supabase.`
+          ? `${qErr.message} — Appliquez les migrations 017 et 018 (cartes de service) dans Supabase.`
           : qErr.message,
       )
       return
@@ -68,8 +73,13 @@ export function ServiceCardsAdmin() {
         role: row.role,
         photo_url: row.photo_url?.trim() || null,
         card_last_name: row.card_last_name?.trim() || null,
+        card_post_name: row.card_post_name?.trim() || null,
         card_first_name: row.card_first_name?.trim() || null,
+        card_sex: row.card_sex?.trim() || null,
+        card_birth_place: row.card_birth_place?.trim() || null,
+        card_birth_date: row.card_birth_date || null,
         card_matricule: row.card_matricule?.trim() || null,
+        card_department: row.card_department?.trim() || null,
         card_address: row.card_address?.trim() || null,
         card_signature_url: row.card_signature_url?.trim() || null,
         card_valid_until: row.card_valid_until || null,
@@ -79,7 +89,7 @@ export function ServiceCardsAdmin() {
       setSavingId(null)
       setError(
         upErr.message.includes('card_')
-          ? `${upErr.message} — Appliquez la migration 017_site_personnel_service_card.sql dans Supabase.`
+          ? `${upErr.message} — Appliquez les migrations 017 et 018 (cartes de service) dans Supabase.`
           : upErr.message,
       )
       return
@@ -224,26 +234,61 @@ export function ServiceCardsAdmin() {
                 <h3 style={{ marginTop: 0 }}>Édition carte — {row.name}</h3>
                 <div className="admin-grid">
                   <label>
-                    Noms (carte)
+                    Nom
                     <input
                       value={row.card_last_name ?? ''}
                       onChange={(e) => updateLocal(row.id, { card_last_name: e.target.value })}
-                      placeholder="Ex. BARAKA MUSA"
+                      placeholder="Ex. BARAKA"
                     />
                   </label>
                   <label>
-                    Prénom (carte)
+                    Post-nom
+                    <input
+                      value={row.card_post_name ?? ''}
+                      onChange={(e) => updateLocal(row.id, { card_post_name: e.target.value })}
+                      placeholder="Ex. MUSA"
+                    />
+                  </label>
+                  <label>
+                    Prénom
                     <input
                       value={row.card_first_name ?? ''}
                       onChange={(e) => updateLocal(row.id, { card_first_name: e.target.value })}
                       placeholder="Ex. Eric"
                     />
                   </label>
+                  <label>
+                    Sexe
+                    <select
+                      value={row.card_sex ?? ''}
+                      onChange={(e) => updateLocal(row.id, { card_sex: e.target.value })}
+                    >
+                      <option value="">—</option>
+                      <option value="Masculin">Masculin</option>
+                      <option value="Féminin">Féminin</option>
+                    </select>
+                  </label>
+                  <label>
+                    Lieu de naissance
+                    <input
+                      value={row.card_birth_place ?? ''}
+                      onChange={(e) => updateLocal(row.id, { card_birth_place: e.target.value })}
+                      placeholder="Ex. Goma"
+                    />
+                  </label>
+                  <label>
+                    Date de naissance
+                    <input
+                      type="date"
+                      value={row.card_birth_date ? String(row.card_birth_date).slice(0, 10) : ''}
+                      onChange={(e) => updateLocal(row.id, { card_birth_date: e.target.value })}
+                    />
+                  </label>
                   <label className="admin-span-2">
                     Nom affiché site (synchronisé)
                     <input value={row.name ?? ''} onChange={(e) => updateLocal(row.id, { name: e.target.value })} />
                   </label>
-                  <label className="admin-span-2">
+                  <label>
                     Fonction
                     <input value={row.role ?? ''} onChange={(e) => updateLocal(row.id, { role: e.target.value })} />
                   </label>
@@ -256,6 +301,14 @@ export function ServiceCardsAdmin() {
                     />
                   </label>
                   <label>
+                    Département
+                    <input
+                      value={row.card_department ?? ''}
+                      onChange={(e) => updateLocal(row.id, { card_department: e.target.value })}
+                      placeholder="Ex. Construction"
+                    />
+                  </label>
+                  <label>
                     Validité
                     <input
                       type="date"
@@ -264,7 +317,7 @@ export function ServiceCardsAdmin() {
                     />
                   </label>
                   <label className="admin-span-2">
-                    Adresse (carte)
+                    Adresse (interne / optionnelle)
                     <input
                       value={row.card_address ?? ''}
                       onChange={(e) => updateLocal(row.id, { card_address: e.target.value })}

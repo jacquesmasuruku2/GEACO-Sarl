@@ -4090,32 +4090,33 @@ html.site-header-topbar-hidden .site-topbar {
   margin: 0;
   display: grid;
   align-content: start;
-  gap: 0.32rem;
+  gap: 0.22rem;
 }
 
-.service-id-card__fields > div {
+.service-id-card__row {
   display: grid;
-  grid-template-columns: 5.1rem minmax(0, 1fr);
-  column-gap: 0.35rem;
-  align-items: start;
+  grid-template-columns: 9.6rem 0.9rem minmax(0, 1fr);
+  column-gap: 0.2rem;
+  align-items: baseline;
 }
 
-.service-id-card__fields dt {
-  margin: 0;
-  font-size: clamp(0.68rem, 1.45vw, 0.84rem);
+.service-id-card__label {
+  font-size: clamp(0.62rem, 1.3vw, 0.76rem);
   font-weight: 400;
   color: #111;
-  text-transform: none;
-  letter-spacing: 0;
+  line-height: 1.25;
 }
 
-.service-id-card__fields dt::after {
-  content: ' :';
+.service-id-card__colon {
+  font-size: clamp(0.62rem, 1.3vw, 0.76rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.25;
+  text-align: left;
 }
 
-.service-id-card__fields dd {
-  margin: 0;
-  font-size: clamp(0.68rem, 1.45vw, 0.84rem);
+.service-id-card__value {
+  font-size: clamp(0.62rem, 1.3vw, 0.76rem);
   font-weight: 700;
   color: #111;
   line-height: 1.25;
