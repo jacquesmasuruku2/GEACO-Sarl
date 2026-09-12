@@ -1,7 +1,16 @@
 import { SITE_CONTACT } from '../../data/siteContact'
 
+/** Signature autorisée GEACO (traits noirs, fond transparent). */
+export const DEFAULT_SERVICE_CARD_SIGNATURE = '/media/geaco/signature-autorisee.png'
+
 function isHttpUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim())
+}
+
+function isUsableImageSrc(url) {
+  if (typeof url !== 'string') return false
+  const v = url.trim()
+  return Boolean(v) && (v.startsWith('/') || /^https?:\/\//i.test(v))
 }
 
 function formatCardDate(value) {
@@ -24,6 +33,7 @@ export function resolveServiceCardData(row) {
   const lastName = String(row?.card_last_name ?? '').trim()
   const firstName = String(row?.card_first_name ?? '').trim()
   const displayName = String(row?.name ?? '').trim()
+  const customSignature = String(row?.card_signature_url ?? '').trim()
 
   return {
     id: row?.id,
@@ -40,9 +50,9 @@ export function resolveServiceCardData(row) {
       String(row?.card_address ?? '').trim() ||
       SITE_CONTACT.offices.goma.shortAddress,
     photoUrl: isHttpUrl(row?.photo_url) ? String(row.photo_url).trim() : '',
-    signatureUrl: isHttpUrl(row?.card_signature_url)
-      ? String(row.card_signature_url).trim()
-      : '',
+    signatureUrl: isUsableImageSrc(customSignature)
+      ? customSignature
+      : DEFAULT_SERVICE_CARD_SIGNATURE,
     validUntil: formatCardDate(row?.card_valid_until),
     company: SITE_CONTACT.legalName,
     companyLong: SITE_CONTACT.legalNameLong,
