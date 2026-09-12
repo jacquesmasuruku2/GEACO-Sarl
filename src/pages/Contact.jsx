@@ -5,10 +5,10 @@ import { PageHero } from '../components/PageHero'
 import { LeadFormSupabase } from '../components/LeadFormSupabase'
 import { ContactThanksBanner } from '../components/ContactThanksBanner'
 import { SocialFollowBlock } from '../components/SocialFollowBlock'
-import { SITE_CONTACT } from '../data/siteContact'
+import { SITE_CONTACT, SITE_OFFICES } from '../data/siteContact'
 
 export function Contact() {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
   const [params] = useSearchParams()
   const merci = params.get('merci') === '1'
 
@@ -60,14 +60,12 @@ export function Contact() {
               </div>
 
               <h2 className="section__title">{t('contact.addressesTitle')}</h2>
-              <div className="card contact-address-card">
-                <h3>{SITE_CONTACT.offices.goma.label}</h3>
-                <p style={{ margin: 0 }}>{SITE_CONTACT.offices.goma.address}</p>
-              </div>
-              <div className="card contact-address-card">
-                <h3>{SITE_CONTACT.offices.butembo.label}</h3>
-                <p style={{ margin: 0 }}>{SITE_CONTACT.offices.butembo.address}</p>
-              </div>
+              {SITE_OFFICES.map((office) => (
+                <div className="card contact-address-card" key={office.label}>
+                  <h3>{locale === 'en' && office.labelEn ? office.labelEn : office.label}</h3>
+                  <p style={{ margin: 0 }}>{office.address}</p>
+                </div>
+              ))}
               <div className="contact-meta" role="group" aria-label="Coordonnées de contact">
                 <p className="contact-meta__line">
                   <strong>Email :</strong>{' '}

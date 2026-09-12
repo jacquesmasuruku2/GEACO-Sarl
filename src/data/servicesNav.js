@@ -1,19 +1,23 @@
 /**
- * Trois piliers GEACO + filière café.
- * Les anciennes URLs (agronomie, genie-civil, hydraulique) sont redirigées vers ces slugs.
+ * Trois piliers GEACO (Agriculture, Construction, WASH).
+ * Solution Café est un projet agricole → /projets/solution-cafe
  */
 export const SERVICE_ROUTES = [
   { slug: 'agriculture', detailKey: 'agriculture', pillar: 'ag', dbKey: 'agronomie' },
   { slug: 'construction', detailKey: 'construction', pillar: 'civil', dbKey: 'civil' },
   { slug: 'wash', detailKey: 'wash', pillar: 'wash', dbKey: 'hydro' },
-  { slug: 'solution-cafe', detailKey: 'solutionCafe', pillar: null, dbKey: 'solution_cafe' },
 ]
 
-/** Anciennes URLs → nouvelles (SEO / liens existants). */
+/** Anciennes URLs services → nouvelles. */
 export const SERVICE_SLUG_REDIRECTS = {
   agronomie: 'agriculture',
   'genie-civil': 'construction',
   hydraulique: 'wash',
+}
+
+/** Redirections hors catalogue services (ex. Solution Café → projets). */
+export const SERVICE_TO_PROJECT_REDIRECTS = {
+  'solution-cafe': '/projets/solution-cafe',
 }
 
 export const PILLAR_ROUTES = SERVICE_ROUTES.filter((r) => r.pillar)
@@ -31,7 +35,6 @@ export function dbKeyFromSlug(slug) {
 }
 
 export function serviceNavLabel(detailKey, t) {
-  if (detailKey === 'solutionCafe') return t('services.solutionCafe.navTitle')
   if (detailKey === 'agriculture') return t('services.agriculture.title')
   if (detailKey === 'construction') return t('services.construction.title')
   if (detailKey === 'wash') return t('services.wash.title')

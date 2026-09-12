@@ -30,6 +30,13 @@ export function JsonLdOrganization() {
         addressRegion: 'Nord-Kivu',
         addressCountry: 'CD',
       },
+      {
+        '@type': 'PostalAddress',
+        streetAddress: 'Burora, en face de l’enclos de Mwami',
+        addressLocality: 'Bweremana',
+        addressRegion: 'Nord-Kivu, Territoire de Masisi',
+        addressCountry: 'CD',
+      },
     ],
     areaServed: 'Central Africa',
     priceRange: '$$',

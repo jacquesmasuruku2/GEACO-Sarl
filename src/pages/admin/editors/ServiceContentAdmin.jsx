@@ -6,7 +6,7 @@ const LABELS = {
   agronomie: 'Agriculture (/services/agriculture)',
   civil: 'Construction (/services/construction)',
   hydro: 'WASH (/services/wash)',
-  solution_cafe: 'Solution Café (/services/solution-cafe)',
+  solution_cafe: 'Solution Café (projet → /projets/solution-cafe)',
 }
 
 export function ServiceContentAdmin() {

@@ -20,14 +20,15 @@ Document généré lors de la refonte structurelle (12 septembre 2026).
 | `+243 836 895 855` | Header topbar, Solution Café | Conservé comme secondaire / TODO |
 | `+243 977 472 158` | WhatsApp | Conservé comme WhatsApp Business |
 
-## Implantations (contradiction)
+## Implantations
 
-| Source | Valeur |
-| --- | --- |
-| Adresses | Goma + Butembo |
-| Ancien chiffre clé | « Goma & Bweremana » |
+| Lieu | Adresse | Statut |
+| --- | --- | --- |
+| Goma | 46, Avenue Erengeti, Quartier Kyeshero | Confirmé (siège) |
+| Butembo | 275, Cellule MIHAKE, Quartier KAMESI MBONZO | Confirmé (agence) |
+| Bweremana (Masisi) | Burora, en face de l’enclos de Mwami | **Confirmé par GEACO (12 sept. 2026)** |
 
-**Décision temporaire :** afficher Goma & Butembo uniquement. Bweremana retiré des stats jusqu’à validation.
+Les chiffres clés affichent **3 implantations** : Goma, Butembo & Bweremana.
 
 ## Chiffres clés
 
@@ -35,7 +36,7 @@ Document généré lors de la refonte structurelle (12 septembre 2026).
 | --- | --- |
 | « 99 ans — horizon de la société » | Retiré de l’accueil (durée statutaire ≠ KPI commercial) |
 | « 3 domaines d’expertise » | Conservé (Agriculture, Construction, WASH) |
-| « 2 implantations » | Conservé avec libellé Goma & Butembo |
+| Implantations | **3** — Goma, Butembo & Bweremana |
 
 ## Projets & partenaires
 

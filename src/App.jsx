@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { ScrollToTop } from './components/ScrollToTop'
 import { Home } from './pages/Home'
@@ -7,6 +7,8 @@ import { Faq } from './pages/Faq'
 import { Services } from './pages/Services'
 import { ServiceDetail } from './pages/ServiceDetail'
 import { Projects } from './pages/Projects'
+import { ProjectDetail } from './pages/ProjectDetail'
+import { ProjectSolutionCafe } from './pages/ProjectSolutionCafe'
 import { Partnerships } from './pages/Partnerships'
 import { Contact } from './pages/Contact'
 import { QuoteRequest } from './pages/QuoteRequest'
@@ -35,13 +37,16 @@ export default function App() {
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/services/solution-cafe" element={<Navigate to="/projets/solution-cafe" replace />} />
           <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/services" element={<Services />} />
-          <Route path="/projets" element={<Projects />} />
+          <Route path="/projets/solution-cafe" element={<ProjectSolutionCafe />} />
           <Route path="/projets/construction" element={<Projects />} />
           <Route path="/projets/agriculture" element={<Projects />} />
           <Route path="/projets/agricoles" element={<Projects />} />
           <Route path="/projets/wash" element={<Projects />} />
+          <Route path="/projets/:slug" element={<ProjectDetail />} />
+          <Route path="/projets" element={<Projects />} />
           <Route path="/partenariats" element={<Partnerships />} />
           <Route path="/devis" element={<QuoteRequest />} />
           <Route path="/contact" element={<Contact />} />

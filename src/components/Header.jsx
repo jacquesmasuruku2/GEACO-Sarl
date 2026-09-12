@@ -116,6 +116,9 @@ export function Header() {
               <Link className="nav-dropdown__link" to="/projets/agriculture" role="menuitem">
                 {navLabel('nav.projectsAgriculture')}
               </Link>
+              <Link className="nav-dropdown__link" to="/projets/solution-cafe" role="menuitem">
+                {navLabel('nav.projectsSolutionCafe')}
+              </Link>
               <Link className="nav-dropdown__link" to="/projets/construction" role="menuitem">
                 {navLabel('nav.projectsConstruction')}
               </Link>
@@ -234,6 +237,9 @@ export function Header() {
             <div className="nav-mobile__sub">
               <NavLink to="/projets/agriculture" onClick={closeAll}>
                 {navLabel('nav.projectsAgriculture')}
+              </NavLink>
+              <NavLink to="/projets/solution-cafe" onClick={closeAll}>
+                {navLabel('nav.projectsSolutionCafe')}
               </NavLink>
               <NavLink to="/projets/construction" onClick={closeAll}>
                 {navLabel('nav.projectsConstruction')}

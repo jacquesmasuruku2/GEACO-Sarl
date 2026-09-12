@@ -10,7 +10,7 @@
  */
 export const SITE_CONTACT = {
   legalName: 'GEACO SARL',
-  legalNameLong: "Groupe d'études agronomiques et de construction",
+  legalNameLong: "Groupe d'Etudes Agronomiques et de Construction",
   email: 'geacosarl@gmail.com',
   phonePrimaryDisplay: '+243 808 368 955',
   phonePrimaryTel: '+243808368955',
@@ -23,13 +23,27 @@ export const SITE_CONTACT = {
   offices: {
     goma: {
       label: 'Siège social — Goma',
+      labelEn: 'Head office — Goma',
+      city: 'Goma',
+      shortAddress: '46, Av. Erengeti, Kyeshero',
       address:
         '46, Avenue Erengeti, Quartier Kyeshero, Commune de Goma, Ville de Goma, Nord-Kivu, RDC.',
     },
     butembo: {
       label: 'Agence — Butembo',
+      labelEn: 'Branch — Butembo',
+      city: 'Butembo',
+      shortAddress: '275, Cellule Mihake, Kamesi Mbonzo',
       address:
         '275, Cellule MIHAKE, Quartier KAMESI MBONZO, Commune de Bulengera, Ville de Butembo, Nord-Kivu, RDC.',
+    },
+    bweremana: {
+      label: 'Bureau — Masisi / Bweremana',
+      labelEn: 'Office — Masisi / Bweremana',
+      city: 'Bweremana',
+      shortAddress: 'Burora, face à l’enclos de Mwami',
+      address:
+        'Burora, en face de l’enclos de Mwami, Bweremana, Territoire de Masisi, Nord-Kivu, RDC.',
     },
   },
   map: {
@@ -40,3 +54,6 @@ export const SITE_CONTACT = {
   socialNote:
     'La page Facebook historique porte le libellé « GEACO ASBL ». À clarifier juridiquement (SARL vs ASBL).',
 }
+
+/** Liste ordonnée des implantations (Goma, Butembo, Bweremana). */
+export const SITE_OFFICES = Object.values(SITE_CONTACT.offices)

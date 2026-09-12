@@ -21,27 +21,23 @@ export function AuthAdmin() {
 
   if (!isSupabaseConfigured || !supabase) {
     return (
-      <div className="admin-shell">
-        <div className="admin-card">
-          <h1>Administration</h1>
-          <p>
-            Supabase n’est pas disponible dans cette version du site : les variables{' '}
-            <code>VITE_SUPABASE_URL</code> et <code>VITE_SUPABASE_ANON_KEY</code> doivent être présentes{' '}
-            <strong>au moment du build</strong> (Vite les intègre dans le bundle).
-          </p>
-          <p className="admin-muted">
-            <strong>En local</strong> : fichier <code>.env</code> à la racine du dossier <code>geaco-sarl</code> (voir{' '}
-            <code>.env.example</code>), puis <code>npm run dev</code>.
-            <br />
-            <strong>Sur Vercel</strong> : Settings → Environment Variables → ajoutez les deux clés pour{' '}
-            <strong>Production</strong>, enregistrez, puis <strong>Redeploy</strong>. Le fichier <code>.env</code> n’est
-            jamais envoyé sur GitHub : le déploiement ne le voit pas.
-          </p>
-          <p className="admin-muted">
-            Ensuite, appliquez les migrations SQL dans Supabase (dont <code>001_site_content.sql</code> pour les
-            admins).
-          </p>
-          <Link to="/">Retour au site</Link>
+      <div className="admin-login">
+        <div className="admin-login__panel">
+          <div className="admin-login__card">
+            <img className="admin-login__logo" src="/geaco-logo-transparent.png" alt="GEACO SARL" />
+            <h1 className="admin-login__title">Configuration requise</h1>
+            <p className="admin-login__lead">
+              Supabase n’est pas disponible : les variables <code>VITE_SUPABASE_URL</code> et{' '}
+              <code>VITE_SUPABASE_ANON_KEY</code> doivent être présentes au moment du build.
+            </p>
+            <p className="admin-login__hint">
+              En local : fichier <code>.env</code> à la racine, puis <code>npm run dev</code>. Sur Vercel :
+              Environment Variables → Production → Redeploy.
+            </p>
+            <Link className="admin-login__back" to="/">
+              ← Retour au site
+            </Link>
+          </div>
         </div>
       </div>
     )
@@ -49,8 +45,10 @@ export function AuthAdmin() {
 
   if (!checked) {
     return (
-      <div className="admin-shell">
-        <p className="admin-muted">Chargement…</p>
+      <div className="admin-login">
+        <div className="admin-login__panel">
+          <p className="admin-login__loading">Chargement…</p>
+        </div>
       </div>
     )
   }
@@ -81,7 +79,7 @@ export function AuthAdmin() {
       setBusy(false)
       setError(
         sessErr?.message ??
-          'Session non enregistrée. Vérifiez que les cookies / le stockage du navigateur ne sont pas bloqués, puis réessayez.',
+          'Session non enregistrée. Vérifiez que le stockage du navigateur n’est pas bloqué, puis réessayez.',
       )
       return
     }
@@ -90,40 +88,64 @@ export function AuthAdmin() {
   }
 
   return (
-    <div className="admin-shell">
-      <div className="admin-card">
-        <h1>Connexion administrateur</h1>
-        <p className="admin-muted">
-          Accès réservé : votre compte doit être enregistré dans la table <code>app_admins</code> du
-          projet Supabase.
-        </p>
-        <form onSubmit={onSubmit} className="admin-form">
-          <label htmlFor="adm-email">Email</label>
-          <input
-            id="adm-email"
-            type="email"
-            autoComplete="username"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <label htmlFor="adm-pass">Mot de passe</label>
-          <input
-            id="adm-pass"
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          {error ? <p className="admin-error">{error}</p> : null}
-          <button className="btn btn--primary" type="submit" disabled={busy}>
-            {busy ? 'Connexion…' : 'Se connecter'}
-          </button>
-        </form>
-        <p style={{ marginTop: '1.25rem' }}>
-          <Link to="/">← Retour au site public</Link>
-        </p>
+    <div className="admin-login">
+      <div className="admin-login__aside" aria-hidden="true">
+        <div className="admin-login__aside-glow" />
+        <div className="admin-login__aside-content">
+          <img src="/geaco-logo-transparent.png" alt="" className="admin-login__aside-logo" />
+          <p className="admin-login__aside-kicker">GEACO SARL</p>
+          <p className="admin-login__aside-title">Espace de publication</p>
+          <p className="admin-login__aside-text">
+            Gérez projets, articles, équipe et contenus des pages services depuis un seul tableau de bord.
+          </p>
+        </div>
+      </div>
+
+      <div className="admin-login__panel">
+        <div className="admin-login__card">
+          <img className="admin-login__logo" src="/geaco-logo-transparent.png" alt="GEACO SARL" />
+          <h1 className="admin-login__title">Connexion</h1>
+          <p className="admin-login__lead">Accédez au studio de contenu GEACO.</p>
+
+          <form onSubmit={onSubmit} className="admin-login__form">
+            <label className="admin-login__field" htmlFor="adm-email">
+              <span>Email</span>
+              <input
+                id="adm-email"
+                type="email"
+                autoComplete="username"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="vous@exemple.com"
+                required
+              />
+            </label>
+            <label className="admin-login__field" htmlFor="adm-pass">
+              <span>Mot de passe</span>
+              <input
+                id="adm-pass"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+              />
+            </label>
+            {error ? (
+              <p className="admin-login__error" role="alert">
+                {error}
+              </p>
+            ) : null}
+            <button className="admin-login__submit" type="submit" disabled={busy}>
+              {busy ? 'Connexion…' : 'Se connecter'}
+            </button>
+          </form>
+
+          <Link className="admin-login__back" to="/">
+            ← Retour au site public
+          </Link>
+        </div>
       </div>
     </div>
   )

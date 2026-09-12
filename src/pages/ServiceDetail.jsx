@@ -7,30 +7,22 @@ import { serviceKeyFromDetailKey } from '../lib/serviceDbKeys'
 import { useSiteServiceContent } from '../hooks/useSiteServiceContent'
 import { pickNonEmptyString, pickSections } from '../lib/mergePublishedContent'
 import { PillarIcon } from '../components/PillarIcon'
+import { SITE_CONTACT } from '../data/siteContact'
 
 function SectionBlock({ section }) {
   const hasTitle = Boolean(section.title?.trim())
   return (
-    <div className="service-block">
-      {hasTitle ? <h2 className="section__title">{section.title}</h2> : null}
-      {section.text ? (
-        <p
-          style={{
-            marginBottom: section.items?.length ? '1rem' : 0,
-            fontStyle: hasTitle ? 'normal' : 'italic',
-          }}
-        >
-          {section.text}
-        </p>
-      ) : null}
+    <section className="service-section">
+      {hasTitle ? <h2 className="service-section__title">{section.title}</h2> : null}
+      {section.text ? <p className="service-section__text">{section.text}</p> : null}
       {section.items?.length ? (
-        <ul className="plain-list">
+        <ul className="service-section__list">
           {section.items.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
       ) : null}
-    </div>
+    </section>
   )
 }
 
@@ -62,11 +54,19 @@ export function ServiceDetail() {
   const heroFromDb = pickNonEmptyString(contentRow?.hero_image_url, '')
   const heroRaw = heroFromDb || t(`${base}.heroImage`)
   const heroImage = typeof heroRaw === 'string' && heroRaw.startsWith('http') ? heroRaw : undefined
-  const projectBadge = dk === 'solutionCafe' ? t(`${base}.projectBadge`) : null
   const deliverables = t(`${base}.deliverables`)
   const safeDeliverables = Array.isArray(deliverables) ? deliverables : []
   const approachTitle = t(`${base}.approachTitle`)
   const approachText = t(`${base}.approachText`)
+  const hasApproach =
+    typeof approachTitle === 'string' &&
+    !approachTitle.includes('approachTitle') &&
+    approachTitle.trim().length > 0
+  const hasApproachText =
+    typeof approachText === 'string' &&
+    !approachText.includes('approachText') &&
+    approachText.trim().length > 0
+
   const iconName =
     dk === 'agriculture' ? 'agriculture' : dk === 'construction' ? 'construction' : dk === 'wash' ? 'wash' : 'agriculture'
   const pillarClass =
@@ -78,6 +78,15 @@ export function ServiceDetail() {
           ? 'service-pillar-badge--wash'
           : 'service-pillar-badge--cafe'
 
+  const projectsHref =
+    dk === 'agriculture'
+      ? '/projets/agriculture'
+      : dk === 'construction'
+        ? '/projets/construction'
+        : dk === 'wash'
+          ? '/projets/wash'
+          : '/projets'
+
   return (
     <>
       <Seo title={metaTitle} description={metaDesc} path={`/services/${slug}`} />
@@ -85,67 +94,89 @@ export function ServiceDetail() {
       <PageHero
         breadcrumbItems={[
           { href: '/', label: t('nav.home') },
-          { href: '/services', label: t('nav.services') },
+          { href: '/services', label: t('nav.solutions') },
           { label: title },
         ]}
         title={title}
         lead={intro}
         heroImage={heroImage || undefined}
+        actions={
+          <>
+            <Link className="btn btn--on-dark" to={`/devis?domaine=${encodeURIComponent(slug)}`}>
+              {t('services.hub.quoteCta')}
+            </Link>
+            <Link className="btn btn--ghost-on-dark" to={projectsHref}>
+              {t('nav.projects')}
+            </Link>
+          </>
+        }
       />
 
-      <section className="section">
+      <section className="section service-detail-page">
         <div className="container service-detail-layout">
           <div className="service-detail-main">
-            {projectBadge ? <p className={`service-pillar-badge ${pillarClass}`}>{projectBadge}</p> : null}
-
-            {approachTitle && typeof approachTitle === 'string' && !approachTitle.includes('approachTitle') ? (
-              <div className="service-block">
+            {hasApproach ? (
+              <section className="service-section service-section--approach">
                 <div className={`service-pillar-badge ${pillarClass}`}>
                   <PillarIcon name={iconName} className="pillar-icon pillar-icon--sm" />
                   <span>{approachTitle}</span>
                 </div>
-                {approachText && typeof approachText === 'string' && !approachText.includes('approachText') ? (
-                  <p>{approachText}</p>
-                ) : null}
-              </div>
+                {hasApproachText ? <p className="service-section__text">{approachText}</p> : null}
+              </section>
             ) : null}
 
             {Array.isArray(sections) && sections.map((section, i) => <SectionBlock key={i} section={section} />)}
 
             {safeDeliverables.length ? (
-              <div className="service-block service-block--deliverables">
-                <h2 className="section__title">{t('services.hub.deliverablesTitle')}</h2>
-                <ul className="plain-list">
+              <section className="service-section service-section--deliverables">
+                <h2 className="service-section__title">{t('services.hub.deliverablesTitle')}</h2>
+                <ul className="service-section__list">
                   {safeDeliverables.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-              </div>
+              </section>
             ) : null}
+
+            <aside className="service-closing">
+              <h2 className="service-section__title">{t('services.hub.contextualCtaTitle')}</h2>
+              <p>{t('services.hub.contextualCtaLead')}</p>
+              <div className="service-closing__actions">
+                <Link className="btn btn--primary" to={`/devis?domaine=${encodeURIComponent(slug)}`}>
+                  {t('services.hub.quoteCta')}
+                </Link>
+                <Link className="btn btn--outline" to={`/contact?domaine=${encodeURIComponent(slug)}`}>
+                  {t('services.hub.contactCta')}
+                </Link>
+                <Link className="btn btn--ghost" to="/services">
+                  {t('services.hub.backToHub')}
+                </Link>
+              </div>
+              <div className="service-closing__direct">
+                <a href={SITE_CONTACT.whatsappUrl} target="_blank" rel="noreferrer">
+                  WhatsApp {SITE_CONTACT.whatsappDisplay}
+                </a>
+                <a href={`mailto:${SITE_CONTACT.email}`}>{SITE_CONTACT.email}</a>
+                <a href={`tel:${SITE_CONTACT.phonePrimaryTel}`}>{SITE_CONTACT.phonePrimaryDisplay}</a>
+              </div>
+            </aside>
           </div>
 
-          <aside className="service-detail-aside">
-            <div className="service-cta-card">
-              <h2>{t('services.hub.contextualCtaTitle')}</h2>
-              <p>{t('services.hub.contextualCtaLead')}</p>
-              <Link className="btn btn--primary" to={`/devis?domaine=${encodeURIComponent(slug)}`}>
-                {t('services.hub.quoteCta')}
-              </Link>
-              <Link className="btn btn--outline" to={`/contact?domaine=${encodeURIComponent(slug)}`}>
-                {t('services.hub.contactCta')}
-              </Link>
-              <Link className="btn btn--ghost" to="/services">
-                {t('services.hub.backToHub')}
-              </Link>
-              <div className="service-cta-card__quick">
-                <a className="btn btn--on-dark" href="https://wa.me/243977472158" target="_blank" rel="noreferrer">
-                  WhatsApp
-                </a>
-                <a className="btn btn--ghost" href="mailto:geacosarl@gmail.com">
-                  Email
-                </a>
-              </div>
-            </div>
+          <aside className="service-detail-aside" aria-label={t('services.hub.contextualCtaTitle')}>
+            <p className="service-aside__kicker">{t('nav.solutions')}</p>
+            <p className="service-aside__lead">{t('services.hub.contextualCtaLead')}</p>
+            <Link className="service-aside__link" to={`/devis?domaine=${encodeURIComponent(slug)}`}>
+              {t('services.hub.quoteCta')}
+            </Link>
+            <Link className="service-aside__link" to={`/contact?domaine=${encodeURIComponent(slug)}`}>
+              {t('services.hub.contactCta')}
+            </Link>
+            <Link className="service-aside__link" to={projectsHref}>
+              {t('nav.projects')}
+            </Link>
+            <Link className="service-aside__link" to="/services">
+              {t('services.hub.backToHub')}
+            </Link>
           </aside>
         </div>
       </section>
