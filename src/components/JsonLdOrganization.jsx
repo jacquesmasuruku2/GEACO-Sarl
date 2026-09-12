@@ -1,4 +1,5 @@
 import { SOCIAL_LINKS } from '../data/socialLinks'
+import { SITE_CONTACT } from '../data/siteContact'
 
 /**
  * Données structurées Schema.org — améliore la compréhension par les moteurs de recherche.
@@ -8,12 +9,12 @@ export function JsonLdOrganization() {
   const data = {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
-    name: 'GEACO SARL',
+    name: SITE_CONTACT.legalName,
     description:
-      'Études, conception et réalisation de projets intégrés en agronomie, génie civil et hydraulique rurale — RDC.',
+      'Études, conception et réalisation de projets intégrés en agriculture, construction et WASH — RDC.',
     url: base || undefined,
-    email: 'geacosarl@gmail.com',
-    telephone: ['+243808368955', '+243977472158'],
+    email: SITE_CONTACT.email,
+    telephone: [SITE_CONTACT.phonePrimaryTel, SITE_CONTACT.whatsappTel],
     address: [
       {
         '@type': 'PostalAddress',

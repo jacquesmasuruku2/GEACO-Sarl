@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { formatNavLabel } from '../lib/formatNavLabel'
 import { SocialFollowBlock } from './SocialFollowBlock'
+import { SITE_CONTACT } from '../data/siteContact'
+import { PILLAR_ROUTES, serviceNavLabel } from '../data/servicesNav'
 
 export function Footer() {
   const { t, locale } = useI18n()
@@ -23,25 +25,20 @@ export function Footer() {
         <div>
           <h3>{t('footer.expertiseTitle')}</h3>
           <ul>
-            <li>
-              <Link to="/services">{nav('nav.services')}</Link>
-            </li>
-            <li>
-              <Link to="/projets">{nav('nav.projects')}</Link>
-            </li>
-            <li>
-              <Link to="/blog">{nav('nav.blog')}</Link>
-            </li>
-            <li>
-              <Link to="/partenariats">{nav('nav.partnerships')}</Link>
-            </li>
-            <li>
-              <Link to="/galerie">{nav('nav.gallery')}</Link>
-            </li>
+            {PILLAR_ROUTES.map(({ slug, detailKey }) => (
+              <li key={slug}>
+                <Link to={`/services/${slug}`}>
+                  {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
+                </Link>
+              </li>
+            ))}
             <li>
               <Link to="/services/solution-cafe">
                 {formatNavLabel(t('services.solutionCafe.navTitle'), locale)}
               </Link>
+            </li>
+            <li>
+              <Link to="/projets">{nav('nav.projects')}</Link>
             </li>
           </ul>
         </div>
@@ -49,13 +46,15 @@ export function Footer() {
           <h3>{t('footer.contactTitle')}</h3>
           <ul>
             <li>
-              <a href="mailto:geacosarl@gmail.com">geacosarl@gmail.com</a>
+              <a href={`mailto:${SITE_CONTACT.email}`}>{SITE_CONTACT.email}</a>
             </li>
             <li>
-              <a href="tel:+243808368955">+243 808 368 955</a>
+              <a href={`tel:${SITE_CONTACT.phonePrimaryTel}`}>{SITE_CONTACT.phonePrimaryDisplay}</a>
             </li>
             <li>
-              <a href="tel:+243977472158">097 747 2158</a>
+              <a href={SITE_CONTACT.whatsappUrl} target="_blank" rel="noreferrer">
+                WhatsApp {SITE_CONTACT.whatsappDisplay}
+              </a>
             </li>
           </ul>
         </div>
@@ -69,7 +68,10 @@ export function Footer() {
               <Link to="/faq">{nav('nav.faq')}</Link>
             </li>
             <li>
-              <Link to="/personnel">{nav('nav.personnel')}</Link>
+              <Link to="/blog">{nav('nav.blog')}</Link>
+            </li>
+            <li>
+              <Link to="/galerie">{nav('nav.gallery')}</Link>
             </li>
             <li>
               <Link to="/mentions-legales">{nav('nav.legal')}</Link>
@@ -83,7 +85,9 @@ export function Footer() {
           </ul>
         </div>
       </div>
-      <div className="footer-bottom">© {new Date().getFullYear()} GEACO SARL — Nord-Kivu, RDC</div>
+      <div className="footer-bottom">
+        © {new Date().getFullYear()} {SITE_CONTACT.legalName} — Nord-Kivu, RDC
+      </div>
     </footer>
   )
 }

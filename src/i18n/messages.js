@@ -17,9 +17,12 @@ export const messages = {
       about: 'à propos',
       personnel: 'notre equipe',
       services: 'services',
+      solutions: 'nos solutions',
+      resources: 'ressources',
       projects: 'projets',
       projectsConstruction: 'projets de construction',
       projectsAgriculture: 'projets agricoles',
+      projectsWash: 'projets WASH',
       blog: 'blog',
       gallery: 'galerie',
       partnerships: 'partenariats',
@@ -31,15 +34,37 @@ export const messages = {
       faq: 'FAQ',
     },
     home: {
-      metaTitle: 'GEACO SARL — Agronomie, génie civil & hydraulique rurale',
+      metaTitle: 'GEACO SARL — Agriculture, Construction & WASH',
       metaDesc:
-        'Entreprise congolaise : études, conception et réalisation de projets intégrés en agriculture et construction. Goma & Butembo, Nord-Kivu.',
-      heroTitle: 'Solutions durables pour territoires ruraux et urbains',
+        'Entreprise congolaise pluridisciplinaire : agriculture, génie civil et WASH. Études, conception et réalisation de projets à impact — Goma & Butembo, Nord-Kivu.',
+      heroTitle: 'Produire mieux. Construire durablement. Garantir l’eau et l’assainissement.',
       heroLead:
-        'GEACO SARL accompagne les communautés du Nord-Kivu et au-delà avec une expertise intégrée : agronomie, génie civil et hydraulique rurale, ancrée dans le terrain.',
-      ctaQuote: 'Demander un devis',
+        'GEACO SARL accompagne bailleurs, collectivités et opérateurs au Nord-Kivu : agriculture, construction & infrastructures, WASH — du diagnostic à la mise en œuvre.',
+      ctaExpertises: 'Découvrir nos solutions',
+      ctaQuote: 'Demander une mission / un devis',
       ctaContact: 'Nous contacter',
       ctaProjects: 'Découvrir nos projets',
+      pillarsTitle: 'Nos trois piliers d’expertise',
+      pillarsLead:
+        'Une architecture claire pour orienter partenaires et clients institutionnels vers le bon domaine, du diagnostic à la mise en œuvre.',
+      pillarsCta: 'Explorer ce domaine',
+      integratedTitle: 'Une approche intégrée',
+      integratedLead:
+        'Agriculture, infrastructures et eau se renforcent : produire durablement suppose des accès, des ouvrages et un service WASH fiable.',
+      methodTitle: 'La méthode GEACO',
+      methodLead: 'Un processus clair, répétable et adapté aux contraintes de terrain.',
+      methodSteps: [
+        { title: 'Diagnostiquer', text: 'Comprendre le contexte, les besoins et les risques locaux.' },
+        { title: 'Concevoir', text: 'Proposer un périmètre technique réaliste et des livrables clairs.' },
+        { title: 'Réaliser', text: 'Exécuter ou superviser avec exigence de qualité et de sécurité.' },
+        { title: 'Former', text: 'Transférer les pratiques aux équipes et communautés locales.' },
+        { title: 'Suivre', text: 'Mesurer, ajuster et documenter pour la durabilité.' },
+      ],
+      trustTitle: 'Confiance & réalisations récentes',
+      trustLead:
+        'Aperçu de missions représentatives. Les typologies illustratives ne remplacent pas une fiche projet documentée.',
+      trustCta: 'Voir tous les projets',
+      trustStatusNote: 'Statut à préciser (réalisé / en cours / capacité) — voir CONTENT-VALIDATION.md',
       visionTitle: 'Vision',
       visionText:
         'Devenir un acteur majeur en Afrique centrale dans la mise en œuvre de solutions durables en agriculture et en infrastructures rurales.',
@@ -94,18 +119,21 @@ export const messages = {
       newsItems: [
         {
           date: '14.04.2026',
-          cats: ['Actualités', 'Hydraulique'],
-          title: 'Optimisation d’un périmètre irrigué communautaire',
+          cats: ['WASH', 'Hydraulique'],
+          title: 'Évaluation et optimisation d’un système d’adduction d’eau communautaire',
+          pillar: 'wash',
         },
         {
           date: '09.04.2026',
-          cats: ['Actualités', 'Génie civil'],
-          title: 'Renforcement d’un axe rural prioritaire pour l’écoulement des récoltes',
+          cats: ['Construction', 'Génie civil'],
+          title: 'Évaluation de site et renforcement d’un axe rural pour l’écoulement des récoltes',
+          pillar: 'construction',
         },
         {
           date: '02.04.2026',
-          cats: ['Actualités', 'Agronomie'],
-          title: 'Campagne d’encadrement technique sur itinéraires culturaux durables',
+          cats: ['Agriculture', 'Chaîne de valeur'],
+          title: 'Étude d’impact et encadrement technique sur itinéraires agro-pastoraux durables',
+          pillar: 'agriculture',
         },
       ],
       promoEyebrow: 'Essentiel GEACO',
@@ -115,14 +143,16 @@ export const messages = {
       promoCta: 'Découvrir l’entreprise',
       statsSectionTitle: 'Chiffres clés',
       stats: [
-        { value: '3', label: 'domaines d’expertise intégrés' },
-        { value: '2', label: 'implantations — Goma & Bweremana' },
-        { value: '99', label: 'ans — horizon de la société' },
+        { value: '3', label: 'domaines d’expertise — Agriculture, Construction, WASH' },
+        { value: '2', label: 'implantations — Goma & Butembo' },
       ],
       ctaBandTitle: 'Construisez votre projet avec nous',
       ctaBandText:
-        'Vous souhaitez contribuer à des chantiers de développement à fort impact et gagner en compétence sur le terrain ? Parlons-en.',
+        'Choisissez le parcours adapté : devis chiffré, visite technique ou discussion de partenariat.',
       ctaBandBtn: 'Nous rejoindre',
+      ctaVisit: 'Planifier une visite',
+      ctaPartner: 'Devenir partenaire',
+      partnersEmpty: 'Aucun partenaire publié pour le moment. La liste sera enrichie après validation.',
       legalInfoTitle: 'Informations légales essentielles',
       legalInfoLead: 'Extraits des statuts de la société (siège social et informations administratives).',
       rccmLabel: 'RCCM',
@@ -219,12 +249,48 @@ export const messages = {
     services: {
       metaTitle: 'Services — GEACO SARL',
       metaDesc:
-        'Agronomie, génie civil, hydraulique rurale, commerce et filière Solution Café — études, travaux et export.',
-      title: 'Nos services',
+        'Agriculture, construction & génie civil, WASH (eau, hygiène, assainissement) et filière Solution Café — études, travaux et accompagnement.',
+      title: 'Nos expertises',
       lead:
-        'Quatre axes complémentaires — agronomie, génie civil, hydraulique rurale et filière café — pour des projets cohérents de la production à l’export.',
+        'Trois piliers complémentaires — Agriculture, Construction et WASH — plus la filière Solution Café, pour des missions cohérentes du diagnostic à la livraison.',
+      agriculture: {
+        title: 'Agriculture',
+        short:
+          'Projets agro-pastoraux, études d’impact, chaînes de valeur et accompagnement des producteurs.',
+        items: [
+          'Études agronomiques et diagnostics de sols',
+          'Études d’impact environnemental et social',
+          'Projets agro-pastoraux et sécurité alimentaire',
+          'Structuration de chaînes de valeur agricoles',
+          'Encadrement technique des coopératives et producteurs',
+        ],
+      },
+      construction: {
+        title: 'Construction & génie civil',
+        short:
+          'Bâtiments, infrastructures, évaluations de sites, études techniques et suivi de chantiers.',
+        items: [
+          'Évaluations de sites et études techniques',
+          'Bâtiments publics, scolaires et communautaires',
+          'Routes rurales, ouvrages d’art et terrassements',
+          'Suivi de chantiers et contrôle qualité',
+          'Assistance à maîtrise d’ouvrage',
+        ],
+      },
+      wash: {
+        title: 'WASH',
+        short:
+          'Eau, hygiène et assainissement : adduction, infrastructures sanitaires et audits de santé publique.',
+        items: [
+          'Adduction d’eau potable et réseaux de distribution',
+          'Forages, captages et stockage',
+          'Infrastructures d’assainissement et hygiène',
+          'Audits WASH et évaluation des structures de santé',
+          'Gestion des déchets et sensibilisation communautaire',
+        ],
+      },
       agronomy: {
-        title: 'Agronomie & environnement',
+        title: 'Agriculture',
         items: [
           'Études agronomiques et diagnostics de sols',
           'Études environnementales et analyses d’impact',
@@ -235,22 +301,22 @@ export const messages = {
         ],
       },
       civil: {
-        title: 'Génie civil & infrastructures',
+        title: 'Construction & génie civil',
         items: [
           'Routes rurales et ouvrages d’art',
           'Bâtiments publics, scolaires et communautaires',
           'Ouvrages hydrauliques et structures associées',
-          'Infrastructures WASH, télécommunications et électricité (études & appui)',
+          'Évaluations de sites et études techniques',
           'Bureau d’études techniques et architecturales',
         ],
       },
       hydro: {
-        title: 'Hydraulique rurale',
+        title: 'WASH',
         items: [
           'Aménagement hydro-agricole : irrigation et drainage',
           'Forage mécanique de puits et captages',
           'Adductions, stockage et distribution d’eau',
-          'Intégration solaire pour pompage et petites énergies',
+          'Assainissement, hygiène et audits de santé publique',
         ],
       },
       commerce: {
@@ -262,38 +328,51 @@ export const messages = {
         navTitle: 'solution café',
       },
       hub: {
-        backToHub: 'Toutes les prestations',
+        backToHub: 'Toutes les expertises',
         contactCta: 'Nous contacter',
-        quoteCta: 'Demander un devis',
-        chooseTitle: 'Choisir une prestation',
-        chooseLead: 'Accédez au détail de chaque domaine ou à la filière Solution Café.',
+        quoteCta: 'Demander une mission / un devis',
+        chooseTitle: 'Choisir un pilier',
+        chooseLead: 'Accédez au détail de chaque domaine d’expertise ou à la filière Solution Café.',
         cardCta: 'Voir le détail',
+        deliverablesTitle: 'Livrables pour vos équipes',
+        contextualCtaTitle: 'Besoin d’une mission dans ce domaine ?',
+        contextualCtaLead: 'Décrivez votre besoin : nous revenons avec un périmètre technique et un devis.',
       },
       detail: {
-        agronomie: {
-          metaTitle: 'Agronomie & environnement — GEACO SARL',
+        agriculture: {
+          metaTitle: 'Agriculture — GEACO SARL',
           metaDesc:
-            'Études agronomiques, sécurité alimentaire, élevage, intrants et encadrement des producteurs au Nord-Kivu et en RDC.',
-          title: 'Agronomie & environnement',
+            'Projets agro-pastoraux, études d’impact, chaînes de valeur agricoles et accompagnement des producteurs au Nord-Kivu et en RDC.',
+          title: 'Agriculture',
           heroImage:
             'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80',
           intro:
-            'Nous accompagnons les exploitations et institutions dans une approche scientifique et terrain : diagnostic des sols, filières végétales et animales, protection de l’environnement et renforcement des capacités.',
+            'Nous accompagnons bailleurs, collectivités et opérateurs agricoles sur toute la chaîne : diagnostics de terrain, études d’impact, projets agro-pastoraux et structuration de chaînes de valeur, jusqu’à l’encadrement des producteurs.',
+          approachTitle: 'Notre approche',
+          approachText:
+            'Une méthode scientifique et terrain : comprendre le contexte agroécologique, co-construire des itinéraires techniques réalistes, et mesurer les impacts sociaux et environnementaux pour des décisions éclairées.',
+          deliverables: [
+            'Rapports d’études agronomiques et diagnostics de sols',
+            'Études d’impact environnemental et social (EIES)',
+            'Plans d’itinéraires techniques et fiches de démonstration',
+            'Cartographie des risques et potentialités agricoles',
+            'Rapports de suivi et d’accompagnement des coopératives',
+          ],
           sections: [
             {
               title: 'Études et diagnostics',
               items: [
                 'Études agronomiques et diagnostics de sols',
-                'Études environnementales et analyses d’impact',
+                'Études d’impact environnemental et social',
                 'Cartographie des risques et des potentialités agricoles',
               ],
             },
             {
-              title: 'Productions et filières',
+              title: 'Projets agro-pastoraux & filières',
               items: [
                 'Sécurité alimentaire, cultures et protection des plantes',
                 'Élevage, santé animale et gestion des parcours',
-                'Fourniture d’intrants et de semences de qualité',
+                'Structuration de chaînes de valeur et accès aux marchés',
               ],
             },
             {
@@ -302,62 +381,87 @@ export const messages = {
             },
           ],
         },
-        civil: {
-          metaTitle: 'Génie civil & infrastructures — GEACO SARL',
+        construction: {
+          metaTitle: 'Construction & génie civil — GEACO SARL',
           metaDesc:
-            'Routes, bâtiments, ouvrages d’art, WASH, études techniques et maîtrise d’œuvre pour infrastructures de base en RDC.',
-          title: 'Génie civil & infrastructures',
+            'Bâtiments, infrastructures, évaluations de sites, études techniques et suivi de chantiers pour ouvrages durables en RDC.',
+          title: 'Construction & génie civil',
           heroImage:
             'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80',
           intro:
-            'Du bureau d’études à la mise en œuvre, nous concevons et réalisons des ouvrages adaptés aux contraintes locales, en veillant à la durabilité technique et au coût maîtrisé.',
+            'Du bureau d’études à la réception des ouvrages, nous concevons et réalisons des infrastructures adaptées aux contraintes locales : évaluations de sites, bâtiments, routes et suivi de chantier avec exigence de qualité et de sécurité.',
+          approachTitle: 'Notre approche',
+          approachText:
+            'Maîtrise d’œuvre et exécution coordonnées : études préalables, planification, contrôle qualité et livraison progressive pour limiter les risques et respecter les engagements envers les communautés bénéficiaires.',
+          deliverables: [
+            'Rapports d’évaluation de sites et notes techniques',
+            'Dossiers d’études (APS / APD) et plans d’exécution',
+            'Cahiers des charges et métrés estimatifs',
+            'Rapports de suivi de chantier et contrôles qualité',
+            'Dossiers de réception et documentation d’ouvrage',
+          ],
           sections: [
             {
-              title: 'Infrastructures de transport et d’ingénierie',
+              title: 'Études et évaluations',
               items: [
-                'Routes en terre et routes revêtues, ouvrages d’art (ponts, dalots)',
+                'Évaluations de sites et études géotechniques de base',
+                'Conception architecturale et technique',
+                'Assistance à maîtrise d’ouvrage',
+              ],
+            },
+            {
+              title: 'Ouvrages et infrastructures',
+              items: [
                 'Bâtiments publics, scolaires et communautaires',
-                'Contrôle et réalisation des activités de bâtiments et travaux publics',
+                'Routes en terre et revêtues, ouvrages d’art (ponts, dalots)',
+                'Contrôle et réalisation des activités de BTP',
               ],
             },
             {
-              title: 'Eau, énergie et télécommunications',
-              items: [
-                'Projets d’eau et d’assainissement (WASH)',
-                'Projets d’électricité et d’hydraulique',
-                'Développement de techniques d’information et de télécommunication',
-              ],
-            },
-            {
-              title: 'Bureau d’études',
-              text: 'Conception architecturale et technique, assistance à maîtrise d’ouvrage et coordination de chantier.',
+              title: 'Suivi de chantiers',
+              text: 'Supervision quotidienne, sécurité, conformité aux normes et livraison progressive avec contrôle qualité avant réception.',
             },
           ],
         },
-        hydro: {
-          metaTitle: 'Hydraulique rurale — GEACO SARL',
+        wash: {
+          metaTitle: 'WASH — Eau, hygiène et assainissement — GEACO SARL',
           metaDesc:
-            'Irrigation, drainage, forages mécaniques, adductions et intégration solaire pour sécuriser l’eau en milieu rural.',
-          title: 'Hydraulique rurale',
+            'Adduction d’eau, infrastructures sanitaires, assainissement, gestion des déchets et audits WASH / santé publique en RDC.',
+          title: 'WASH — Eau, hygiène et assainissement',
           heroImage:
             'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=1800&q=80',
           intro:
-            'L’eau est au cœur des territoires agricoles. Nous dimensionnons et réalisons des ouvrages pour l’irrigation, l’abreuvement et l’alimentation des communautés.',
+            'Nous sécurisons l’accès à l’eau et à des conditions d’hygiène durables : forages, adductions, infrastructures d’assainissement, audits WASH et évaluations des structures de santé, avec une forte composante communautaire.',
+          approachTitle: 'Notre approche',
+          approachText:
+            'Diagnostic terrain, dimensionnement d’ouvrages, mise en œuvre et transfert aux comités d’eau / structures de santé — pour des services WASH appropriés, maintenables et mesurables.',
+          deliverables: [
+            'Diagnostics WASH et cartographie des points d’eau',
+            'Dossiers techniques d’adduction et d’assainissement',
+            'Rapports d’audit des structures de santé',
+            'Plans de gestion des déchets et d’hygiène',
+            'Manuels de formation des comités d’eau / agents communautaires',
+          ],
           sections: [
             {
-              title: 'Aménagements hydro-agricoles',
+              title: 'Eau potable et adduction',
               items: [
-                'Irrigation et drainage de périmètres',
-                'Réseaux primaires et secondaires, stockage',
-                'Intégration solaire pour pompage et petites énergies',
+                'Forage mécanique, captages et stockage',
+                'Réseaux d’adduction et distribution d’eau potable',
+                'Intégration solaire pour pompage',
               ],
             },
             {
-              title: 'Captage et distribution',
+              title: 'Assainissement et hygiène',
               items: [
-                'Forage mécanique des puits',
-                'Adductions, captages et distribution d’eau potable',
+                'Infrastructures sanitaires (latrines, points de lavage)',
+                'Gestion des déchets et sensibilisation communautaire',
+                'Irrigation / drainage lorsque liés à la santé publique',
               ],
+            },
+            {
+              title: 'Audits et santé publique',
+              text: 'Évaluation des structures de santé, audits WASH institutionnels et recommandations opérationnelles pour bailleurs et autorités sanitaires.',
             },
           ],
         },
@@ -371,11 +475,19 @@ export const messages = {
             'https://images.unsplash.com/photo-1447933601408-4c668d815b56?auto=format&fit=crop&w=1800&q=80',
           intro:
             'Le Groupe d’études agronomiques et de construction (GEACO SARL) porte le projet Solution Café : une filière structurante qui valorise le café congolais, de la production à l’exportation, avec une exigence de qualité et de traçabilité.',
+          approachTitle: 'Notre approche',
+          approachText:
+            'Relier producteurs, post-récolte et marchés internationaux avec traçabilité et qualité, pour revaloriser le travail des coopératives.',
+          deliverables: [
+            'Itinéraires techniques café et fiches qualité',
+            'Protocoles post-récolte (tri, séchage, défauts)',
+            'Documentation d’export et suivi logistique',
+          ],
           sections: [
             {
               title: 'Un projet d’entreprise, ancré terrain et marchés',
               text:
-                'Solution Café n’est pas un simple slogan : il s’agit d’un programme opérationnel qui relie les producteurs, les étapes de tri et de transformation, et l’accès aux acheteurs internationaux. L’objectif est double : revaloriser le travail des coopératives et des petits producteurs, et positionner le café congolais sur des segments de marché exigeants.',
+                'Solution Café n’est pas un simple slogan : il s’agit d’un programme opérationnel qui relie les producteurs, les étapes de tri et de transformation, et l’accès aux acheteurs internationaux.',
             },
             {
               title: 'Périmètre « du champ à la tasse »',
@@ -403,7 +515,7 @@ export const messages = {
             },
             {
               title: 'Contact Solution Café',
-              text: 'Pour plus d’informations : +243 836 895 855 / 097 747 2158 — geacosarl@gmail.com',
+              text: 'Pour plus d’informations : +243 808 368 955 / 097 747 2158 — geacosarl@gmail.com',
             },
             {
               title: '',
@@ -422,7 +534,7 @@ export const messages = {
       items: [
         {
           title: 'Aménagement hydro-agricole villageois',
-          tag: 'Hydraulique',
+          tag: 'WASH',
           desc: 'Conception de périmètres irrigués, optimisation des réseaux primaires/secondaires et formation des comités d’eau.',
           impact: 'Réduction des pertes d’eau et hausse des rendements sur les cultures de contre-saison.',
         },
@@ -449,7 +561,7 @@ export const messages = {
       partnersStoryLead:
         'GEACO SARL exécute des projets de construction financés par plusieurs partenaires techniques et institutionnels, avec une approche de proximité et de résultat.',
       partnersStoryBody:
-        'Par exemple, à Bukavu, un projet financé par UNICEF a été exécuté par GEACO SARL. Nous y avons assuré la mise en œuvre des travaux avec rigueur, transparence et respect des engagements envers les communautés bénéficiaires.',
+        'Certaines missions de construction ont été menées avec l’appui de partenaires techniques et institutionnels. Toute mention nominative (ex. bailleur) doit être confirmée et autorisée avant publication définitive — voir CONTENT-VALIDATION.md.',
       partnersStoryBody2:
         'Au-delà de l’exécution technique, nos équipes accompagnent chaque étape : préparation du site, coordination locale, contrôle qualité et remise d’ouvrages fonctionnels. Notre priorité est de livrer des infrastructures utiles, durables et réellement appropriées par les usagers.',
       partnersStoryBullets: [
@@ -457,6 +569,20 @@ export const messages = {
         'Suivi de chantier quotidien, sécurité et conformité des travaux',
         'Livraison progressive avec contrôle de la qualité avant réception',
       ],
+      washTitle: 'Projets WASH & eau',
+      washLead:
+        'Interventions eau potable, assainissement et hygiène. Les fiches sans preuves éditoriales sont présentées comme typologies / capacités.',
+      filterLabel: 'Filtrer les projets',
+      filterAll: 'Tous les domaines',
+      loading: 'Chargement des projets…',
+      loadError: 'Impossible de charger les projets',
+      emptyConstruction: 'Aucun projet construction publié pour le moment.',
+      emptyAgriculture: 'Aucun projet agricole publié pour le moment.',
+      emptyWash: 'Aucun projet WASH publié pour le moment. Les capacités proposées sont décrites sur la page WASH.',
+      statusIllustrative: 'Typologie / capacité (à documenter)',
+      statusLegend:
+        'Les cartes issues du contenu de secours sont des typologies illustratives, pas des réalisations certifiées. Enrichissez les fiches via l’admin après validation.',
+      ctaSimilar: 'Demander un projet similaire',
       constructionStory: {
         steps: [
           {
@@ -636,8 +762,11 @@ export const messages = {
       lead: 'Écrivez-nous pour un devis, une étude ou une collaboration.',
       formTitle: 'Message général',
       formName: 'Nom complet',
-      formOrganization: 'Organisation (facultatif)',
+      formOrganization: 'Organisation',
       formOrganizationPlaceholder: 'Nom de votre organisation / entreprise',
+      formDomain: 'Domaine concerné',
+      formDomainPlaceholder: 'Sélectionnez un domaine',
+      domainOptions: ['Agriculture', 'Construction & génie civil', 'WASH', 'Autre / transversal'],
       formEmail: 'Email',
       formPhone: 'Téléphone',
       formSubject: 'Objet',
@@ -646,20 +775,17 @@ export const messages = {
         'Renseignement général',
         'Demande d’information sur un service',
         'Prise de rendez-vous',
-        'Demande de devis de construction',
-        'Construction de maison',
-        'Réhabilitation / rénovation de bâtiment',
-        'Livraison de matériaux de construction',
-        'Approvisionnement en intrants agricoles',
-        'Étude agronomique et diagnostic de sols',
-        'Hydraulique rurale (forage, irrigation, drainage)',
+        'Demande de mission / étude',
+        'Demande de devis',
         'Partenariat institutionnel / ONG / bailleur',
-        'Demande de visite technique sur site',
         'Réclamation / assistance',
         'Autre demande',
       ],
       formMessage: 'Message',
       formSubmit: 'Envoyer',
+      quickContactTitle: 'Contact rapide',
+      quickWhatsapp: 'WhatsApp Business',
+      quickEmail: 'Email professionnel',
       addressesTitle: 'Adresses',
       goma: 'Siège social — Goma',
       butembo: 'Agence — Butembo',
@@ -670,7 +796,7 @@ export const messages = {
       thanksClosing: 'Merci,',
       thanksBrand: '— GEACO SARL',
       formValidationError:
-        'Veuillez remplir l’objet, le nom complet, l’email, le téléphone (obligatoire) et un message d’au moins 10 caractères.',
+        'Veuillez remplir le domaine, l’objet, le nom complet, l’organisation, l’email, le téléphone et un message d’au moins 10 caractères.',
       followTitle: 'Suivre GEACO en ligne',
       followLead:
         'Pour augmenter la visibilité de notre entreprise et renforcer la confiance en ligne, suivez la page Facebook de GEACO ASBL et la page LinkedIn du groupe d’études agronomiques et de construction.',
@@ -698,14 +824,13 @@ export const messages = {
       formProjectType: 'Type de prestation',
       formProjectPlaceholder: 'Sélectionnez un type',
       projectTypes: [
-        'Construction / génie civil',
-        'Routes, ouvrages d’art et terrassements',
-        'Bâtiments publics ou privés',
-        'Hydraulique rurale (forage, irrigation, adduction)',
-        'Agronomie, études de sols et accompagnement',
-        'Filière agricole (ex. café) ou intrants',
-        'Fourniture de matériaux',
-        'Autre demande de devis',
+        'Agriculture & agronomie',
+        'Construction & infrastructures',
+        'WASH & eau potable / assainissement',
+        'Eau agricole / irrigation',
+        'Fournitures & formation',
+        'Solution Café / filière café',
+        'Autre',
       ],
       formSite: 'Lieu ou zone d’intervention',
       formSitePlaceholder: 'Ville, territoire, site ou coordonnées approximatives',
@@ -810,9 +935,12 @@ export const messages = {
       about: 'about',
       personnel: 'staff',
       services: 'services',
+      solutions: 'our solutions',
+      resources: 'resources',
       projects: 'projects',
       projectsConstruction: 'construction projects',
       projectsAgriculture: 'agricultural projects',
+      projectsWash: 'WASH projects',
       blog: 'blog',
       gallery: 'gallery',
       partnerships: 'partnerships',
@@ -824,15 +952,37 @@ export const messages = {
       faq: 'FAQ',
     },
     home: {
-      metaTitle: 'GEACO SARL — Agronomy, civil engineering & rural hydraulics',
+      metaTitle: 'GEACO SARL — Agriculture, Construction & WASH',
       metaDesc:
-        'Congolese firm: studies, design and delivery of integrated agriculture and construction projects. Goma & Butembo, North Kivu.',
-      heroTitle: 'Sustainable solutions for rural and urban territories',
+        'Multidisciplinary Congolese firm: agriculture, civil engineering and WASH. Studies, design and delivery of high-impact projects — Goma & Butembo, North Kivu.',
+      heroTitle: 'Produce better. Build sustainably. Secure water and sanitation.',
       heroLead:
-        'GEACO SARL supports communities in North Kivu and beyond with integrated expertise in agronomy, civil engineering and rural water, grounded in local realities.',
-      ctaQuote: 'Request a quote',
+        'GEACO SARL supports donors, local authorities and operators in North Kivu: agriculture, construction & infrastructure, WASH—from diagnostics to delivery.',
+      ctaExpertises: 'Discover our solutions',
+      ctaQuote: 'Request a mission / quote',
       ctaContact: 'Contact us',
       ctaProjects: 'Explore our projects',
+      pillarsTitle: 'Our three pillars of expertise',
+      pillarsLead:
+        'A clear architecture so partners and institutional clients quickly reach the right domain—from diagnostics to delivery.',
+      pillarsCta: 'Explore this domain',
+      integratedTitle: 'An integrated approach',
+      integratedLead:
+        'Agriculture, infrastructure and water reinforce each other: sustainable production needs access, works and a reliable WASH service.',
+      methodTitle: 'The GEACO method',
+      methodLead: 'A clear, repeatable process adapted to field constraints.',
+      methodSteps: [
+        { title: 'Diagnose', text: 'Understand the local context, needs and risks.' },
+        { title: 'Design', text: 'Propose a realistic technical scope and clear deliverables.' },
+        { title: 'Deliver', text: 'Execute or supervise with quality and safety requirements.' },
+        { title: 'Train', text: 'Transfer practices to local teams and communities.' },
+        { title: 'Follow up', text: 'Measure, adjust and document for sustainability.' },
+      ],
+      trustTitle: 'Trust & recent assignments',
+      trustLead:
+        'A snapshot of representative missions. Illustrative typologies do not replace a documented project sheet.',
+      trustCta: 'View all projects',
+      trustStatusNote: 'Status to confirm (delivered / ongoing / capacity) — see CONTENT-VALIDATION.md',
       visionTitle: 'Vision',
       visionText:
         'Become a leading actor in Central Africa for sustainable agriculture and rural infrastructure delivery.',
@@ -875,18 +1025,21 @@ export const messages = {
       newsItems: [
         {
           date: '14 Apr 2026',
-          cats: ['News', 'Hydraulics'],
-          title: 'Optimising a community irrigated perimeter',
+          cats: ['WASH', 'Hydraulics'],
+          title: 'Assessment and optimisation of a community water supply system',
+          pillar: 'wash',
         },
         {
           date: '9 Apr 2026',
-          cats: ['News', 'Civil engineering'],
-          title: 'Upgrading a priority rural corridor for crop evacuation',
+          cats: ['Construction', 'Civil works'],
+          title: 'Site assessment and upgrade of a rural corridor for crop evacuation',
+          pillar: 'construction',
         },
         {
           date: '2 Apr 2026',
-          cats: ['News', 'Agronomy'],
-          title: 'Field coaching campaign on sustainable crop itineraries',
+          cats: ['Agriculture', 'Value chain'],
+          title: 'Impact study and technical coaching on sustainable agro-pastoral itineraries',
+          pillar: 'agriculture',
         },
       ],
       promoEyebrow: 'GEACO essentials',
@@ -896,14 +1049,16 @@ export const messages = {
       promoCta: 'Discover the company',
       statsSectionTitle: 'Key figures',
       stats: [
-        { value: '3', label: 'integrated expertise areas' },
+        { value: '3', label: 'expertise areas — Agriculture, Construction, WASH' },
         { value: '2', label: 'locations — Goma & Butembo' },
-        { value: '99', label: 'years — corporate duration' },
       ],
       ctaBandTitle: 'Build your project with us',
       ctaBandText:
-        'Want to contribute to high-impact development works and strengthen field skills? Let’s talk.',
+        'Choose the right path: priced quote, technical visit, or partnership discussion.',
       ctaBandBtn: 'Join us',
+      ctaVisit: 'Plan a visit',
+      ctaPartner: 'Become a partner',
+      partnersEmpty: 'No partners published yet. The list will grow after validation.',
       legalInfoTitle: 'Key legal information',
       legalInfoLead: 'Extracts from the company statutes (registered office and administrative details).',
       rccmLabel: 'RCCM',
@@ -1000,12 +1155,45 @@ export const messages = {
     services: {
       metaTitle: 'Services — GEACO SARL',
       metaDesc:
-        'Agronomy, civil engineering, rural hydraulics, trade and the Solution Café value chain—studies, works and export.',
-      title: 'Our services',
+        'Agriculture, construction & civil engineering, WASH (water, sanitation, hygiene) and the Solution Café value chain—studies, works and advisory.',
+      title: 'Our expertise',
       lead:
-        'Four complementary areas—agronomy, civil engineering, rural hydraulics and the coffee value chain—for coherent projects from production to export.',
+        'Three complementary pillars—Agriculture, Construction and WASH—plus the Solution Café programme, for coherent missions from diagnostics to handover.',
+      agriculture: {
+        title: 'Agriculture',
+        short: 'Agro-pastoral projects, impact studies, value chains and farmer support.',
+        items: [
+          'Agronomic studies and soil diagnostics',
+          'Environmental and social impact assessments',
+          'Agro-pastoral projects and food security',
+          'Agricultural value-chain structuring',
+          'Technical coaching for cooperatives and producers',
+        ],
+      },
+      construction: {
+        title: 'Construction & civil engineering',
+        short: 'Buildings, infrastructure, site assessments, technical studies and works supervision.',
+        items: [
+          'Site assessments and technical studies',
+          'Public, school and community buildings',
+          'Rural roads, civil structures and earthworks',
+          'Works supervision and quality control',
+          'Owner’s engineer support',
+        ],
+      },
+      wash: {
+        title: 'WASH',
+        short: 'Water, sanitation and hygiene: supply systems, sanitary infrastructure and public-health audits.',
+        items: [
+          'Potable water supply and distribution networks',
+          'Boreholes, intakes and storage',
+          'Sanitation and hygiene infrastructure',
+          'WASH audits and health-facility assessments',
+          'Waste management and community sensitisation',
+        ],
+      },
       agronomy: {
-        title: 'Agronomy & environment',
+        title: 'Agriculture',
         items: [
           'Agronomic studies and soil diagnostics',
           'Environmental studies and impact analysis',
@@ -1016,22 +1204,22 @@ export const messages = {
         ],
       },
       civil: {
-        title: 'Civil engineering & infrastructure',
+        title: 'Construction & civil engineering',
         items: [
           'Rural roads and civil structures',
           'Public, school and community buildings',
           'Hydraulic works and associated structures',
-          'WASH, telecom and power infrastructure (studies & support)',
+          'Site assessments and technical studies',
           'Technical and architectural design office',
         ],
       },
       hydro: {
-        title: 'Rural hydraulics',
+        title: 'WASH',
         items: [
           'Hydro-agricultural development: irrigation and drainage',
           'Mechanical well drilling and intakes',
           'Water supply, storage and distribution',
-          'Solar integration for pumping and small-scale energy',
+          'Sanitation, hygiene and public-health audits',
         ],
       },
       commerce: {
@@ -1043,38 +1231,51 @@ export const messages = {
         navTitle: 'solution coffee',
       },
       hub: {
-        backToHub: 'All services',
+        backToHub: 'All expertise areas',
         contactCta: 'Contact us',
-        quoteCta: 'Request a quote',
-        chooseTitle: 'Choose a service line',
-        chooseLead: 'Open a detailed page for each expertise or the Solution Café programme.',
+        quoteCta: 'Request a mission / quote',
+        chooseTitle: 'Choose a pillar',
+        chooseLead: 'Open a detailed page for each expertise domain or the Solution Café programme.',
         cardCta: 'View details',
+        deliverablesTitle: 'Deliverables for your teams',
+        contextualCtaTitle: 'Need a mission in this domain?',
+        contextualCtaLead: 'Describe your need—we will come back with a technical scope and a quote.',
       },
       detail: {
-        agronomie: {
-          metaTitle: 'Agronomy & environment — GEACO SARL',
+        agriculture: {
+          metaTitle: 'Agriculture — GEACO SARL',
           metaDesc:
-            'Agronomic studies, food security, livestock, inputs and farmer support in North Kivu and the DRC.',
-          title: 'Agronomy & environment',
+            'Agro-pastoral projects, impact studies, agricultural value chains and farmer support in North Kivu and the DRC.',
+          title: 'Agriculture',
           heroImage:
             'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80',
           intro:
-            'We support farms and institutions with science-based field work: soil diagnostics, crop and livestock systems, environmental protection and capacity building.',
+            'We support donors, local authorities and agricultural operators across the full chain: field diagnostics, impact studies, agro-pastoral projects and value-chain structuring, through to farmer coaching.',
+          approachTitle: 'Our approach',
+          approachText:
+            'A science-based field method: understand the agroecological context, co-design realistic technical itineraries, and measure social and environmental impacts for informed decisions.',
+          deliverables: [
+            'Agronomic study reports and soil diagnostics',
+            'Environmental and social impact assessments (ESIA)',
+            'Technical itinerary plans and demonstration sheets',
+            'Agricultural risk and opportunity mapping',
+            'Cooperative coaching and monitoring reports',
+          ],
           sections: [
             {
               title: 'Studies and diagnostics',
               items: [
                 'Agronomic studies and soil diagnostics',
-                'Environmental studies and impact assessments',
+                'Environmental and social impact assessments',
                 'Mapping of agricultural risks and opportunities',
               ],
             },
             {
-              title: 'Production and value chains',
+              title: 'Agro-pastoral projects & value chains',
               items: [
                 'Food security, crops and plant protection',
                 'Livestock, animal health and grazing management',
-                'Supply of quality inputs and seed',
+                'Value-chain structuring and market access',
               ],
             },
             {
@@ -1083,59 +1284,87 @@ export const messages = {
             },
           ],
         },
-        civil: {
-          metaTitle: 'Civil engineering & infrastructure — GEACO SARL',
+        construction: {
+          metaTitle: 'Construction & civil engineering — GEACO SARL',
           metaDesc:
-            'Roads, buildings, civil structures, WASH, studies and supervision for basic infrastructure in the DRC.',
-          title: 'Civil engineering & infrastructure',
+            'Buildings, infrastructure, site assessments, technical studies and works supervision for durable assets in the DRC.',
+          title: 'Construction & civil engineering',
           heroImage:
             'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1800&q=80',
           intro:
-            'From design office to works delivery, we engineer and build structures suited to local constraints, with sound durability and controlled cost.',
+            'From design office to handover, we engineer and deliver infrastructure suited to local constraints: site assessments, buildings, roads and works supervision with strong quality and safety requirements.',
+          approachTitle: 'Our approach',
+          approachText:
+            'Coordinated design and delivery: preliminary studies, planning, quality control and progressive handover to reduce risk and honour commitments to beneficiary communities.',
+          deliverables: [
+            'Site assessment reports and technical notes',
+            'Design dossiers (concept / detailed) and execution drawings',
+            'Specifications and estimated bills of quantities',
+            'Works supervision and quality-control reports',
+            'Handover dossiers and as-built documentation',
+          ],
           sections: [
             {
-              title: 'Transport and engineering structures',
+              title: 'Studies and assessments',
               items: [
-                'Earth and paved roads, civil structures (bridges, culverts)',
+                'Site assessments and baseline geotechnical studies',
+                'Architectural and technical design',
+                'Owner’s engineer support',
+              ],
+            },
+            {
+              title: 'Works and infrastructure',
+              items: [
                 'Public, school and community buildings',
+                'Earth and paved roads, civil structures (bridges, culverts)',
                 'Control and delivery of building and civil engineering works',
               ],
             },
             {
-              title: 'Water, energy and telecoms',
-              items: [
-                'Water and sanitation (WASH) projects',
-                'Power and hydraulics projects',
-                'Information and communication technology development',
-              ],
-            },
-            {
-              title: 'Design office',
-              text: 'Architectural and technical design, owner’s engineer support and site coordination.',
+              title: 'Works supervision',
+              text: 'Daily supervision, safety, standards compliance and progressive delivery with quality checks before handover.',
             },
           ],
         },
-        hydro: {
-          metaTitle: 'Rural hydraulics — GEACO SARL',
+        wash: {
+          metaTitle: 'WASH — Water, sanitation and hygiene — GEACO SARL',
           metaDesc:
-            'Irrigation, drainage, mechanical drilling, water supply and solar integration to secure rural water.',
-          title: 'Rural hydraulics',
+            'Water supply, sanitary infrastructure, sanitation, waste management and WASH / public-health audits in the DRC.',
+          title: 'WASH — Water, sanitation and hygiene',
           heroImage:
             'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&w=1800&q=80',
           intro:
-            'Water is central to agricultural territories. We design and build works for irrigation, livestock watering and community supply.',
+            'We secure access to water and sustainable hygiene conditions: boreholes, supply networks, sanitation infrastructure, WASH audits and health-facility assessments, with a strong community component.',
+          approachTitle: 'Our approach',
+          approachText:
+            'Field diagnostics, works sizing, implementation and transfer to water committees / health structures—for WASH services that are appropriated, maintainable and measurable.',
+          deliverables: [
+            'WASH diagnostics and water-point mapping',
+            'Technical dossiers for water supply and sanitation',
+            'Health-facility audit reports',
+            'Waste management and hygiene plans',
+            'Training manuals for water committees / community agents',
+          ],
           sections: [
             {
-              title: 'Hydro-agricultural development',
+              title: 'Potable water and supply',
               items: [
-                'Perimeter irrigation and drainage',
-                'Primary and secondary networks, storage',
-                'Solar integration for pumping and small-scale energy',
+                'Mechanical drilling, intakes and storage',
+                'Water supply and potable distribution networks',
+                'Solar integration for pumping',
               ],
             },
             {
-              title: 'Abstraction and distribution',
-              items: ['Mechanical well drilling', 'Water supply, intakes and potable distribution'],
+              title: 'Sanitation and hygiene',
+              items: [
+                'Sanitary infrastructure (latrines, handwashing points)',
+                'Waste management and community sensitisation',
+                'Irrigation / drainage when linked to public health',
+              ],
+            },
+            {
+              title: 'Audits and public health',
+              text: 'Health-facility assessments, institutional WASH audits and operational recommendations for donors and health authorities.',
             },
           ],
         },
@@ -1144,10 +1373,19 @@ export const messages = {
           metaDesc:
             'Coffee value chain from field to export: production, processing and international markets for Congolese coffee.',
           title: 'Solution Café',
+          projectBadge: 'Operational programme — GEACO coffee value chain',
           heroImage:
             'https://images.unsplash.com/photo-1447933601408-4c668d815b56?auto=format&fit=crop&w=1800&q=80',
           intro:
             'GEACO SARL presents Solution Café, a full value chain programme that promotes Congolese coffee from production through export.',
+          approachTitle: 'Our approach',
+          approachText:
+            'Connect growers, post-harvest and international markets with traceability and quality, to revalue cooperative work.',
+          deliverables: [
+            'Coffee technical itineraries and quality sheets',
+            'Post-harvest protocols (sorting, drying, defects)',
+            'Export documentation and logistics tracking',
+          ],
           sections: [
             {
               title: 'What we deliver on the chain',
@@ -1167,7 +1405,7 @@ export const messages = {
             },
             {
               title: 'Solution Café contact',
-              text: 'For more information: +243 836 895 855 / 097 747 2158 — geacosarl@gmail.com',
+              text: 'For more information: +243 808 368 955 / 097 747 2158 — geacosarl@gmail.com',
             },
             {
               title: '',
@@ -1186,7 +1424,7 @@ export const messages = {
       items: [
         {
           title: 'Village hydro-agricultural scheme',
-          tag: 'Hydraulics',
+          tag: 'WASH',
           desc: 'Irrigated perimeter design, primary/secondary network optimization and water committee training.',
           impact: 'Lower water losses and higher yields for off-season crops.',
         },
@@ -1213,7 +1451,7 @@ export const messages = {
       partnersStoryLead:
         'GEACO SARL delivers construction projects funded by several technical and institutional partners, with a field-driven and results-oriented approach.',
       partnersStoryBody:
-        'For example, in Bukavu, a project funded by UNICEF was executed by GEACO SARL. We delivered the works with rigor, transparency and full commitment to beneficiary communities.',
+        'Some construction missions have been delivered with support from technical and institutional partners. Any named donor reference must be confirmed and authorised before final publication — see CONTENT-VALIDATION.md.',
       partnersStoryBody2:
         'Beyond technical execution, our teams support every phase: site preparation, local coordination, quality control and handover of fully functional facilities. Our priority is to deliver useful, durable infrastructure truly owned by end users.',
       partnersStoryBullets: [
@@ -1221,6 +1459,20 @@ export const messages = {
         'Daily site supervision, safety and compliance',
         'Progressive delivery with quality checks before handover',
       ],
+      washTitle: 'WASH & water projects',
+      washLead:
+        'Water supply, sanitation and hygiene interventions. Sheets without editorial evidence are shown as typologies / capacities.',
+      filterLabel: 'Filter projects',
+      filterAll: 'All domains',
+      loading: 'Loading projects…',
+      loadError: 'Unable to load projects',
+      emptyConstruction: 'No construction projects published yet.',
+      emptyAgriculture: 'No agricultural projects published yet.',
+      emptyWash: 'No WASH projects published yet. Proposed capacities are described on the WASH page.',
+      statusIllustrative: 'Typology / capacity (to document)',
+      statusLegend:
+        'Fallback cards are illustrative typologies, not certified deliveries. Enrich sheets via admin after validation.',
+      ctaSimilar: 'Request a similar project',
       constructionStory: {
         steps: [
           {
@@ -1400,8 +1652,11 @@ export const messages = {
       lead: 'Reach out for a quote, a study or a collaboration.',
       formTitle: 'General message',
       formName: 'Full name',
-      formOrganization: 'Organization (optional)',
+      formOrganization: 'Organization',
       formOrganizationPlaceholder: 'Your organization / company name',
+      formDomain: 'Relevant domain',
+      formDomainPlaceholder: 'Select a domain',
+      domainOptions: ['Agriculture', 'Construction & civil engineering', 'WASH', 'Other / cross-cutting'],
       formEmail: 'Email',
       formPhone: 'Phone',
       formSubject: 'Subject',
@@ -1410,20 +1665,17 @@ export const messages = {
         'General inquiry',
         'Service information request',
         'Appointment request',
-        'Construction quotation request',
-        'House construction request',
-        'Building rehabilitation / renovation',
-        'Construction materials delivery request',
-        'Agricultural inputs supply request',
-        'Agronomic study and soil diagnosis',
-        'Rural hydraulics (drilling, irrigation, drainage)',
+        'Mission / study request',
+        'Quote request',
         'Institutional / NGO / donor partnership',
-        'Request for a technical site visit',
         'Claim / support request',
         'Other request',
       ],
       formMessage: 'Message',
       formSubmit: 'Send',
+      quickContactTitle: 'Quick contact',
+      quickWhatsapp: 'WhatsApp Business',
+      quickEmail: 'Professional email',
       addressesTitle: 'Addresses',
       goma: 'Head office — Goma',
       butembo: 'Branch — Butembo',
@@ -1434,7 +1686,7 @@ export const messages = {
       thanksClosing: 'Thank you,',
       thanksBrand: '— GEACO SARL',
       formValidationError:
-        'Please fill in subject, full name, email, phone (required) and a message of at least 10 characters.',
+        'Please fill in domain, subject, full name, organization, email, phone and a message of at least 10 characters.',
       followTitle: 'Follow GEACO online',
       followLead:
         'To strengthen visibility and trust, follow the official GEACO ASBL Facebook page and the LinkedIn page of the agronomic studies and construction group.',
@@ -1462,14 +1714,13 @@ export const messages = {
       formProjectType: 'Service type',
       formProjectPlaceholder: 'Select a type',
       projectTypes: [
-        'Construction / civil engineering',
-        'Roads, structures and earthworks',
-        'Public or private buildings',
-        'Rural hydraulics (drilling, irrigation, water supply)',
-        'Agronomy, soil studies and technical support',
-        'Agricultural value chain (e.g. coffee) or inputs',
-        'Materials supply',
-        'Other quote request',
+        'Agriculture & agronomy',
+        'Construction & infrastructure',
+        'WASH & drinking water / sanitation',
+        'Agricultural water / irrigation',
+        'Supplies & training',
+        'Solution Café / coffee value chain',
+        'Other',
       ],
       formSite: 'Location or intervention area',
       formSitePlaceholder: 'City, territory, site or approximate coordinates',

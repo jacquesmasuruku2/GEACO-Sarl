@@ -6,6 +6,7 @@ import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 const PROJECT_CATEGORY_OPTIONS = [
   { value: 'construction', label: 'Projet de construction' },
   { value: 'agricole', label: 'Projet agricole' },
+  { value: 'wash', label: 'Projet WASH' },
 ]
 
 function projectCategoryLabel(value) {
@@ -81,7 +82,12 @@ export function ProjectsAdmin() {
         slug: row.slug,
         title: row.title,
         tag: row.tag,
-        project_category: row.project_category === 'agricole' ? 'agricole' : 'construction',
+        project_category:
+          row.project_category === 'agricole'
+            ? 'agricole'
+            : row.project_category === 'wash'
+              ? 'wash'
+              : 'construction',
         image_url: row.image_url || null,
         description: row.description,
         impact: row.impact,

@@ -2,7 +2,22 @@ import { Link } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
+import { PillarIcon } from '../components/PillarIcon'
 import { SERVICE_ROUTES, serviceNavLabel } from '../data/servicesNav'
+
+const PILLAR_CLASS = {
+  agriculture: 'pillar-card--agriculture',
+  construction: 'pillar-card--construction',
+  wash: 'pillar-card--wash',
+  solutionCafe: 'pillar-card--cafe',
+}
+
+const PILLAR_ICON = {
+  agriculture: 'agriculture',
+  construction: 'construction',
+  wash: 'wash',
+  solutionCafe: 'agriculture',
+}
 
 export function Services() {
   const { t } = useI18n()
@@ -23,20 +38,26 @@ export function Services() {
 
       <section className="section section--muted">
         <div className="container">
-          <div className="section__head">
+          <div className="section__head section__head--wide">
             <h2 className="section__title">{t('services.hub.chooseTitle')}</h2>
             <p>{t('services.hub.chooseLead')}</p>
           </div>
-          <div className="card-grid">
+          <div className="pillar-grid">
             {SERVICE_ROUTES.map(({ slug, detailKey }) => {
               const title = serviceNavLabel(detailKey, t)
-              const intro = t(`services.detail.${detailKey}.intro`)
-              const lead = intro.length > 200 ? `${intro.slice(0, 197)}…` : intro
+              const short =
+                detailKey === 'solutionCafe'
+                  ? t('services.detail.solutionCafe.intro')
+                  : t(`services.${detailKey}.short`)
+              const lead = String(short).length > 180 ? `${String(short).slice(0, 177)}…` : short
               return (
-                <article className="card" key={slug}>
-                  <h2 style={{ fontSize: '1.2rem' }}>{title}</h2>
+                <article className={`pillar-card ${PILLAR_CLASS[detailKey] || ''}`} key={slug}>
+                  <div className="pillar-card__icon">
+                    <PillarIcon name={PILLAR_ICON[detailKey] || 'agriculture'} />
+                  </div>
+                  <h3>{title}</h3>
                   <p>{lead}</p>
-                  <Link className="btn btn--primary" to={`/services/${slug}`}>
+                  <Link className="btn btn--primary pillar-card__cta" to={`/services/${slug}`}>
                     {t('services.hub.cardCta')}
                   </Link>
                 </article>

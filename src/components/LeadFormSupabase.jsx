@@ -1,9 +1,15 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
 const PARTNERSHIP_SUBJECT = '[GEACO] Proposition de partenariat'
+
+const DOMAINE_SLUG_MAP = {
+  agriculture: 0,
+  construction: 1,
+  wash: 2,
+}
 
 function trimOrNull(v) {
   if (v == null) return null
@@ -18,10 +24,21 @@ function trimOrNull(v) {
 export function LeadFormSupabase({ source, redirectTo }) {
   const { t, locale } = useI18n()
   const navigate = useNavigate()
+  const [params] = useSearchParams()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
 
+  const domainOptions = source === 'contact' ? t('contact.domainOptions') : []
+  const safeDomainOptions = Array.isArray(domainOptions) ? domainOptions : []
+  const domaineParam = params.get('domaine') || ''
+  const initialDomainIndex = DOMAINE_SLUG_MAP[domaineParam]
+  const initialDomain =
+    typeof initialDomainIndex === 'number' && safeDomainOptions[initialDomainIndex]
+      ? safeDomainOptions[initialDomainIndex]
+      : ''
+
   const [subject, setSubject] = useState('')
+  const [domain, setDomain] = useState(initialDomain)
   const [quoteKind, setQuoteKind] = useState('')
   const [siteLocation, setSiteLocation] = useState('')
   const [timeline, setTimeline] = useState('')
@@ -39,6 +56,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
 
   function clearForm() {
     setSubject('')
+    setDomain('')
     setQuoteKind('')
     setSiteLocation('')
     setTimeline('')
@@ -114,12 +132,14 @@ export function LeadFormSupabase({ source, redirectTo }) {
     let finalMessage = ''
 
     if (source === 'contact') {
+      const dom = trimOrNull(domain)
       finalSubject = trimOrNull(subject)
-      finalMessage = msg
-      if (!finalSubject || !name || !mail || !finalMessage) {
+      if (!dom || !finalSubject || !name || !org || !mail || !msg) {
         setError(t('contact.formValidationError'))
         return
       }
+      finalSubject = `[${dom}] ${finalSubject}`.slice(0, 400)
+      finalMessage = [`Domaine: ${dom}`, '', msg].join('\n')
     } else {
       const kind = trimOrNull(quoteKind)
       if (!kind || !name || !mail || !msg) {
@@ -195,6 +215,18 @@ export function LeadFormSupabase({ source, redirectTo }) {
 
       {source === 'contact' ? (
         <>
+          <label htmlFor="lead-domain">{t('contact.formDomain')}</label>
+          <select id="lead-domain" value={domain} onChange={(e) => setDomain(e.target.value)} required>
+            <option value="" disabled>
+              {t('contact.formDomainPlaceholder')}
+            </option>
+            {safeDomainOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+
           <label htmlFor="lead-subject">{t('contact.formSubject')}</label>
           <select id="lead-subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
             <option value="" disabled>
@@ -224,6 +256,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
             type="text"
             value={organization}
             onChange={(e) => setOrganization(e.target.value)}
+            required
             maxLength={300}
             autoComplete="organization"
             placeholder={t('contact.formOrganizationPlaceholder')}

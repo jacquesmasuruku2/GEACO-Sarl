@@ -3,9 +3,9 @@ import { supabase } from '../../../lib/supabase'
 import { SERVICE_CONTENT_KEYS } from '../../../lib/serviceDbKeys'
 
 const LABELS = {
-  agronomie: 'Agronomie (/services/agronomie)',
-  civil: 'Génie civil (/services/genie-civil)',
-  hydro: 'Hydraulique (/services/hydraulique)',
+  agronomie: 'Agriculture (/services/agriculture)',
+  civil: 'Construction (/services/construction)',
+  hydro: 'WASH (/services/wash)',
   solution_cafe: 'Solution Café (/services/solution-cafe)',
 }
 
