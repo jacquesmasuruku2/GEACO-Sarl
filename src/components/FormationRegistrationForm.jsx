@@ -12,9 +12,21 @@ function trimOrNull(v) {
 
 /**
  * Inscription à une formation publiée.
- * @param {{ formations: Array<object>, redirectTo?: string, preselectId?: string }} props
+ * @param {{
+ *   formations: Array<object>,
+ *   redirectTo?: string,
+ *   preselectId?: string,
+ *   lockFormation?: boolean,
+ *   onSuccess?: () => void,
+ * }} props
  */
-export function FormationRegistrationForm({ formations, redirectTo = '/formations?merci=1', preselectId = '' }) {
+export function FormationRegistrationForm({
+  formations,
+  redirectTo = '/formations?merci=1',
+  preselectId = '',
+  lockFormation = false,
+  onSuccess,
+}) {
   const { t, locale } = useI18n()
   const navigate = useNavigate()
   const [params] = useSearchParams()
@@ -101,6 +113,7 @@ export function FormationRegistrationForm({ formations, redirectTo = '/formation
     setPhone('')
     setOrganization('')
     setMotivation('')
+    if (typeof onSuccess === 'function') onSuccess()
     navigate(redirectTo, { replace: false })
   }
 
@@ -120,24 +133,28 @@ export function FormationRegistrationForm({ formations, redirectTo = '/formation
         aria-hidden="true"
       />
 
-      <div className="simple-form__field">
-        <label htmlFor="formation-pick">{t('formations.formFormation')}</label>
-        <select
-          id="formation-pick"
-          value={formationId}
-          onChange={(e) => setFormationId(e.target.value)}
-          required
-        >
-          <option value="" disabled>
-            {t('formations.formFormationPlaceholder')}
-          </option>
-          {openFormations.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.title}
+      {lockFormation && formationId ? (
+        <input type="hidden" name="formation_id" value={formationId} />
+      ) : (
+        <div className="simple-form__field">
+          <label htmlFor="formation-pick">{t('formations.formFormation')}</label>
+          <select
+            id="formation-pick"
+            value={formationId}
+            onChange={(e) => setFormationId(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              {t('formations.formFormationPlaceholder')}
             </option>
-          ))}
-        </select>
-      </div>
+            {openFormations.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.title}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="simple-form__grid">
         <div className="simple-form__field">

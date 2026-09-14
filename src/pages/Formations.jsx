@@ -1,41 +1,21 @@
-import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { ContactThanksBanner } from '../components/ContactThanksBanner'
-import { FormationRegistrationForm } from '../components/FormationRegistrationForm'
-import { RichTextContent } from '../components/RichTextContent'
 import { useSiteFormations } from '../hooks/useSiteFormations'
-import { resolveFormationRegistrationStatus } from '../lib/formationStatus'
-
-function formatFormationDate(value, locale) {
-  if (!value) return ''
-  try {
-    return new Date(`${value}T12:00:00`).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    })
-  } catch {
-    return String(value)
-  }
-}
+import {
+  formatFormationDate,
+  formationPath,
+  formationStatusLabel,
+  resolveFormationRegistrationStatus,
+} from '../lib/formationDisplay'
 
 export function Formations() {
   const { t, locale } = useI18n()
   const [params] = useSearchParams()
   const merci = params.get('merci') === '1'
   const { rows, loading, error } = useSiteFormations(locale)
-  const [preselectId, setPreselectId] = useState(params.get('formation') || '')
-
-  function scrollToRegister(formationId) {
-    if (formationId) setPreselectId(formationId)
-    requestAnimationFrame(() => {
-      const target = document.getElementById('inscription-formation')
-      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
-  }
 
   return (
     <>
@@ -85,25 +65,27 @@ export function Formations() {
               const start = formatFormationDate(formation.starts_on, locale)
               const end = formatFormationDate(formation.ends_on, locale)
               const status = resolveFormationRegistrationStatus(formation)
-              const open = status === 'open'
-              const statusLabel =
-                status === 'full'
-                  ? t('formations.statusFull')
-                  : status === 'ended'
-                    ? t('formations.statusEnded')
-                    : status === 'closed'
-                      ? t('formations.statusClosed')
-                      : t('formations.statusOpen')
+              const statusLabel = formationStatusLabel(status, t)
+              const imageUrl = String(formation.image_url ?? '').trim()
+              const href = formationPath(formation.slug)
               return (
                 <li className="formations-item" key={formation.id} data-status={status}>
-                  {formation.image_url ? (
-                    <div className="formations-item__media">
-                      <img src={String(formation.image_url).trim()} alt="" loading="lazy" />
-                    </div>
+                  {imageUrl ? (
+                    <Link
+                      className="formations-item__media formations-item__media--button"
+                      to={href}
+                      aria-label={`${t('formations.readOffer')}: ${formation.title}`}
+                    >
+                      <img src={imageUrl} alt="" loading="lazy" />
+                    </Link>
                   ) : null}
                   <div className="formations-item__body">
                     <div className="formations-item__title-row">
-                      <h3>{formation.title}</h3>
+                      <h3>
+                        <Link className="formations-item__title-btn" to={href}>
+                          {formation.title}
+                        </Link>
+                      </h3>
                       <span className={`formations-item__badge formations-item__badge--${status}`}>
                         {statusLabel}
                       </span>
@@ -115,41 +97,16 @@ export function Formations() {
                       {formation.duration_label ? <li>{formation.duration_label}</li> : null}
                       {formation.seats_label ? <li>{formation.seats_label}</li> : null}
                     </ul>
-                    {formation.description ? (
-                      <div className="formations-item__desc rich-text">
-                        <RichTextContent value={formation.description} />
-                      </div>
-                    ) : null}
                   </div>
                   <div className="formations-item__actions">
-                    {open ? (
-                      <button
-                        type="button"
-                        className="btn btn--primary"
-                        onClick={() => scrollToRegister(formation.id)}
-                      >
-                        {t('formations.registerCta')}
-                      </button>
-                    ) : (
-                      <span className="formations-item__closed">{statusLabel}</span>
-                    )}
+                    <Link className="btn btn--outline" to={href}>
+                      {t('formations.readOffer')}
+                    </Link>
                   </div>
                 </li>
               )
             })}
           </ul>
-
-          <section className="formations-register" id="inscription-formation" aria-labelledby="inscription-title">
-            <header className="formations-page__head">
-              <h2 id="inscription-title">{t('formations.registerTitle')}</h2>
-              <p>{t('formations.registerLead')}</p>
-            </header>
-            <FormationRegistrationForm
-              key={preselectId || 'all'}
-              formations={rows}
-              preselectId={preselectId}
-            />
-          </section>
         </div>
       </section>
     </>

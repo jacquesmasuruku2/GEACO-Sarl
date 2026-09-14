@@ -19,6 +19,7 @@ import { Personnel } from './pages/Personnel'
 import { PersonnelDetail } from './pages/PersonnelDetail'
 import { Gallery } from './pages/Gallery'
 import { Formations } from './pages/Formations'
+import { FormationDetail } from './pages/FormationDetail'
 import { AuthAdmin } from './pages/admin/AuthAdmin'
 import { AdminPanel } from './pages/admin/AdminPanel'
 import { NotFound } from './pages/NotFound'
@@ -50,6 +51,7 @@ export default function App() {
           <Route path="/projets/wash" element={<Projects />} />
           <Route path="/projets/:slug" element={<ProjectDetail />} />
           <Route path="/projets" element={<Projects />} />
+          <Route path="/formations/:slug" element={<FormationDetail />} />
           <Route path="/formations" element={<Formations />} />
           <Route path="/partenariats" element={<Partnerships />} />
           <Route path="/devis" element={<QuoteRequest />} />

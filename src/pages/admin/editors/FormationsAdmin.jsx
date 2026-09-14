@@ -181,8 +181,9 @@ export function FormationsAdmin() {
         <Link to="/formations" target="_blank" rel="noreferrer">
           /formations
         </Link>
-        . Pour chaque fiche : image, texte, dates, statut d’inscription, puis cochez{' '}
-        <strong>Publié sur le site</strong> et Enregistrer. Les candidatures arrivent dans « Inscriptions ».
+        . Chaque offre a une URL partageable <code>/formations/votre-slug</code>. Pour chaque fiche :
+        image, texte, dates, statut d’inscription, puis cochez <strong>Publié sur le site</strong> et
+        Enregistrer. Les candidatures arrivent dans « Inscriptions ».
       </p>
 
       <div className="admin-stack">
@@ -214,8 +215,13 @@ export function FormationsAdmin() {
                   </div>
                 </div>
                 <div className="admin-compact-item__actions">
-                  {row.published ? (
-                    <Link className="btn btn--ghost" to="/formations" target="_blank" rel="noreferrer">
+                  {row.published && row.slug ? (
+                    <Link
+                      className="btn btn--ghost"
+                      to={`/formations/${row.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       Voir
                     </Link>
                   ) : null}
