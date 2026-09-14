@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ImagePickerField } from '../../../components/admin/ImagePickerField'
+import { RichTextTextarea } from '../../../components/admin/RichTextTextarea'
 import { supabase } from '../../../lib/supabase'
 import { isFormationDatePassed } from '../../../lib/formationStatus'
 
@@ -229,150 +230,158 @@ export function FormationsAdmin() {
                     Supprimer
                   </button>
                 </div>
-
-                {editingId === row.id ? (
-                  <div className="admin-card admin-compact-item__editor">
-                    <div className="admin-grid">
-                      <label className="admin-span-2">
-                        Titre de l’offre
-                        <input
-                          value={row.title ?? ''}
-                          onChange={(e) => updateLocal(row.id, { title: e.target.value })}
-                        />
-                      </label>
-                      <ImagePickerField
-                        label="Image de l’offre"
-                        value={row.image_url ?? ''}
-                        onChange={(e) => updateLocal(row.id, { image_url: e.target.value })}
-                        storageFolder="formations"
-                        previewAlt={`Illustration de ${row.title ?? 'formation'}`}
-                        icon="🎓"
-                        help="Téléversez une image ou collez une URL. Elle s’affiche sur /formations."
-                      />
-                      <label>
-                        Slug (URL)
-                        <input
-                          value={row.slug ?? ''}
-                          onChange={(e) => updateLocal(row.id, { slug: e.target.value })}
-                        />
-                      </label>
-                      <label>
-                        Langue
-                        <select
-                          value={row.locale === 'en' ? 'en' : 'fr'}
-                          onChange={(e) => updateLocal(row.id, { locale: e.target.value })}
-                        >
-                          <option value="fr">FR</option>
-                          <option value="en">EN</option>
-                        </select>
-                      </label>
-                      <label>
-                        Ordre d’affichage
-                        <input
-                          type="number"
-                          value={row.sort_order ?? 0}
-                          onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
-                        />
-                      </label>
-                      <label className="admin-span-2">
-                        Résumé court
-                        <input
-                          value={row.summary ?? ''}
-                          onChange={(e) => updateLocal(row.id, { summary: e.target.value })}
-                          placeholder="Une phrase visible sous le titre"
-                        />
-                      </label>
-                      <label className="admin-span-2">
-                        Description
-                        <textarea
-                          rows={4}
-                          value={row.description ?? ''}
-                          onChange={(e) => updateLocal(row.id, { description: e.target.value })}
-                          placeholder="Programme, public cible, prérequis…"
-                        />
-                      </label>
-                      <label>
-                        Lieu
-                        <input
-                          value={row.location ?? ''}
-                          onChange={(e) => updateLocal(row.id, { location: e.target.value })}
-                          placeholder="Ex. Goma"
-                        />
-                      </label>
-                      <label>
-                        Durée (libellé)
-                        <input
-                          value={row.duration_label ?? ''}
-                          onChange={(e) => updateLocal(row.id, { duration_label: e.target.value })}
-                          placeholder="Ex. 5 jours"
-                        />
-                      </label>
-                      <label>
-                        Début
-                        <input
-                          type="date"
-                          value={row.starts_on ?? ''}
-                          onChange={(e) => updateLocal(row.id, { starts_on: e.target.value })}
-                        />
-                      </label>
-                      <label>
-                        Fin
-                        <input
-                          type="date"
-                          value={row.ends_on ?? ''}
-                          onChange={(e) => updateLocal(row.id, { ends_on: e.target.value })}
-                        />
-                      </label>
-                      <label>
-                        Places (libellé)
-                        <input
-                          value={row.seats_label ?? ''}
-                          onChange={(e) => updateLocal(row.id, { seats_label: e.target.value })}
-                          placeholder="Ex. 20 places"
-                        />
-                      </label>
-                      <label>
-                        Statut d’inscription
-                        <select
-                          value={status}
-                          onChange={(e) =>
-                            updateLocal(row.id, {
-                              registration_status: e.target.value,
-                              registration_open: e.target.value === 'open',
-                            })
-                          }
-                        >
-                          <option value="open">Inscriptions ouvertes (postuler)</option>
-                          <option value="full">Places épuisées</option>
-                          <option value="ended">Formation déjà passée</option>
-                          <option value="closed">Inscriptions fermées</option>
-                        </select>
-                      </label>
-                      <label className="admin-check admin-span-2">
-                        <input
-                          type="checkbox"
-                          checked={Boolean(row.published)}
-                          onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
-                        />
-                        Publié sur le site (/formations) — sans cette case, l’offre reste en brouillon
-                      </label>
-                    </div>
-                    <div className="admin-compact-item__actions" style={{ marginTop: '0.85rem' }}>
-                      <button
-                        type="button"
-                        className="btn btn--primary"
-                        disabled={savingId === row.id}
-                        onClick={() => saveRow(row)}
-                      >
-                        {savingId === row.id ? 'Enregistrement…' : 'Enregistrer'}
-                      </button>
-                    </div>
-                  </div>
-                ) : null}
               </article>
             )
           })}
         </div>
+
+        {rows
+          .filter((row) => row.id === editingId)
+          .map((row) => {
+            const status = row.registration_status || (row.registration_open === false ? 'closed' : 'open')
+            return (
+              <div className="admin-card admin-card--tight" key={`edit-${row.id}`}>
+                <h3 style={{ marginTop: 0 }}>Éditer : {row.title || 'Sans titre'}</h3>
+                <div className="admin-grid">
+                  <label className="admin-span-2">
+                    Titre de l’offre
+                    <input
+                      value={row.title ?? ''}
+                      onChange={(e) => updateLocal(row.id, { title: e.target.value })}
+                    />
+                  </label>
+                  <ImagePickerField
+                    label="Image de l’offre"
+                    value={row.image_url ?? ''}
+                    onChange={(e) => updateLocal(row.id, { image_url: e.target.value })}
+                    storageFolder="formations"
+                    previewAlt={`Illustration de ${row.title ?? 'formation'}`}
+                    icon="🎓"
+                    help="Téléversez une image ou collez une URL. Elle s’affiche sur /formations."
+                  />
+                  <label>
+                    Slug (URL)
+                    <input
+                      value={row.slug ?? ''}
+                      onChange={(e) => updateLocal(row.id, { slug: e.target.value })}
+                    />
+                  </label>
+                  <label>
+                    Langue
+                    <select
+                      value={row.locale === 'en' ? 'en' : 'fr'}
+                      onChange={(e) => updateLocal(row.id, { locale: e.target.value })}
+                    >
+                      <option value="fr">FR</option>
+                      <option value="en">EN</option>
+                    </select>
+                  </label>
+                  <label>
+                    Ordre d’affichage
+                    <input
+                      type="number"
+                      value={row.sort_order ?? 0}
+                      onChange={(e) => updateLocal(row.id, { sort_order: e.target.value })}
+                    />
+                  </label>
+                  <label className="admin-span-2">
+                    Résumé court
+                    <input
+                      value={row.summary ?? ''}
+                      onChange={(e) => updateLocal(row.id, { summary: e.target.value })}
+                      placeholder="Une phrase visible sous le titre"
+                    />
+                  </label>
+                  <RichTextTextarea
+                    label="Description"
+                    rows={12}
+                    storageKey={`formation:${row.id}:description`}
+                    value={row.description ?? ''}
+                    onChange={(e) => updateLocal(row.id, { description: e.target.value })}
+                    hint="Mise en forme : titres, gras, italique, listes et liens — comme un éditeur de texte."
+                  />
+                  <label>
+                    Lieu
+                    <input
+                      value={row.location ?? ''}
+                      onChange={(e) => updateLocal(row.id, { location: e.target.value })}
+                      placeholder="Ex. Goma"
+                    />
+                  </label>
+                  <label>
+                    Durée (libellé)
+                    <input
+                      value={row.duration_label ?? ''}
+                      onChange={(e) => updateLocal(row.id, { duration_label: e.target.value })}
+                      placeholder="Ex. 5 jours"
+                    />
+                  </label>
+                  <label>
+                    Début
+                    <input
+                      type="date"
+                      value={row.starts_on ?? ''}
+                      onChange={(e) => updateLocal(row.id, { starts_on: e.target.value })}
+                    />
+                  </label>
+                  <label>
+                    Fin
+                    <input
+                      type="date"
+                      value={row.ends_on ?? ''}
+                      onChange={(e) => updateLocal(row.id, { ends_on: e.target.value })}
+                    />
+                  </label>
+                  <label>
+                    Places (libellé)
+                    <input
+                      value={row.seats_label ?? ''}
+                      onChange={(e) => updateLocal(row.id, { seats_label: e.target.value })}
+                      placeholder="Ex. 20 places"
+                    />
+                  </label>
+                  <label>
+                    Statut d’inscription
+                    <select
+                      value={status}
+                      onChange={(e) =>
+                        updateLocal(row.id, {
+                          registration_status: e.target.value,
+                          registration_open: e.target.value === 'open',
+                        })
+                      }
+                    >
+                      <option value="open">Inscriptions ouvertes (postuler)</option>
+                      <option value="full">Places épuisées</option>
+                      <option value="ended">Formation déjà passée</option>
+                      <option value="closed">Inscriptions fermées</option>
+                    </select>
+                  </label>
+                  <label className="admin-check admin-span-2">
+                    <input
+                      type="checkbox"
+                      checked={Boolean(row.published)}
+                      onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
+                    />
+                    Publié sur le site (/formations) — sans cette case, l’offre reste en brouillon
+                  </label>
+                </div>
+                <div className="admin-compact-item__actions" style={{ marginTop: '0.85rem' }}>
+                  <button
+                    type="button"
+                    className="btn btn--primary"
+                    disabled={savingId === row.id}
+                    onClick={() => saveRow(row)}
+                  >
+                    {savingId === row.id ? 'Enregistrement…' : 'Enregistrer'}
+                  </button>
+                  <button type="button" className="btn btn--ghost" onClick={() => setEditingId(null)}>
+                    Fermer
+                  </button>
+                </div>
+              </div>
+            )
+          })}
       </div>
     </section>
   )

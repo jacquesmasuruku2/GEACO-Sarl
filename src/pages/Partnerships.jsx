@@ -12,8 +12,7 @@ export function Partnerships() {
   const merci = params.get('merci') === '1'
   const types = t('partnerships.types')
   const typesList = Array.isArray(types) ? types : []
-  const { rows: partners } = useSitePartners()
-  const carouselItems = partners.length ? [...partners, ...partners] : []
+  const { rows: partners, loading } = useSitePartners()
 
   function getInitials(name) {
     return String(name ?? '')
@@ -27,6 +26,14 @@ export function Partnerships() {
 
   function hasLogoUrl(partner) {
     return String(partner?.logo_url ?? '').trim().length > 0
+  }
+
+  function partnerBlurb(partner) {
+    return (
+      String(partner?.partnership_motive ?? '').trim() ||
+      String(partner?.notes ?? '').trim() ||
+      String(partner?.subtitle ?? '').trim()
+    )
   }
 
   function scrollToPartnershipForm() {
@@ -50,41 +57,61 @@ export function Partnerships() {
         heroImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1800&q=80"
       />
 
-      <section className="section section--muted partners-showcase">
-        <div className="container">
-          <div className="partners-showcase__head">
-            <h2 className="partners-showcase__title">
-              <span>Nos </span>
-              <span className="is-accent">Partenaires</span>
-            </h2>
-          </div>
-          <p className="partners-showcase__lead">{t('partnerships.activeLead')}</p>
+      <section className="section partners-directory" aria-labelledby="partenaires-liste-title">
+        <div className="container partners-directory__wrap">
+          <header className="partners-directory__head">
+            <h2 id="partenaires-liste-title">{t('partnerships.activeTitle')}</h2>
+            <p>{t('partnerships.activeLead')}</p>
+          </header>
+
+          {loading ? <p className="form-note">{t('partnerships.loading')}</p> : null}
+
+          {!loading && partners.length === 0 ? (
+            <p className="form-note">{t('partnerships.activeEmpty')}</p>
+          ) : null}
+
           {partners.length ? (
-            <div className="partners-carousel" role="region" aria-label={t('partnerships.activeTitle')}>
-              <div className="partners-carousel__track">
-                {carouselItems.map((p, index) => (
-                  <article className="partners-logo-card" key={`${p.id}-${index}`}>
-                    <div className="partners-logo-card__logo" aria-hidden="true">
-                      {hasLogoUrl(p) ? (
-                        <img src={String(p.logo_url).trim()} alt="" loading="lazy" decoding="async" />
+            <ul className="partners-directory__list">
+              {partners.map((partner) => {
+                const website = String(partner.website_url ?? '').trim()
+                const blurb = partnerBlurb(partner)
+                const subtitle = String(partner.subtitle ?? '').trim()
+                return (
+                  <li className="partners-directory__item" key={partner.id}>
+                    <div className="partners-directory__logo" aria-hidden="true">
+                      {hasLogoUrl(partner) ? (
+                        <img src={String(partner.logo_url).trim()} alt="" loading="lazy" decoding="async" />
                       ) : (
-                        getInitials(p.name)
+                        <span>{getInitials(partner.name)}</span>
                       )}
                     </div>
-                    <h3>{p.name}</h3>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <p style={{ color: 'var(--color-text-muted)' }}>{t('partnerships.activeEmpty')}</p>
-          )}
-          <div className="partners-showcase__footer">
-            <button
-              type="button"
-              className="btn btn--primary partners-showcase__cta"
-              onClick={scrollToPartnershipForm}
-            >
+                    <div className="partners-directory__body">
+                      <h3>{partner.name}</h3>
+                      {subtitle && subtitle !== blurb ? (
+                        <p className="partners-directory__subtitle">{subtitle}</p>
+                      ) : null}
+                      {blurb ? <p className="partners-directory__blurb">{blurb}</p> : null}
+                    </div>
+                    <div className="partners-directory__actions">
+                      {website ? (
+                        <a
+                          className="btn btn--outline"
+                          href={website}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {t('partnerships.visitWebsite')}
+                        </a>
+                      ) : null}
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          ) : null}
+
+          <div className="partners-directory__footer">
+            <button type="button" className="btn btn--primary" onClick={scrollToPartnershipForm}>
               {t('partnerships.becomePartner')}
             </button>
           </div>

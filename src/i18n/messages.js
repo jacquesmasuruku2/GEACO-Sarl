@@ -727,6 +727,8 @@ export const messages = {
         'Organisations avec lesquelles nous collaborons actuellement ou récemment sur des opérations documentées (liste éditoriale).',
       activeEmpty:
         'Aucun partenaire public pour le moment. Revenez prochainement pour découvrir nos collaborations.',
+      loading: 'Chargement des partenaires…',
+      visitWebsite: 'Site web',
       partnersScrollHint:
         'Faites défiler horizontalement pour parcourir tous les partenaires publiés (souris, trackpad ou glissement au doigt).',
       becomePartner: 'Devenir partenaire',
@@ -1800,6 +1802,8 @@ export const messages = {
         'Organisations we currently work with—or have recently worked with—on documented operations (editorial list).',
       activeEmpty:
         'No public partners yet. Please check back soon to discover our collaborations.',
+      loading: 'Loading partners…',
+      visitWebsite: 'Website',
       partnersScrollHint:
         'Scroll horizontally to browse all published partners (mouse, trackpad or swipe).',
       becomePartner: 'Become a partner',

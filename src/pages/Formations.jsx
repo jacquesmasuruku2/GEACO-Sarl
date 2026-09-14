@@ -5,6 +5,7 @@ import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { ContactThanksBanner } from '../components/ContactThanksBanner'
 import { FormationRegistrationForm } from '../components/FormationRegistrationForm'
+import { RichTextContent } from '../components/RichTextContent'
 import { useSiteFormations } from '../hooks/useSiteFormations'
 import { resolveFormationRegistrationStatus } from '../lib/formationStatus'
 
@@ -115,7 +116,9 @@ export function Formations() {
                       {formation.seats_label ? <li>{formation.seats_label}</li> : null}
                     </ul>
                     {formation.description ? (
-                      <p className="formations-item__desc">{formation.description}</p>
+                      <div className="formations-item__desc rich-text">
+                        <RichTextContent value={formation.description} />
+                      </div>
                     ) : null}
                   </div>
                   <div className="formations-item__actions">
