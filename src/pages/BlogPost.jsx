@@ -112,6 +112,28 @@ export function BlogPost() {
     loadEngagement(row.id)
   }, [row?.id, user?.id])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (window.location.hash !== '#commentaires') return
+    const node = document.getElementById('commentaires')
+    if (!node) return
+    window.requestAnimationFrame(() => {
+      node.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }, [row?.id, comments.length])
+
+  function goToComments() {
+    const node = document.getElementById('commentaires')
+    if (!node) return
+    node.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#commentaires`)
+    }
+    window.setTimeout(() => {
+      document.getElementById('blog-comment-text')?.focus?.()
+    }, 350)
+  }
+
   async function saveReaction() {
     if (!supabase || !row?.id) return
     const displayName = String(authorName || userDisplayName || '').trim()
@@ -132,11 +154,19 @@ export function BlogPost() {
         liked: Boolean(liked),
         rating: Math.max(1, Math.min(5, Number(rating) || 5)),
       },
-      { onConflict: 'post_id,user_email' },
+      {
+        onConflict: 'post_id,user_email',
+        ignoreDuplicates: false,
+      },
     )
     setBusy(false)
     if (error) {
-      setErrorMsg(error.message)
+      const msg = String(error.message || '')
+      setErrorMsg(
+        msg.includes('ON CONFLICT') || msg.includes('unique or exclusion constraint')
+          ? `${msg} — Appliquez la migration 020 (contrainte UNIQUE likes) dans Supabase.`
+          : msg,
+      )
       return
     }
     setStatusMsg(t('blog.memberSaved'))
@@ -222,15 +252,26 @@ export function BlogPost() {
             </p>
           ) : null}
           <RichTextContent value={row.body || ''} />
-          <section className="blog-engagement card" style={{ marginTop: '1.5rem' }}>
-            <h2 style={{ marginTop: 0 }}>{t('blog.communityTitle')}</h2>
-            <p className="admin-muted">
-              {t('blog.likesCountLabel')}: <strong>{likesCount}</strong> · {t('blog.avgRatingLabel')}:{' '}
-              <strong>{avgRating ? avgRating.toFixed(1) : '0.0'}/5</strong>
+
+          <div className="blog-comments-cta">
+            <button type="button" className="btn btn--outline" onClick={goToComments}>
+              {String(t('blog.openCommentsWithCount')).replace('{count}', String(comments.length))}
+            </button>
+          </div>
+
+          <section className="blog-engagement">
+            <p className="blog-engagement__summary">
+              {t('blog.likesCountLabel')} : {likesCount}
+              {' · '}
+              {t('blog.avgRatingLabel')} : {avgRating ? avgRating.toFixed(1) : '0.0'}/5
+              {' · '}
+              <button type="button" className="blog-engagement__link" onClick={goToComments}>
+                {t('blog.commentsTitle')} : {comments.length}
+              </button>
             </p>
 
             <div className="blog-member-panel">
-              <p className="admin-muted">{t('blog.guestPrompt')}</p>
+              <p className="blog-member-panel__prompt">{t('blog.guestPrompt')}</p>
               <div className="blog-member-controls">
                 <label>
                   {t('blog.commenterNameLabel')}
@@ -249,7 +290,7 @@ export function BlogPost() {
                     placeholder={t('blog.commenterEmailPlaceholder')}
                   />
                 </label>
-                <label className="admin-check">
+                <label className="admin-check blog-member-controls__like">
                   <input type="checkbox" checked={liked} onChange={(e) => setLiked(e.target.checked)} />
                   {t('blog.likeToggle')}
                 </label>
@@ -273,7 +314,7 @@ export function BlogPost() {
                     <span className="blog-stars__value">{rating}/5</span>
                   </div>
                 </div>
-                <button type="button" className="btn btn--dark" onClick={saveReaction} disabled={busy}>
+                <button type="button" className="btn btn--outline" onClick={saveReaction} disabled={busy}>
                   {busy ? t('forms.formSending') : t('blog.saveLikeRating')}
                 </button>
               </div>
@@ -290,47 +331,71 @@ export function BlogPost() {
               </p>
             ) : null}
 
-            <div style={{ marginTop: '1rem' }}>
-              <h3 style={{ marginBottom: '0.5rem' }}>{t('blog.likersTitle')}</h3>
+            <div className="blog-likers">
+              <p className="blog-section-label">{t('blog.likersTitle')}</p>
               {likesUsers.length ? (
                 <div className="blog-likers-list">
                   {likesUsers.map((item) => (
-                    <span key={item.key} className="tag">
+                    <span key={item.key} className="blog-liker-name">
                       {item.name}
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="admin-muted">{t('blog.noLikersYet')}</p>
+                <p className="blog-engagement__empty">{t('blog.noLikersYet')}</p>
               )}
             </div>
 
-            <div style={{ marginTop: '1.1rem' }}>
-              <h3 style={{ marginBottom: '0.5rem' }}>{t('blog.commentsTitle')}</h3>
-              <form onSubmit={submitComment} className="admin-form">
-                <label htmlFor="blog-comment-text">{t('blog.commentLabel')}</label>
-                <textarea
-                  id="blog-comment-text"
-                  rows={4}
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  placeholder={t('blog.commentPlaceholder')}
-                />
-                <button type="submit" className="btn btn--primary" disabled={busy}>
-                  {busy ? t('forms.formSending') : t('blog.publishComment')}
-                </button>
-              </form>
+            <div className="blog-comments" id="commentaires" tabIndex={-1}>
+              <p className="blog-section-label">
+                {String(t('blog.commentsCountTitle')).replace('{count}', String(comments.length))}
+              </p>
+
               <div className="blog-comments-list">
-                {comments.map((comment) => (
-                  <article key={comment.id} className="blog-comment-item">
-                    <p className="blog-comment-item__meta">
-                      <strong>{comment.user_display_name || 'Membre'}</strong> ·{' '}
-                      {new Date(comment.created_at).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
-                    </p>
-                    <p>{comment.comment}</p>
-                  </article>
-                ))}
-                {!comments.length ? <p className="admin-muted">{t('blog.noCommentsYet')}</p> : null}
+                {comments.map((comment) => {
+                  const name = comment.user_display_name || 'Membre'
+                  const when = new Date(comment.created_at).toLocaleString(
+                    locale === 'en' ? 'en-GB' : 'fr-FR',
+                    {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    },
+                  )
+                  return (
+                    <article key={comment.id} className="blog-comment-item">
+                      <p className="blog-comment-item__meta">
+                        <span className="blog-comment-item__name">{name} :</span> {when}
+                      </p>
+                      <p className="blog-comment-item__text">{comment.comment}</p>
+                    </article>
+                  )
+                })}
+                {!comments.length ? (
+                  <p className="blog-engagement__empty">{t('blog.noCommentsYet')}</p>
+                ) : null}
+              </div>
+
+              <div className="blog-comments__compose">
+                <p className="blog-section-label">{t('blog.commentFormTitle')}</p>
+                <p className="blog-comments__compose-hint">{t('blog.memberToComment')}</p>
+                <form onSubmit={submitComment} className="blog-comments__form">
+                  <label htmlFor="blog-comment-text">{t('blog.commentLabel')}</label>
+                  <textarea
+                    id="blog-comment-text"
+                    rows={3}
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder={t('blog.commentPlaceholder')}
+                  />
+                  <div className="blog-comments__form-actions">
+                    <button type="submit" className="btn btn--outline" disabled={busy}>
+                      {busy ? t('forms.formSending') : t('blog.publishComment')}
+                    </button>
+                  </div>
+                </form>
               </div>
             </div>
           </section>
