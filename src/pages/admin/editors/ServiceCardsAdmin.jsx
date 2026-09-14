@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
 import { supabase } from '../../../lib/supabase'
 import { ImagePickerField } from '../../../components/admin/ImagePickerField'
-import { ServiceIdCard, resolveServiceCardData } from '../../../components/admin/ServiceIdCard'
+import { ServiceIdCard, ServiceIdCardBack, resolveServiceCardData } from '../../../components/admin/ServiceIdCard'
 import { SITE_CONTACT } from '../../../data/siteContact'
+import { slugifyPersonnel } from '../../../lib/personnelSlug'
 
 function slugifyFilename(value) {
   return (
@@ -93,8 +94,8 @@ export function ServiceCardsAdmin() {
       .order('sort_order', { ascending: true })
     if (qErr) {
       setError(
-        qErr.message.includes('card_')
-          ? `${qErr.message} — Appliquez les migrations 017 et 018 (cartes de service) dans Supabase.`
+        qErr.message.includes('card_') || qErr.message.includes('slug')
+          ? `${qErr.message} — Appliquez les migrations 017–019 (cartes / slug) dans Supabase.`
           : qErr.message,
       )
       return
@@ -121,10 +122,12 @@ export function ServiceCardsAdmin() {
     setSavingId(row.id)
     setError('')
     setMessage('')
+    const slug = String(row.slug ?? '').trim() || slugifyPersonnel(row.name)
     const { error: upErr } = await supabase
       .from('site_personnel')
       .update({
         name: row.name,
+        slug,
         role: row.role,
         photo_url: row.photo_url?.trim() || null,
         card_last_name: row.card_last_name?.trim() || null,
@@ -143,8 +146,8 @@ export function ServiceCardsAdmin() {
     if (upErr) {
       setSavingId(null)
       setError(
-        upErr.message.includes('card_')
-          ? `${upErr.message} — Appliquez les migrations 017 et 018 (cartes de service) dans Supabase.`
+        upErr.message.includes('card_') || upErr.message.includes('slug')
+          ? `${upErr.message} — Appliquez les migrations 017–019 (cartes / slug) dans Supabase.`
           : upErr.message,
       )
       return
@@ -166,6 +169,7 @@ export function ServiceCardsAdmin() {
       }
     }
     if (!row.card_address) patch.card_address = SITE_CONTACT.offices.goma.shortAddress
+    if (!row.slug && row.name) patch.slug = slugifyPersonnel(row.name)
     if (!row.card_valid_until) {
       const d = new Date()
       d.setFullYear(d.getFullYear() + 1)
@@ -188,30 +192,37 @@ export function ServiceCardsAdmin() {
 
   async function exportPreviewPng() {
     const stage = previewStageRef.current
-    const node = stage?.querySelector('.service-id-card')
-    if (!previewRow || !node) return
+    const nodes = stage ? [...stage.querySelectorAll('.service-id-card')] : []
+    if (!previewRow || !nodes.length) return
 
     setExportingPng(true)
     setError('')
     setMessage('')
     try {
-      const dataUrl = await toPng(node, {
-        cacheBust: true,
-        pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
-        backgroundColor: '#ffffff',
-      })
-      const blob = await (await fetch(dataUrl)).blob()
-      const filename = `geaco-carte-service-${slugifyFilename(
-        previewRow.card_matricule || previewRow.name,
-      )}.png`
-      const mode = await savePngBlob(blob, filename)
-      if (mode === 'shared') {
-        setMessage('PNG prêt. Choisissez « Enregistrer l’image » ou Partager depuis le menu.')
-      } else if (mode === 'downloaded') {
+      const pixelRatio = Math.min(3, Math.max(2, window.devicePixelRatio || 2))
+      const base = slugifyFilename(previewRow.card_matricule || previewRow.name)
+      let lastMode = 'downloaded'
+
+      for (const node of nodes) {
+        const face = node.getAttribute('data-card-face') || 'recto'
+        const dataUrl = await toPng(node, {
+          cacheBust: true,
+          pixelRatio,
+          backgroundColor: '#ffffff',
+        })
+        const blob = await (await fetch(dataUrl)).blob()
+        const filename = `geaco-carte-service-${base}-${face}.png`
+        lastMode = await savePngBlob(blob, filename)
+        if (lastMode === 'cancelled') break
+      }
+
+      if (lastMode === 'shared') {
+        setMessage('PNG recto/verso prêts. Enregistrez via le menu de partage.')
+      } else if (lastMode === 'downloaded') {
         setMessage(
           isLikelyIos()
-            ? 'PNG ouvert. Appui long sur l’image → Enregistrer dans Photos.'
-            : 'PNG téléchargé sur votre appareil.',
+            ? 'PNG ouverts. Appui long → Enregistrer dans Photos (recto puis verso).'
+            : 'PNG recto et verso téléchargés.',
         )
       }
     } catch (err) {
@@ -275,9 +286,9 @@ export function ServiceCardsAdmin() {
       ) : null}
 
       <p className="admin-muted">
-        Produisez les cartes de service GEACO à partir des fiches équipe. Sur téléphone : utilisez
-        « Télécharger PNG » (partage / enregistrement dans Photos). Sur ordinateur : PNG ou
-        impression / PDF.
+        Chaque carte a un recto (identité) et un verso (QR, contacts, laissez-passer, expiration). Sur
+        téléphone : « Télécharger PNG » exporte les deux faces. Sur ordinateur : PNG ou impression /
+        PDF.
       </p>
 
       <div className="service-cards-admin__layout">
@@ -491,7 +502,10 @@ export function ServiceCardsAdmin() {
           </div>
           {previewRow ? (
             <div className="service-cards-admin__stage" ref={previewStageRef}>
+              <p className="service-cards-admin__face-label">Recto</p>
               <ServiceIdCard member={previewRow} />
+              <p className="service-cards-admin__face-label">Verso</p>
+              <ServiceIdCardBack member={previewRow} />
             </div>
           ) : (
             <p className="admin-muted">Sélectionnez un membre pour prévisualiser sa carte.</p>
@@ -501,11 +515,14 @@ export function ServiceCardsAdmin() {
 
       {/* Zone d’impression hors écran normal */}
       <div className="service-cards-print" aria-hidden="true">
-        {printRows.map((row) => (
-          <div className="service-cards-print__page" key={`print-${row.id}`}>
+        {printRows.flatMap((row) => [
+          <div className="service-cards-print__page" key={`print-recto-${row.id}`}>
             <ServiceIdCard member={row} />
-          </div>
-        ))}
+          </div>,
+          <div className="service-cards-print__page" key={`print-verso-${row.id}`}>
+            <ServiceIdCardBack member={row} />
+          </div>,
+        ])}
       </div>
     </section>
   )

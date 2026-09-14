@@ -1,7 +1,12 @@
+import { QRCodeSVG } from 'qrcode.react'
 import { SITE_CONTACT } from '../../data/siteContact'
+import { personnelProfileUrl, slugifyPersonnel } from '../../lib/personnelSlug'
 
 /** Signature autorisée GEACO (traits noirs, fond transparent). */
 export const DEFAULT_SERVICE_CARD_SIGNATURE = '/media/geaco/signature-autorisee.png'
+
+/** Cachet officiel GEACO (accompagne la signature). */
+export const SERVICE_CARD_OFFICIAL_STAMP = '/media/geaco/cachet-officiel.png'
 
 function isHttpUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim())
@@ -21,9 +26,25 @@ function formatCardDate(value) {
   return `${d}/${m}/${y}`
 }
 
+/** Format type carte UPG : MM/YYYY */
+function formatExpiryMonthYear(value) {
+  if (!value) return '—'
+  const raw = String(value).slice(0, 10)
+  const [y, m] = raw.split('-')
+  if (!y || !m) return raw
+  return `${m}/${y}`
+}
+
 function textOrDash(value) {
   const v = String(value ?? '').trim()
   return v || '—'
+}
+
+/**
+ * Contenu QR : URL du profil public (/personnel/:slug).
+ */
+export function buildServiceCardQrPayload(data) {
+  return data.profileUrl || SITE_CONTACT.websiteUrl
 }
 
 /**
@@ -34,9 +55,16 @@ export function resolveServiceCardData(row) {
   const firstName = String(row?.card_first_name ?? '').trim()
   const displayName = String(row?.name ?? '').trim()
   const customSignature = String(row?.card_signature_url ?? '').trim()
+  const slug = String(row?.slug ?? '').trim() || slugifyPersonnel(displayName)
+  const profileUrl = personnelProfileUrl(
+    { slug, name: displayName },
+    SITE_CONTACT.websiteUrl,
+  )
 
   return {
     id: row?.id,
+    slug,
+    profileUrl,
     lastName: lastName || displayName || '—',
     postName: textOrDash(row?.card_post_name),
     firstName: firstName || '—',
@@ -54,8 +82,14 @@ export function resolveServiceCardData(row) {
       ? customSignature
       : DEFAULT_SERVICE_CARD_SIGNATURE,
     validUntil: formatCardDate(row?.card_valid_until),
+    expiryMonthYear: formatExpiryMonthYear(row?.card_valid_until),
     company: SITE_CONTACT.legalName,
     companyLong: SITE_CONTACT.legalNameLong,
+    websiteDisplay: SITE_CONTACT.websiteDisplay,
+    websiteUrl: SITE_CONTACT.websiteUrl,
+    email: SITE_CONTACT.email,
+    phone: SITE_CONTACT.phonePrimaryDisplay,
+    officeAddress: SITE_CONTACT.offices.goma.address.replace(/\.\s*$/, ''),
   }
 }
 
@@ -72,14 +106,18 @@ function CardField({ label, value }) {
 }
 
 /**
- * Carte de service GEACO —
+ * Carte de service GEACO — recto
  * en-tête GEACO (logo | textes | drapeau), corps style carte de service classique.
  */
 export function ServiceIdCard({ member, className = '' }) {
   const data = resolveServiceCardData(member)
 
   return (
-    <article className={`service-id-card ${className}`.trim()} data-card-id={data.id || undefined}>
+    <article
+      className={`service-id-card service-id-card--front ${className}`.trim()}
+      data-card-id={data.id || undefined}
+      data-card-face="recto"
+    >
       <div className="service-id-card__watermark" aria-hidden="true">
         <img src="/geaco-logo-transparent.png" alt="" />
       </div>
@@ -128,21 +166,31 @@ export function ServiceIdCard({ member, className = '' }) {
         </div>
 
         <div className="service-id-card__photo-col">
-          <div className="service-id-card__photo">
-            {data.photoUrl ? (
-              <img src={data.photoUrl} alt="" crossOrigin="anonymous" />
-            ) : (
-              <span className="service-id-card__photo-empty">Photo</span>
-            )}
+          <div className="service-id-card__photo-wrap">
+            <div className="service-id-card__photo">
+              {data.photoUrl ? (
+                <img src={data.photoUrl} alt="" crossOrigin="anonymous" />
+              ) : (
+                <span className="service-id-card__photo-empty">Photo</span>
+              )}
+            </div>
           </div>
-          <div className="service-id-card__signature">
-            {data.signatureUrl ? (
-              <img
-                src={data.signatureUrl}
-                alt=""
-                crossOrigin={/^https?:\/\//i.test(data.signatureUrl) ? 'anonymous' : undefined}
-              />
-            ) : null}
+          <div className="service-id-card__sign-block">
+            <img
+              className="service-id-card__stamp"
+              src={SERVICE_CARD_OFFICIAL_STAMP}
+              alt=""
+              aria-hidden="true"
+            />
+            <div className="service-id-card__signature">
+              {data.signatureUrl ? (
+                <img
+                  src={data.signatureUrl}
+                  alt=""
+                  crossOrigin={/^https?:\/\//i.test(data.signatureUrl) ? 'anonymous' : undefined}
+                />
+              ) : null}
+            </div>
           </div>
           <p className="service-id-card__sign-label">Signature autorisée</p>
           <p className="service-id-card__validity">Validité {data.validUntil}</p>
@@ -153,6 +201,67 @@ export function ServiceIdCard({ member, className = '' }) {
         Les autorités civiles et militaires sont priées d’apporter assistance au titulaire de la présente
         carte.
       </p>
+    </article>
+  )
+}
+
+/**
+ * Verso — QR (infos carte), contacts, laissez-passer, expiration.
+ */
+export function ServiceIdCardBack({ member, className = '' }) {
+  const data = resolveServiceCardData(member)
+  const qrValue = buildServiceCardQrPayload(data)
+
+  return (
+    <article
+      className={`service-id-card service-id-card--back ${className}`.trim()}
+      data-card-id={data.id || undefined}
+      data-card-face="verso"
+    >
+      <div className="service-id-card__watermark service-id-card__watermark--back" aria-hidden="true">
+        <img src="/geaco-logo-transparent.png" alt="" />
+      </div>
+
+      <header className="service-id-card__back-header">
+        <p>{data.companyLong.toUpperCase()}</p>
+      </header>
+
+      <div className="service-id-card__back-body">
+        <div className="service-id-card__back-qr" aria-label="QR code de la carte de service">
+          <QRCodeSVG
+            value={qrValue}
+            size={128}
+            level="M"
+            includeMargin={false}
+            bgColor="#ffffff"
+            fgColor="#111111"
+          />
+        </div>
+
+        <div className="service-id-card__back-contacts">
+          <h3>Contacts</h3>
+          <p>{data.officeAddress}</p>
+          <p>{data.phone}</p>
+          <p>{data.email}</p>
+          <p>{data.websiteDisplay}</p>
+          <p className="service-id-card__back-profile">Profil : /personnel/{data.slug}</p>
+        </div>
+      </div>
+
+      <p className="service-id-card__pass">LAISSEZ-PASSER</p>
+
+      <p className="service-id-card__expiry">Date d&apos;expiration : {data.expiryMonthYear}</p>
+
+      <div className="service-id-card__stripe" aria-hidden="true" />
+
+      <p className="service-id-card__back-assist">
+        Les autorités tant civiles et militaires sont priées d’apporter assistance au porteur de la
+        présente en cas de nécessité.
+      </p>
+
+      <footer className="service-id-card__back-footer">
+        Cette carte est strictement personnelle et non transférable.
+      </footer>
     </article>
   )
 }

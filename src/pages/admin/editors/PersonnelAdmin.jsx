@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
 import { ImagePickerField } from '../../../components/admin/ImagePickerField'
+import { slugifyPersonnel } from '../../../lib/personnelSlug'
 
 export function PersonnelAdmin() {
   const [rows, setRows] = useState([])
@@ -37,6 +38,7 @@ export function PersonnelAdmin() {
       section_order: nextOrder,
       section_title: 'Nouvelle rubrique',
       name: 'Nom',
+      slug: 'nom',
       role: 'Fonction',
       focus: '',
       bio: '',
@@ -49,7 +51,11 @@ export function PersonnelAdmin() {
       published: true,
     })
     if (insErr) {
-      setError(insErr.message)
+      setError(
+        insErr.message.includes('slug')
+          ? `${insErr.message} — Appliquez la migration 019 (slug personnel) dans Supabase.`
+          : insErr.message,
+      )
       return
     }
     setMessage('Fiche créée et publiée par défaut. Vous pouvez la repasser en brouillon si besoin.')
@@ -61,12 +67,14 @@ export function PersonnelAdmin() {
     setSavingId(row.id)
     setError('')
     setMessage('')
+    const slug = String(row.slug ?? '').trim() || slugifyPersonnel(row.name)
     const { error: upErr } = await supabase
       .from('site_personnel')
       .update({
         section_order: Number(row.section_order) || 0,
         section_title: row.section_title,
         name: row.name,
+        slug,
         role: row.role,
         focus: row.focus || null,
         bio: row.bio || null,
@@ -81,7 +89,11 @@ export function PersonnelAdmin() {
       .eq('id', row.id)
     if (upErr) {
       setSavingId(null)
-      setError(upErr.message)
+      setError(
+        upErr.message.includes('slug')
+          ? `${upErr.message} — Appliquez la migration 019 (slug personnel) dans Supabase.`
+          : upErr.message,
+      )
       return
     }
     setSavingId(null)
@@ -222,6 +234,19 @@ export function PersonnelAdmin() {
                 <label className="admin-span-2">
                   Nom affiché
                   <input value={row.name} onChange={(e) => updateLocal(row.id, { name: e.target.value })} />
+                </label>
+                <label className="admin-span-2">
+                  Slug URL (/personnel/…)
+                  <input
+                    value={row.slug ?? ''}
+                    onChange={(e) => updateLocal(row.id, { slug: e.target.value })}
+                    onBlur={() => {
+                      if (!String(row.slug ?? '').trim() && row.name) {
+                        updateLocal(row.id, { slug: slugifyPersonnel(row.name) })
+                      }
+                    }}
+                    placeholder={slugifyPersonnel(row.name || 'membre')}
+                  />
                 </label>
                 <label className="admin-span-2">
                   Fonction (titre)

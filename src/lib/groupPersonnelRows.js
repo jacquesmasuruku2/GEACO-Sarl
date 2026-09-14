@@ -30,6 +30,7 @@ export function groupPersonnelRows(rows) {
     const g = groups[groups.length - 1]
     g.members.push({
       id: row.id,
+      slug: row.slug ?? '',
       name: row.name,
       role: row.role,
       focus: row.focus ?? '',

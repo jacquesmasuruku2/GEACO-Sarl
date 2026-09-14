@@ -11,6 +11,8 @@
 export const SITE_CONTACT = {
   legalName: 'GEACO SARL',
   legalNameLong: "Groupe d'Etudes Agronomiques et de Construction",
+  websiteDisplay: 'www.geacosarl.org',
+  websiteUrl: 'https://www.geacosarl.org',
   email: 'geacosarl@gmail.com',
   phonePrimaryDisplay: '+243 808 368 955',
   phonePrimaryTel: '+243808368955',

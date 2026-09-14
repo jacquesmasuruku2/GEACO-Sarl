@@ -3742,6 +3742,16 @@ html.site-header-topbar-hidden .site-topbar {
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 
+a.personnel-profile__name-btn,
+a.personnel-profile__more,
+a.personnel-profile__media--button {
+  color: inherit;
+}
+
+a.personnel-profile__more {
+  color: #1a5fd0;
+}
+
 .personnel-profile__name-btn:hover,
 .personnel-profile__name-btn:focus-visible {
   color: #1a5fd0;
@@ -4042,6 +4052,43 @@ html.site-header-topbar-hidden .site-topbar {
   }
 }
 
+.personnel-detail__layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.personnel-detail__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #e8eef4;
+}
+
+.personnel-detail__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  display: block;
+}
+
+.personnel-detail__media[data-has-photo='false'] {
+  min-height: 280px;
+}
+
+.personnel-detail__content {
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .personnel-detail__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ——— Cartes de service (admin) ——— */
 .service-cards-admin__layout {
   display: grid;
@@ -4082,6 +4129,18 @@ html.site-header-topbar-hidden .site-topbar {
 .service-cards-admin__stage {
   overflow: auto;
   padding: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.service-cards-admin__face-label {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5b6b7c;
 }
 
 .service-cards-print {
@@ -4114,7 +4173,7 @@ html.site-header-topbar-hidden .site-topbar {
 
 .service-id-card__watermark {
   position: absolute;
-  inset: 28% 18% 18% 18%;
+  inset: 18% 8% 14% 8%;
   z-index: 0;
   display: grid;
   place-items: center;
@@ -4124,7 +4183,7 @@ html.site-header-topbar-hidden .site-topbar {
 }
 
 .service-id-card__watermark img {
-  width: min(72%, 11rem);
+  width: min(92%, 18rem);
   height: auto;
   object-fit: contain;
   opacity: 0.14;
@@ -4304,6 +4363,12 @@ html.site-header-topbar-hidden .site-topbar {
   margin-bottom: 0;
 }
 
+.service-id-card__photo-wrap {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
 .service-id-card__photo {
   width: 100%;
   aspect-ratio: 3 / 3.35;
@@ -4333,26 +4398,52 @@ html.site-header-topbar-hidden .site-topbar {
   font-weight: 700;
 }
 
+.service-id-card__sign-block {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 0.2rem;
+  width: 100%;
+  margin-top: -1.15rem;
+  padding: 0 0.05rem;
+  min-height: 2.85rem;
+}
+
+.service-id-card__stamp {
+  width: clamp(2.55rem, 44%, 3.25rem);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  opacity: 0.95;
+  pointer-events: none;
+  transform: rotate(-10deg);
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.16));
+  margin-bottom: -0.15rem;
+}
+
 .service-id-card__signature {
   width: 100%;
-  height: 2.1rem;
-  margin-top: -0.35rem;
+  min-height: 1.85rem;
   display: grid;
-  place-items: center;
+  place-items: center end;
   position: relative;
-  z-index: 2;
+  z-index: 1;
+  padding-bottom: 0.1rem;
 }
 
 .service-id-card__signature img {
   max-width: 100%;
-  max-height: 2rem;
+  max-height: 1.85rem;
   width: auto;
   object-fit: contain;
   display: block;
+  justify-self: end;
 }
 
 .service-id-card__sign-label {
-  margin: 0.05rem 0 0;
+  margin: 0.15rem 0 0;
   font-size: clamp(0.5rem, 1.05vw, 0.6rem);
   color: #111;
   font-weight: 400;
@@ -4377,6 +4468,164 @@ html.site-header-topbar-hidden .site-topbar {
   font-weight: 400;
   color: #111;
   line-height: 1.3;
+}
+
+/* ——— Verso carte de service ——— */
+.service-id-card--back {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-id-card__watermark--back {
+  inset: 14% 6% 16% 6%;
+}
+
+.service-id-card__watermark--back img {
+  opacity: 0.12;
+  width: min(96%, 20rem);
+}
+
+.service-id-card__back-header {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  background: #1f7fd0;
+  text-align: center;
+}
+
+.service-id-card__back-header p {
+  margin: 0;
+  font-family: 'Outfit', Arial, sans-serif;
+  font-size: clamp(0.72rem, 1.9vw, 0.95rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.25;
+}
+
+.service-id-card__back-body {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.85rem 1rem 0.35rem;
+  min-height: 0;
+}
+
+.service-id-card__back-qr {
+  width: clamp(5.4rem, 18vw, 7.2rem);
+  height: clamp(5.4rem, 18vw, 7.2rem);
+  padding: 0.28rem;
+  background: #fff;
+  border: 1px solid #d0d8e2;
+  display: grid;
+  place-items: center;
+}
+
+.service-id-card__back-qr svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.service-id-card__back-contacts {
+  min-width: 0;
+}
+
+.service-id-card__back-contacts h3 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  font-weight: 800;
+  color: #1f7fd0;
+}
+
+.service-id-card__back-contacts p {
+  margin: 0 0 0.18rem;
+  font-size: clamp(0.58rem, 1.35vw, 0.74rem);
+  line-height: 1.35;
+  color: #111;
+  word-break: break-word;
+}
+
+.service-id-card__back-profile {
+  margin-top: 0.35rem !important;
+  font-size: clamp(0.48rem, 1.1vw, 0.6rem) !important;
+  font-weight: 700;
+  color: #1f7fd0 !important;
+}
+
+.service-id-card__pass {
+  position: relative;
+  z-index: 1;
+  margin: 0.15rem 1rem 0.35rem;
+  text-align: center;
+  font-family: 'Outfit', Arial, sans-serif;
+  font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1f7fd0;
+  line-height: 1.1;
+}
+
+.service-id-card__expiry {
+  position: relative;
+  z-index: 1;
+  margin: 0 1rem 0.45rem auto;
+  text-align: right;
+  font-size: clamp(0.68rem, 1.45vw, 0.82rem);
+  font-weight: 800;
+  color: #1f7fd0;
+}
+
+.service-id-card__stripe {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  height: 0.38rem;
+  background: linear-gradient(
+    90deg,
+    #1f7fd0 0%,
+    #1f7fd0 42%,
+    #e30613 42%,
+    #e30613 58%,
+    #1f7fd0 58%,
+    #1f7fd0 100%
+  );
+}
+
+.service-id-card__back-assist {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.28rem 0.85rem;
+  text-align: center;
+  font-size: clamp(0.42rem, 1vw, 0.54rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.3;
+  background: #fff;
+}
+
+.service-id-card__back-footer {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0.42rem 0.85rem;
+  text-align: center;
+  font-size: clamp(0.52rem, 1.2vw, 0.68rem);
+  font-weight: 700;
+  color: #fff;
+  background: #1a1a1a;
+  line-height: 1.25;
 }
 
 @media (max-width: 980px) {
