@@ -3379,7 +3379,7 @@ html.site-header-topbar-hidden .site-topbar {
   }
 
   .service-cards-admin__stage .service-id-card {
-    min-width: min(100%, 520px);
+    min-width: min(100%, 580px);
   }
 }
 
@@ -4155,7 +4155,7 @@ a.personnel-profile__more {
   --sid-navy: #0a2748;
   --sid-ink: #111111;
   position: relative;
-  width: min(100%, 740px);
+  width: min(100%, 840px);
   aspect-ratio: 86 / 54;
   margin: 0 auto;
   overflow: hidden;
@@ -4401,49 +4401,29 @@ a.personnel-profile__more {
 .service-id-card__sign-block {
   position: relative;
   z-index: 3;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: end;
-  gap: 0.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
   width: 100%;
-  margin-top: -1.15rem;
+  margin-top: -1.65rem;
   padding: 0 0.05rem;
-  min-height: 2.85rem;
+  min-height: 3.1rem;
 }
 
-.service-id-card__stamp {
-  width: clamp(2.55rem, 44%, 3.25rem);
+.service-id-card__stamp-sign {
+  width: min(100%, 8.6rem);
   height: auto;
-  aspect-ratio: 1;
+  max-height: 4rem;
   object-fit: contain;
-  opacity: 0.95;
-  pointer-events: none;
-  transform: rotate(-10deg);
-  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.16));
-  margin-bottom: -0.15rem;
-}
-
-.service-id-card__signature {
-  width: 100%;
-  min-height: 1.85rem;
-  display: grid;
-  place-items: center end;
-  position: relative;
-  z-index: 1;
-  padding-bottom: 0.1rem;
-}
-
-.service-id-card__signature img {
-  max-width: 100%;
-  max-height: 1.85rem;
-  width: auto;
-  object-fit: contain;
+  object-position: left bottom;
   display: block;
-  justify-self: end;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
 }
 
 .service-id-card__sign-label {
-  margin: 0.15rem 0 0;
+  margin: 0.2rem 0 0;
   font-size: clamp(0.5rem, 1.05vw, 0.6rem);
   color: #111;
   font-weight: 400;
@@ -4675,8 +4655,8 @@ a.personnel-profile__more {
   }
 
   .service-id-card {
-    width: 160mm;
-    height: 100mm;
+    width: 175mm;
+    height: 110mm;
     aspect-ratio: auto;
     box-shadow: none;
     border-color: #9eb2c9;

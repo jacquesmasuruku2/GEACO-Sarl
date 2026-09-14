@@ -446,11 +446,11 @@ export function ServiceCardsAdmin() {
                     icon="👤"
                   />
                   <ImagePickerField
-                    label="Signature autorisée"
+                    label="Cachet + signature (défaut GEACO si vide)"
                     value={row.card_signature_url ?? ''}
                     onChange={(e) => updateLocal(row.id, { card_signature_url: e.target.value })}
                     storageFolder="personnel-signatures"
-                    previewAlt="Signature"
+                    previewAlt="Cachet et signature"
                     icon="✍️"
                   />
                 </div>

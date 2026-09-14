@@ -2,11 +2,8 @@ import { QRCodeSVG } from 'qrcode.react'
 import { SITE_CONTACT } from '../../data/siteContact'
 import { personnelProfileUrl, slugifyPersonnel } from '../../lib/personnelSlug'
 
-/** Signature autorisée GEACO (traits noirs, fond transparent). */
-export const DEFAULT_SERVICE_CARD_SIGNATURE = '/media/geaco/signature-autorisee.png'
-
-/** Cachet officiel GEACO (accompagne la signature). */
-export const SERVICE_CARD_OFFICIAL_STAMP = '/media/geaco/cachet-officiel.png'
+/** Cachet + signature autorisée GEACO (image unique, fond transparent). */
+export const DEFAULT_SERVICE_CARD_SIGNATURE = '/media/geaco/cachet-signature.png'
 
 function isHttpUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim())
@@ -176,21 +173,14 @@ export function ServiceIdCard({ member, className = '' }) {
             </div>
           </div>
           <div className="service-id-card__sign-block">
-            <img
-              className="service-id-card__stamp"
-              src={SERVICE_CARD_OFFICIAL_STAMP}
-              alt=""
-              aria-hidden="true"
-            />
-            <div className="service-id-card__signature">
-              {data.signatureUrl ? (
-                <img
-                  src={data.signatureUrl}
-                  alt=""
-                  crossOrigin={/^https?:\/\//i.test(data.signatureUrl) ? 'anonymous' : undefined}
-                />
-              ) : null}
-            </div>
+            {data.signatureUrl ? (
+              <img
+                className="service-id-card__stamp-sign"
+                src={data.signatureUrl}
+                alt=""
+                crossOrigin={/^https?:\/\//i.test(data.signatureUrl) ? 'anonymous' : undefined}
+              />
+            ) : null}
           </div>
           <p className="service-id-card__sign-label">Signature autorisée</p>
           <p className="service-id-card__validity">Validité {data.validUntil}</p>
