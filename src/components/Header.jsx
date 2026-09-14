@@ -222,7 +222,7 @@ export function Header() {
 
           <NavLink to="/contact">{navLabel('nav.contact')}</NavLink>
 
-          <Link className="btn btn--primary nav-desktop__cta" to="/devis">
+          <Link className="nav-desktop__cta" to="/devis">
             {navLabel('nav.quote')}
           </Link>
 

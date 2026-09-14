@@ -15,7 +15,19 @@ const PILLAR_META = {
 export function Home() {
   const { t, locale } = useI18n()
   const { rows: partners } = useSitePartners()
-  const heroSlides = ['/media/geaco/geaco-home-hero-02.png', '/media/geaco/geaco-01.jpeg']
+  const heroSlides = [
+    '/media/geaco/geaco-24.jpeg',
+    '/media/geaco/geaco-29.jpeg',
+    '/media/geaco/geaco-25.jpeg',
+    '/media/geaco/geaco-16.jpeg',
+  ]
+  const fieldPhotos = [
+    { src: '/media/geaco/geaco-24.jpeg', featured: true },
+    { src: '/media/geaco/geaco-29.jpeg', featured: false },
+    { src: '/media/geaco/geaco-09.jpeg', featured: false },
+    { src: '/media/geaco/geaco-16.jpeg', featured: false },
+    { src: '/media/geaco/geaco-25.jpeg', featured: false },
+  ]
   const [activeHeroSlide, setActiveHeroSlide] = useState(0)
 
   const newsItems = t('home.newsItems')
@@ -72,11 +84,11 @@ export function Home() {
               alt=""
               loading={index === 0 ? 'eager' : 'lazy'}
               decoding="async"
+              fetchPriority={index === 0 ? 'high' : 'auto'}
               className={index === activeHeroSlide ? 'is-active' : ''}
             />
           ))}
           <div className="home-hero-immersive__veil" />
-          <div className="home-hero-immersive__glow" />
         </div>
         <div className="container home-hero-immersive__inner">
           <p className="home-hero-immersive__eyebrow">{t('brand.short')}</p>
@@ -123,6 +135,34 @@ export function Home() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section section--tight" aria-labelledby="home-field-title">
+        <div className="container">
+          <div className="section__head section__head--wide">
+            <p className="section-kicker">{t('home.fieldKicker')}</p>
+            <h2 id="home-field-title" className="section__title">
+              {t('home.fieldTitle')}
+            </h2>
+            <p>{t('home.fieldLead')}</p>
+          </div>
+          <div className="home-gallery-grid">
+            {fieldPhotos.map((photo) => (
+              <Link
+                key={photo.src}
+                to="/galerie"
+                className={`home-gallery-card${photo.featured ? ' is-featured' : ''}`}
+              >
+                <img src={photo.src} alt="" loading="lazy" decoding="async" />
+              </Link>
+            ))}
+          </div>
+          <p style={{ marginTop: '1.1rem' }}>
+            <Link className="btn btn--outline" to="/galerie">
+              {t('home.fieldCta')}
+            </Link>
+          </p>
         </div>
       </section>
 

@@ -89,6 +89,11 @@ export const messages = {
       partnersTeaser:
         'Nous recherchons des partenaires semenciers, organisations agricoles, bailleurs et ONG internationales.',
       partnersCta: 'Proposer un partenariat',
+      fieldKicker: 'Terrain',
+      fieldTitle: 'Nos chantiers, en images',
+      fieldLead:
+        'Photos réelles de nos équipes et chantiers au Nord-Kivu — fondations, maçonnerie et suivi de travaux.',
+      fieldCta: 'Voir la galerie',
       breadcrumbParent: 'GEACO SARL',
       breadcrumbCurrent: 'Nos expertises terrain',
       expertiseSectionTitle: 'Nos expertises',
@@ -165,32 +170,64 @@ export const messages = {
     },
     about: {
       metaTitle: 'À propos — GEACO SARL',
-      metaDesc: 'Présentation, valeurs et équipe dirigeante de GEACO SARL.',
+      metaDesc:
+        'Identité juridique, implantations et équipe dirigeante de GEACO SARL — Groupe d’études agronomiques et de construction.',
       title: 'À propos de GEACO',
       intro:
-        'GEACO SARL est une société à responsabilité limitée enregistrée en République démocratique du Congo. Nous concevons et réalisons des projets intégrés en agriculture et construction pour renforcer la résilience des territoires.',
+        'GEACO SARL (Groupe d’études agronomiques et de construction) est une société à responsabilité limitée constituée en République démocratique du Congo. Nous concevons et réalisons des projets intégrés en agriculture, construction et WASH pour renforcer la résilience des territoires.',
+      identityTitle: 'Identité de la société',
+      identityLead:
+        'Informations issues des statuts de la société (mai 2025). Pour le détail complet, consultez les mentions légales.',
+      legalNameLabel: 'Dénomination',
+      legalNameValue: 'Groupe d’études agronomiques et de construction (GEACO SARL)',
+      formLabel: 'Forme juridique',
+      formValue: 'Société à responsabilité limitée (SARL)',
+      capitalLabel: 'Capital social',
+      capitalValue: '2.000.000 FC — 100 parts de 20.000 FC, entièrement libérées',
+      durationLabel: 'Durée',
+      durationValue: '99 ans',
+      statutesLabel: 'Statuts',
+      statutesValue: 'Mai 2025',
+      managerLabel: 'Gérant',
+      managerValue: 'Baraka Musa Eric — mandat initial de quatre années, renouvelable',
+      registrationNote:
+        'Le numéro RCCM et le numéro d’impôt sont en cours d’obtention ; ils seront publiés dès confirmation officielle.',
+      officesTitle: 'Implantations',
+      officesLead: 'Trois implantations au Nord-Kivu : siège, agence et bureau de terrain.',
+      objectTitle: 'Objet social (synthèse)',
+      objectItems: [
+        'Bureau d’études techniques et architecturales : bâtiments, routes, ouvrages d’art, WASH, télécommunication, électricité, hydraulique.',
+        'Forage mécanique des puits et hydraulique rurale.',
+        'Industrie et commerce de matériaux de construction, équipements électriques et informatiques.',
+        'Formation professionnelle et renforcement des capacités.',
+        'Agronomie et vétérinaire : sécurité alimentaire, productions végétales et animales, sols et élevage.',
+        'Industrie agricole : produits agricoles et semences.',
+      ],
       valuesTitle: 'Valeurs & engagement',
       values: [
         'Excellence technique et respect des normes applicables',
         'Transparence vis-à-vis des parties prenantes et des communautés',
         'Durabilité environnementale et sociale des interventions',
       ],
-      teamTitle: 'Associés & expertise',
+      teamTitle: 'Associés fondateurs',
+      teamLead: 'Deux associés à parts égales (50 parts sociales chacun).',
       team: [
         {
           name: 'Baraka Musa Eric',
-          role: 'Ingénieur en bâtiment et travaux publics',
-          bio: 'Pilotage des ouvrages, routes, bâtiments et infrastructures hydrauliques.',
+          role: 'Ingénieur en bâtiment et travaux publics · Gérant',
+          bio: 'Associé fondateur (50 parts). Pilotage des ouvrages, routes, bâtiments et infrastructures hydrauliques. Pouvoir de direction de la société.',
         },
         {
           name: 'Naomi Mukobelwa Sifa',
           role: 'Ingénieure en agronomie et vétérinaire',
-          bio: 'Sécurité alimentaire, cultures, élevage et accompagnement des producteurs.',
+          bio: 'Associée fondatrice (50 parts). Sécurité alimentaire, cultures, élevage et accompagnement des producteurs.',
         },
       ],
       approachTitle: 'Approche intégrée',
       approachText:
         'Combiner études agronomiques, aménagements hydro-agricoles et travaux de génie civil permet d’aligner la production, l’accès à l’eau et la connectivité physique des exploitations et villages.',
+      legalLink: 'Voir les mentions légales complètes',
+      contactLink: 'Nous contacter',
     },
     faq: {
       metaTitle: 'FAQ — GEACO SARL',
@@ -816,9 +853,9 @@ export const messages = {
           members: [
             {
               name: 'Jacques MASURUKU',
-              role: 'Secrétaire général',
-              focus: 'Coordination administrative, suivi institutionnel et appui à la direction',
-              bio: 'Assure la cohérence des correspondances, le suivi des dossiers internes et externes, la préparation des réunions et le lien avec les partenaires et administrations.',
+              role: 'Secrétaire Général Administratif',
+              focus: 'Coordination administrative et coordination des programmes',
+              bio: 'Assure le secrétariat général administratif, la cohérence des dossiers, le suivi institutionnel et la coordination des programmes ; appui à la direction et lien avec les partenaires et administrations.',
             },
           ],
         },
@@ -927,10 +964,12 @@ export const messages = {
     },
     legal: {
       metaTitle: 'Mentions légales — GEACO SARL',
-      metaDesc: 'Informations légales issues des statuts (indicatif, mai 2025).',
+      metaDesc: 'Informations légales issues des statuts (indicatif, mai 2025) et organisation administrative.',
       title: 'Mentions légales',
       intro:
-        'Les informations ci-dessous reprennent des extraits fournis par la société à titre de transparence. Pour tout acte juridique, se référer aux statuts authentiques.',
+        'Extraits des statuts et organisation de GEACO SARL, présentés pour transparence. Pour tout acte juridique, se référer aux documents authentiques.',
+      identityTitle: 'Identité de la société',
+      identityLead: 'Éléments statutaires essentiels (mai 2025).',
       company: 'Dénomination',
       companyValue: 'Groupe d’études agronomiques et de construction (GEACO SARL)',
       form: 'Forme juridique',
@@ -957,17 +996,32 @@ export const messages = {
         'Baraka Musa Eric, ingénieur en bâtiment et travaux publics — 50 parts sociales.',
         'Naomi Mukobelwa Sifa, ingénieure en agronomie et vétérinaire — 50 parts sociales.',
       ],
-      governanceTitle: 'Gouvernance',
+      governanceTitle: 'Gouvernance & organisation',
+      governanceLead: 'Direction statutaire et pilier administratif de coordination.',
       governanceManager:
         'Monsieur Baraka Musa Eric est désigné comme gérant pour un premier mandat de quatre années, renouvelable. Il détient le pouvoir de direction et engage la société pour tous les actes relevant de l’objet social, avec possibilité de délégation pour la direction technique et commerciale.',
+      governanceAdmin:
+        'Monsieur Jacques MASURUKU assure la fonction de Secrétaire Général Administratif : il pilote le secrétariat général, la coordination des programmes et l’appui administratif à la direction.',
       governanceAg:
         'Les décisions collectives sont prises en assemblée générale. Les modifications des statuts requièrent l’accord d’au moins les trois quarts du capital social.',
+      adminPillarsTitle: 'Pilier administratif',
+      adminPillarsLead:
+        'Acteur de coordination entre la direction, les programmes et les partenaires institutionnels.',
+      adminPillars: [
+        {
+          name: 'Jacques MASURUKU',
+          role: 'Secrétaire Général Administratif · Coordination des programmes',
+          bio: 'Assure le secrétariat général administratif, la cohérence des dossiers internes et externes, le suivi institutionnel et la coordination des programmes. Il appuie la direction dans la préparation des réunions, le lien avec les administrations et le suivi opérationnel des projets.',
+        },
+      ],
       financeTitle: 'Bénéfices et dividendes',
       financeText:
         'Les produits nets de l’exercice, déduction faite des frais généraux et charges, constituent les bénéfices nets. Une réserve légale est constituée à hauteur d’un dixième des bénéfices. Les dividendes sont mis en paiement après approbation des comptes par l’assemblée générale.',
       finalTitle: 'Entrée en vigueur et litiges',
       finalText:
         'Les statuts entrent en vigueur après obtention du numéro de Registre du Commerce et du Crédit Mobilier (RCCM). Toute contestation est d’abord réglée par arbitrage.',
+      aboutLink: 'À propos de GEACO',
+      contactLink: 'Nous contacter',
     },
     forms: {
       honeypot: 'Ne pas remplir ce champ',
@@ -1084,6 +1138,11 @@ export const messages = {
       partnersTeaser:
         'We seek partnerships with seed companies, farmer organizations, donors and international NGOs.',
       partnersCta: 'Start a partnership',
+      fieldKicker: 'In the field',
+      fieldTitle: 'Our sites, in pictures',
+      fieldLead:
+        'Real photos of our teams and worksites in North Kivu — foundations, masonry and works supervision.',
+      fieldCta: 'Browse the gallery',
       breadcrumbParent: 'GEACO SARL',
       breadcrumbCurrent: 'Field expertise',
       expertiseSectionTitle: 'Our expertise',
@@ -1148,32 +1207,64 @@ export const messages = {
     },
     about: {
       metaTitle: 'About — GEACO SARL',
-      metaDesc: 'Presentation, values and leadership team.',
+      metaDesc:
+        'Legal identity, offices and leadership of GEACO SARL — Agronomic studies and construction group.',
       title: 'About GEACO',
       intro:
-        'GEACO SARL is a limited liability company registered in the Democratic Republic of the Congo. We design and deliver integrated agriculture and construction projects to strengthen territorial resilience.',
+        'GEACO SARL (Agronomic studies and construction group) is a limited liability company incorporated in the Democratic Republic of the Congo. We design and deliver integrated agriculture, construction and WASH projects to strengthen territorial resilience.',
+      identityTitle: 'Company identity',
+      identityLead:
+        'Information drawn from the company statutes (May 2025). For full details, see the legal notice.',
+      legalNameLabel: 'Legal name',
+      legalNameValue: 'Agronomic studies and construction group (GEACO SARL)',
+      formLabel: 'Legal form',
+      formValue: 'Limited liability company (SARL)',
+      capitalLabel: 'Share capital',
+      capitalValue: '2,000,000 CDF — 100 shares of 20,000 CDF, fully paid up',
+      durationLabel: 'Duration',
+      durationValue: '99 years',
+      statutesLabel: 'Statutes',
+      statutesValue: 'May 2025',
+      managerLabel: 'Managing director',
+      managerValue: 'Baraka Musa Eric — initial four-year term, renewable',
+      registrationNote:
+        'RCCM and tax numbers are being obtained and will be published once officially confirmed.',
+      officesTitle: 'Locations',
+      officesLead: 'Three locations in North Kivu: head office, branch and field office.',
+      objectTitle: 'Corporate purpose (summary)',
+      objectItems: [
+        'Technical and architectural design office: buildings, roads, civil structures, WASH, telecoms, electricity, hydraulics.',
+        'Mechanical borehole drilling and rural water systems.',
+        'Trade in construction materials, electrical and IT equipment.',
+        'Vocational training and capacity building.',
+        'Agronomy and veterinary services: food security, crop and livestock production, soils.',
+        'Agro-industry: agricultural products and seeds.',
+      ],
       valuesTitle: 'Values',
       values: [
         'Technical excellence and compliance with applicable standards',
         'Transparency towards stakeholders and communities',
         'Environmental and social sustainability of interventions',
       ],
-      teamTitle: 'Shareholders & expertise',
+      teamTitle: 'Founding shareholders',
+      teamLead: 'Two equal shareholders (50 shares each).',
       team: [
         {
           name: 'Baraka Musa Eric',
-          role: 'Civil and structural engineer',
-          bio: 'Delivery of buildings, roads, hydraulic structures and related infrastructure.',
+          role: 'Civil and structural engineer · Managing director',
+          bio: 'Founding shareholder (50 shares). Delivery of buildings, roads, hydraulic structures and related infrastructure. Holds company management authority.',
         },
         {
           name: 'Naomi Mukobelwa Sifa',
           role: 'Agronomist & veterinarian',
-          bio: 'Food security, crop and livestock systems, farmer support.',
+          bio: 'Founding shareholder (50 shares). Food security, crop and livestock systems, farmer support.',
         },
       ],
       approachTitle: 'Integrated approach',
       approachText:
         'Combining agronomic studies, hydro-agricultural schemes and civil works aligns production, water access and physical connectivity for farms and villages.',
+      legalLink: 'Read the full legal notice',
+      contactLink: 'Contact us',
     },
     faq: {
       metaTitle: 'FAQ — GEACO SARL',
@@ -1783,9 +1874,9 @@ export const messages = {
           members: [
             {
               name: 'Jacques MASURUKU',
-              role: 'Secretary general',
-              focus: 'Administrative coordination, institutional liaison and executive support',
-              bio: 'Ensures correspondence, internal and external case tracking, meeting preparation, and liaison with partners and authorities.',
+              role: 'Administrative Secretary-General',
+              focus: 'Administrative coordination and programme coordination',
+              bio: 'Leads the administrative general secretariat, file consistency, institutional follow-up and programme coordination; supports management and liaises with partners and authorities.',
             },
           ],
         },
@@ -1894,10 +1985,12 @@ export const messages = {
     },
     legal: {
       metaTitle: 'Legal notice — GEACO SARL',
-      metaDesc: 'Legal information from corporate statutes (May 2025, indicative).',
+      metaDesc: 'Legal information from corporate statutes (May 2025, indicative) and administrative organisation.',
       title: 'Legal notice',
       intro:
-        'The information below summarises extracts provided by the company for transparency. For any legal act, refer to the authenticated statutes.',
+        'Extracts from GEACO SARL statutes and organisation, presented for transparency. For any legal act, refer to the authenticated documents.',
+      identityTitle: 'Company identity',
+      identityLead: 'Key statutory details (May 2025).',
       company: 'Company name',
       companyValue: 'Groupe d’études agronomiques et de construction (GEACO SARL)',
       form: 'Legal form',
@@ -1924,17 +2017,32 @@ export const messages = {
         'Baraka Musa Eric, civil engineer — 50 shares.',
         'Naomi Mukobelwa Sifa, agronomist and veterinarian — 50 shares.',
       ],
-      governanceTitle: 'Governance',
+      governanceTitle: 'Governance & organisation',
+      governanceLead: 'Statutory management and administrative coordination pillar.',
       governanceManager:
         'Mr Baraka Musa Eric is appointed manager for an initial four-year renewable term. He holds executive authority and binds the company for all acts within the corporate purpose, with the option to delegate technical and commercial management.',
+      governanceAdmin:
+        'Mr Jacques MASURUKU serves as Administrative Secretary-General: he leads the general secretariat, programme coordination and administrative support to management.',
       governanceAg:
         'Collective decisions are taken in general meeting. By-law amendments require approval of at least three quarters of the share capital.',
+      adminPillarsTitle: 'Administrative pillar',
+      adminPillarsLead:
+        'Coordination actor between management, programmes and institutional partners.',
+      adminPillars: [
+        {
+          name: 'Jacques MASURUKU',
+          role: 'Administrative Secretary-General · Programme coordination',
+          bio: 'Leads the administrative general secretariat, ensures consistency of internal and external files, institutional follow-up and programme coordination. He supports management with meeting preparation, liaison with authorities and operational tracking of projects.',
+        },
+      ],
       financeTitle: 'Profits and dividends',
       financeText:
         'Net income for the year, after general expenses and charges, constitutes net profit. A legal reserve is built up to one tenth of profits. Dividends are paid after accounts are approved by the general meeting.',
       finalTitle: 'Entry into force and disputes',
       finalText:
         'The statutes take effect after obtaining the RCCM registration number. Any dispute shall first be settled by arbitration.',
+      aboutLink: 'About GEACO',
+      contactLink: 'Contact us',
     },
     forms: {
       honeypot: 'Leave this field empty',
