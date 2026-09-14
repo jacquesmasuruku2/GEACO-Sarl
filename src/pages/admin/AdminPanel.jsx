@@ -155,7 +155,7 @@ export function AdminPanel() {
       {
         id: 'formations',
         label: 'Formations',
-        description: 'Catalogue des formations publiées sur le site.',
+        description: 'Créer, éditer, illustrer et publier les offres sur /formations.',
         render: FormationsAdmin,
       },
       { id: 'personnel', label: 'Équipe', description: 'Fiches équipe, rôles et réseaux.', render: PersonnelAdmin },

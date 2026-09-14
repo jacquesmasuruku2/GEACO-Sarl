@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 import { supabase } from '../../../lib/supabase'
 import { isFormationDatePassed } from '../../../lib/formationStatus'
 
@@ -41,7 +43,7 @@ export function FormationsAdmin() {
     if (qErr) {
       setError(
         qErr.message.includes('site_formations')
-          ? `${qErr.message} — Appliquez les migrations 021 et 022 (formations) dans Supabase.`
+          ? `${qErr.message} — Appliquez les migrations 021, 022 et 023 (formations) dans Supabase.`
           : qErr.message,
       )
       return
@@ -68,6 +70,7 @@ export function FormationsAdmin() {
         location: '',
         duration_label: '',
         seats_label: '',
+        image_url: null,
         registration_status: 'open',
         registration_open: true,
         published: false,
@@ -77,13 +80,15 @@ export function FormationsAdmin() {
       .single()
     if (insErr) {
       setError(
-        insErr.message.includes('site_formations') || insErr.message.includes('registration_status')
-          ? `${insErr.message} — Appliquez les migrations 021 et 022 (formations) dans Supabase.`
+        insErr.message.includes('site_formations') ||
+          insErr.message.includes('registration_status') ||
+          insErr.message.includes('image_url')
+          ? `${insErr.message} — Appliquez les migrations 021, 022 et 023 (formations) dans Supabase.`
           : insErr.message,
       )
       return
     }
-    setMessage('Formation créée (brouillon).')
+    setMessage('Formation créée (brouillon). Cliquez sur « Éditer » pour l’image, le texte et la publication.')
     setEditingId(inserted?.id ?? null)
     load()
   }
@@ -96,6 +101,7 @@ export function FormationsAdmin() {
     const status = ['open', 'full', 'ended', 'closed'].includes(row.registration_status)
       ? row.registration_status
       : 'open'
+    const imageUrl = String(row.image_url ?? '').trim() || null
     const { error: upErr } = await supabase
       .from('site_formations')
       .update({
@@ -109,6 +115,7 @@ export function FormationsAdmin() {
         ends_on: row.ends_on || null,
         duration_label: row.duration_label || null,
         seats_label: row.seats_label || null,
+        image_url: imageUrl,
         registration_status: status,
         registration_open: status === 'open',
         published: Boolean(row.published),
@@ -118,15 +125,19 @@ export function FormationsAdmin() {
     if (upErr) {
       setSavingId(null)
       setError(
-        upErr.message.includes('registration_status')
-          ? `${upErr.message} — Appliquez la migration 022 dans Supabase.`
+        upErr.message.includes('registration_status') || upErr.message.includes('image_url')
+          ? `${upErr.message} — Appliquez les migrations 022 et 023 dans Supabase.`
           : upErr.message,
       )
       return
     }
     setSavingId(null)
     setEditingId(null)
-    setMessage('Formation enregistrée.')
+    setMessage(
+      row.published
+        ? 'Formation enregistrée et publiée sur /formations.'
+        : 'Formation enregistrée (brouillon — cochez « Publié sur le site » pour l’afficher).',
+    )
     load()
   }
 
@@ -149,9 +160,9 @@ export function FormationsAdmin() {
   return (
     <section className="admin-section">
       <div className="admin-section__head">
-        <h2>Formations ({rows.length})</h2>
+        <h2>Offres de formation ({rows.length})</h2>
         <button type="button" className="btn btn--primary" onClick={addRow}>
-          + Ajouter
+          + Nouvelle offre
         </button>
       </div>
       {message ? (
@@ -165,10 +176,12 @@ export function FormationsAdmin() {
         </p>
       ) : null}
       <p className="admin-muted">
-        Publiez une formation pour l’afficher sur <code>/formations</code>. Choisissez le statut
-        d’inscription : <strong>ouvertes</strong>, <strong>places épuisées</strong>,{' '}
-        <strong>formation passée</strong> ou <strong>fermées</strong>. Les candidatures arrivent dans
-        « Inscriptions ».
+        Ici vous créez, éditez et publiez les offres affichées sur{' '}
+        <Link to="/formations" target="_blank" rel="noreferrer">
+          /formations
+        </Link>
+        . Pour chaque fiche : image, texte, dates, statut d’inscription, puis cochez{' '}
+        <strong>Publié sur le site</strong> et Enregistrer. Les candidatures arrivent dans « Inscriptions ».
       </p>
 
       <div className="admin-stack">
@@ -176,11 +189,12 @@ export function FormationsAdmin() {
           {rows.map((row) => {
             const status = row.registration_status || (row.registration_open === false ? 'closed' : 'open')
             const datePassed = isFormationDatePassed(row)
+            const thumb = String(row.image_url ?? '').trim()
             return (
               <article className="admin-compact-item" key={row.id}>
                 <div className="admin-compact-item__main">
                   <div className="admin-compact-item__avatar" aria-hidden="true">
-                    🎓
+                    {thumb ? <img src={thumb} alt="" /> : '🎓'}
                   </div>
                   <div className="admin-compact-item__text">
                     <h3>{row.title || 'Sans titre'}</h3>
@@ -199,6 +213,11 @@ export function FormationsAdmin() {
                   </div>
                 </div>
                 <div className="admin-compact-item__actions">
+                  {row.published ? (
+                    <Link className="btn btn--ghost" to="/formations" target="_blank" rel="noreferrer">
+                      Voir
+                    </Link>
+                  ) : null}
                   <button
                     type="button"
                     className="btn btn--ghost"
@@ -214,15 +233,24 @@ export function FormationsAdmin() {
                 {editingId === row.id ? (
                   <div className="admin-card admin-compact-item__editor">
                     <div className="admin-grid">
-                      <label>
-                        Titre
+                      <label className="admin-span-2">
+                        Titre de l’offre
                         <input
                           value={row.title ?? ''}
                           onChange={(e) => updateLocal(row.id, { title: e.target.value })}
                         />
                       </label>
+                      <ImagePickerField
+                        label="Image de l’offre"
+                        value={row.image_url ?? ''}
+                        onChange={(e) => updateLocal(row.id, { image_url: e.target.value })}
+                        storageFolder="formations"
+                        previewAlt={`Illustration de ${row.title ?? 'formation'}`}
+                        icon="🎓"
+                        help="Téléversez une image ou collez une URL. Elle s’affiche sur /formations."
+                      />
                       <label>
-                        Slug
+                        Slug (URL)
                         <input
                           value={row.slug ?? ''}
                           onChange={(e) => updateLocal(row.id, { slug: e.target.value })}
@@ -239,7 +267,7 @@ export function FormationsAdmin() {
                         </select>
                       </label>
                       <label>
-                        Ordre
+                        Ordre d’affichage
                         <input
                           type="number"
                           value={row.sort_order ?? 0}
@@ -247,10 +275,11 @@ export function FormationsAdmin() {
                         />
                       </label>
                       <label className="admin-span-2">
-                        Résumé
+                        Résumé court
                         <input
                           value={row.summary ?? ''}
                           onChange={(e) => updateLocal(row.id, { summary: e.target.value })}
+                          placeholder="Une phrase visible sous le titre"
                         />
                       </label>
                       <label className="admin-span-2">
@@ -259,6 +288,7 @@ export function FormationsAdmin() {
                           rows={4}
                           value={row.description ?? ''}
                           onChange={(e) => updateLocal(row.id, { description: e.target.value })}
+                          placeholder="Programme, public cible, prérequis…"
                         />
                       </label>
                       <label>
@@ -266,6 +296,7 @@ export function FormationsAdmin() {
                         <input
                           value={row.location ?? ''}
                           onChange={(e) => updateLocal(row.id, { location: e.target.value })}
+                          placeholder="Ex. Goma"
                         />
                       </label>
                       <label>
@@ -317,13 +348,13 @@ export function FormationsAdmin() {
                           <option value="closed">Inscriptions fermées</option>
                         </select>
                       </label>
-                      <label className="admin-check">
+                      <label className="admin-check admin-span-2">
                         <input
                           type="checkbox"
                           checked={Boolean(row.published)}
                           onChange={(e) => updateLocal(row.id, { published: e.target.checked })}
                         />
-                        Publié sur le site
+                        Publié sur le site (/formations) — sans cette case, l’offre reste en brouillon
                       </label>
                     </div>
                     <div className="admin-compact-item__actions" style={{ marginTop: '0.85rem' }}>

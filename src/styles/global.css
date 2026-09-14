@@ -6281,10 +6281,36 @@ a.personnel-profile__more {
   align-items: start;
 }
 
+.formations-item__media {
+  margin: 0;
+  overflow: hidden;
+  max-height: 220px;
+}
+
+.formations-item__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 220px;
+  object-fit: cover;
+}
+
 @media (min-width: 700px) {
   .formations-item {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: 200px minmax(0, 1fr) auto;
     gap: 1.25rem;
+  }
+
+  .formations-item:not(:has(.formations-item__media)) {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .formations-item__media {
+    max-height: 160px;
+  }
+
+  .formations-item__media img {
+    max-height: 160px;
   }
 }
 

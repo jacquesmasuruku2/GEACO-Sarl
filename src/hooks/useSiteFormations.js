@@ -22,7 +22,7 @@ export function useSiteFormations(locale = 'fr') {
     supabase
       .from('site_formations')
       .select(
-        'id,slug,title,summary,description,location,starts_on,ends_on,duration_label,seats_label,registration_open,registration_status,sort_order',
+        'id,slug,title,summary,description,location,starts_on,ends_on,duration_label,seats_label,image_url,registration_open,registration_status,sort_order',
       )
       .eq('published', true)
       .eq('locale', loc)

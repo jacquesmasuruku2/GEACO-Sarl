@@ -95,6 +95,11 @@ export function Formations() {
                       : t('formations.statusOpen')
               return (
                 <li className="formations-item" key={formation.id} data-status={status}>
+                  {formation.image_url ? (
+                    <div className="formations-item__media">
+                      <img src={String(formation.image_url).trim()} alt="" loading="lazy" />
+                    </div>
+                  ) : null}
                   <div className="formations-item__body">
                     <div className="formations-item__title-row">
                       <h3>{formation.title}</h3>
