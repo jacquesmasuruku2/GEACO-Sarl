@@ -225,11 +225,19 @@ export function BlogPost() {
     return <Navigate to="/blog" replace />
   }
 
+  const coverUrl = (() => {
+    const url = String(row.hero_image_url ?? '').trim()
+    if (!url) return ''
+    if (url.startsWith('http') || url.startsWith('/')) return url
+    return ''
+  })()
+
   return (
     <>
       <Seo title={row.title} description={row.excerpt || row.title} path={`/blog/${slug}`} />
 
       <PageHero
+        immersive={false}
         breadcrumbItems={[
           { href: '/', label: formatNavLabel(t('nav.home'), locale) },
           { href: '/blog', label: t('blog.title') },
@@ -237,20 +245,22 @@ export function BlogPost() {
         ]}
         title={row.title}
         lead={row.excerpt || ''}
-        heroImage={
-          row.hero_image_url && String(row.hero_image_url).startsWith('http')
-            ? row.hero_image_url
-            : undefined
-        }
       />
 
-      <section className="section">
-        <div className="container" style={{ maxWidth: 'var(--max-text)' }}>
+      <section className="section blog-post">
+        <div className="container blog-post__wrap">
           {row.published_at ? (
-            <p className="tag" style={{ display: 'inline-block', marginBottom: '1.25rem' }}>
+            <p className="blog-post__date">
               {new Date(row.published_at).toLocaleDateString(locale === 'en' ? 'en-GB' : 'fr-FR')}
             </p>
           ) : null}
+
+          {coverUrl ? (
+            <figure className="blog-post__cover">
+              <img src={coverUrl} alt="" loading="eager" decoding="async" />
+            </figure>
+          ) : null}
+
           <RichTextContent value={row.body || ''} />
 
           <div className="blog-comments-cta">

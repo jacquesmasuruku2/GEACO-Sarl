@@ -202,7 +202,11 @@ export function LeadFormSupabase({ source, redirectTo }) {
           : t('partnerships.formSubmit')
 
   const formClassName =
-    source === 'quote' ? 'form form--quote-premium' : source === 'partnership' ? 'form form--partnership' : 'form'
+    source === 'quote'
+      ? 'form form--quote-premium'
+      : source === 'partnership' || source === 'contact'
+        ? 'form form--simple'
+        : 'form'
 
   return (
     <form className={formClassName} onSubmit={onSubmit} noValidate>
@@ -222,86 +226,107 @@ export function LeadFormSupabase({ source, redirectTo }) {
 
       {source === 'contact' ? (
         <>
-          <label htmlFor="lead-domain">{t('contact.formDomain')}</label>
-          <select id="lead-domain" value={domain} onChange={(e) => setDomain(e.target.value)} required>
-            <option value="" disabled>
-              {t('contact.formDomainPlaceholder')}
-            </option>
-            {safeDomainOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+          <div className="simple-form__grid">
+            <div className="simple-form__field">
+              <label htmlFor="lead-domain">{t('contact.formDomain')}</label>
+              <select id="lead-domain" value={domain} onChange={(e) => setDomain(e.target.value)} required>
+                <option value="" disabled>
+                  {t('contact.formDomainPlaceholder')}
+                </option>
+                {safeDomainOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="simple-form__field">
+              <label htmlFor="lead-subject">{t('contact.formSubject')}</label>
+              <select id="lead-subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
+                <option value="" disabled>
+                  {t('contact.formSubjectPlaceholder')}
+                </option>
+                {safeSubjectOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-          <label htmlFor="lead-subject">{t('contact.formSubject')}</label>
-          <select id="lead-subject" value={subject} onChange={(e) => setSubject(e.target.value)} required>
-            <option value="" disabled>
-              {t('contact.formSubjectPlaceholder')}
-            </option>
-            {safeSubjectOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+          <div className="simple-form__grid">
+            <div className="simple-form__field">
+              <label htmlFor="lead-name">{t('contact.formName')}</label>
+              <input
+                id="lead-name"
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                maxLength={200}
+                autoComplete="name"
+                placeholder={t('contact.formNamePlaceholder')}
+              />
+            </div>
+            <div className="simple-form__field">
+              <label htmlFor="lead-org-contact">{t('contact.formOrganization')}</label>
+              <input
+                id="lead-org-contact"
+                type="text"
+                value={organization}
+                onChange={(e) => setOrganization(e.target.value)}
+                required
+                maxLength={300}
+                autoComplete="organization"
+                placeholder={t('contact.formOrganizationPlaceholder')}
+              />
+            </div>
+          </div>
 
-          <label htmlFor="lead-name">{t('contact.formName')}</label>
-          <input
-            id="lead-name"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-            maxLength={200}
-            autoComplete="name"
-          />
+          <div className="simple-form__grid">
+            <div className="simple-form__field">
+              <label htmlFor="lead-email">{t('contact.formEmail')}</label>
+              <input
+                id="lead-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                maxLength={254}
+                autoComplete="email"
+                placeholder={t('contact.formEmailPlaceholder')}
+              />
+            </div>
+            <div className="simple-form__field">
+              <label htmlFor="lead-phone">{t('contact.formPhone')}</label>
+              <input
+                id="lead-phone"
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required
+                maxLength={60}
+                autoComplete="tel"
+                placeholder={t('contact.formPhonePlaceholder')}
+              />
+            </div>
+          </div>
 
-          <label htmlFor="lead-org-contact">{t('contact.formOrganization')}</label>
-          <input
-            id="lead-org-contact"
-            type="text"
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-            required
-            maxLength={300}
-            autoComplete="organization"
-            placeholder={t('contact.formOrganizationPlaceholder')}
-          />
-
-          <label htmlFor="lead-email">{t('contact.formEmail')}</label>
-          <input
-            id="lead-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            maxLength={254}
-            autoComplete="email"
-          />
-
-          <label htmlFor="lead-phone">{t('contact.formPhone')}</label>
-          <input
-            id="lead-phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-            maxLength={60}
-            autoComplete="tel"
-          />
-
-          <label htmlFor="lead-message">{t('contact.formMessage')}</label>
-          <textarea
-            id="lead-message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-            minLength={10}
-            maxLength={8000}
-            rows={5}
-            autoComplete="off"
-          />
+          <div className="simple-form__field">
+            <label htmlFor="lead-message">{t('contact.formMessage')}</label>
+            <textarea
+              id="lead-message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              minLength={10}
+              maxLength={8000}
+              rows={5}
+              autoComplete="off"
+              placeholder={t('contact.formMessagePlaceholder')}
+            />
+          </div>
         </>
       ) : null}
 
@@ -425,7 +450,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
 
       {source === 'partnership' ? (
         <>
-          <div className="partnership-form__field">
+          <div className="simple-form__field">
             <label htmlFor="lead-org">{t('partnerships.formOrg')}</label>
             <input
               id="lead-org"
@@ -439,8 +464,8 @@ export function LeadFormSupabase({ source, redirectTo }) {
             />
           </div>
 
-          <div className="partnership-form__grid">
-            <div className="partnership-form__field">
+          <div className="simple-form__grid">
+            <div className="simple-form__field">
               <label htmlFor="lead-pname">{t('partnerships.formName')}</label>
               <input
                 id="lead-pname"
@@ -453,7 +478,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
                 placeholder={t('partnerships.formNamePlaceholder')}
               />
             </div>
-            <div className="partnership-form__field">
+            <div className="simple-form__field">
               <label htmlFor="lead-pemail">{t('partnerships.formEmail')}</label>
               <input
                 id="lead-pemail"
@@ -468,7 +493,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
             </div>
           </div>
 
-          <div className="partnership-form__field">
+          <div className="simple-form__field">
             <label htmlFor="lead-pmsg">{t('partnerships.formMessage')}</label>
             <textarea
               id="lead-pmsg"
@@ -510,8 +535,8 @@ export function LeadFormSupabase({ source, redirectTo }) {
         className={
           source === 'quote'
             ? 'btn btn--primary btn--quote-submit'
-            : source === 'partnership'
-              ? 'btn btn--primary partnership-form__submit'
+            : source === 'partnership' || source === 'contact'
+              ? 'btn btn--primary simple-form__submit'
               : 'btn btn--primary'
         }
         type="submit"

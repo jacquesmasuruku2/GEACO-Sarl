@@ -9,10 +9,12 @@ import { BlogAdmin } from './editors/BlogAdmin'
 import { PersonnelAdmin } from './editors/PersonnelAdmin'
 import { ServiceCardsAdmin } from './editors/ServiceCardsAdmin'
 import { GalleryAdmin } from './editors/GalleryAdmin'
+import { FormationsAdmin } from './editors/FormationsAdmin'
 import {
   ContactMessagesAdmin,
   QuoteMessagesAdmin,
   PartnershipMessagesAdmin,
+  FormationRegistrationsAdmin,
 } from './editors/InboxMessagesAdmin'
 
 function PanelIcon({ name }) {
@@ -86,6 +88,13 @@ function PanelIcon({ name }) {
       </svg>
     )
   }
+  if (name === 'formations' || name === 'formationRegs') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3 2 8l10 5 10-5-10-5Zm0 8.5L4.5 8 12 4.5 19.5 8 12 11.5ZM4 10.2V16l8 4 8-4v-5.8l-8 4-8-4Z" />
+      </svg>
+    )
+  }
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 7h16M4 12h16M4 17h16" />
@@ -133,9 +142,22 @@ export function AdminPanel() {
         render: PartnershipMessagesAdmin,
         group: 'inbox',
       },
+      {
+        id: 'formationRegs',
+        label: 'Inscriptions',
+        description: 'Candidatures aux formations reçues via /formations.',
+        render: FormationRegistrationsAdmin,
+        group: 'inbox',
+      },
       { id: 'projects', label: 'Projets', description: 'Fiches projets type blog : image, date, description.', render: ProjectsAdmin },
       { id: 'partners', label: 'Partenaires', description: 'Cartes partenaires et publication.', render: PartnersAdmin },
       { id: 'blog', label: 'Blog', description: 'Articles, mises en forme et dates.', render: BlogAdmin },
+      {
+        id: 'formations',
+        label: 'Formations',
+        description: 'Catalogue des formations publiées sur le site.',
+        render: FormationsAdmin,
+      },
       { id: 'personnel', label: 'Équipe', description: 'Fiches équipe, rôles et réseaux.', render: PersonnelAdmin },
       {
         id: 'cards',
@@ -166,6 +188,8 @@ export function AdminPanel() {
       contacts: { total: 0 },
       quotes: { total: 0 },
       partnerships: { total: 0 },
+      formations: { total: 0, published: 0 },
+      formationRegs: { total: 0 },
     },
   })
 
@@ -177,9 +201,13 @@ export function AdminPanel() {
     dashboard.data.blog.published +
     dashboard.data.partners.published +
     dashboard.data.personnel.published +
-    dashboard.data.gallery.published
+    dashboard.data.gallery.published +
+    dashboard.data.formations.published
   const inboxTotal =
-    dashboard.data.contacts.total + dashboard.data.quotes.total + dashboard.data.partnerships.total
+    dashboard.data.contacts.total +
+    dashboard.data.quotes.total +
+    dashboard.data.partnerships.total +
+    dashboard.data.formationRegs.total
 
   const kpiTiles = useMemo(
     () => [
@@ -254,6 +282,9 @@ export function AdminPanel() {
       contactsTotal,
       quotesTotal,
       partnershipsTotal,
+      formationsTotal,
+      formationsPublished,
+      formationRegsTotal,
     ] = await Promise.all([
       countQuery(supabase.from('site_projects').select('*', { count: 'exact', head: true })),
       countQuery(supabase.from('site_projects').select('*', { count: 'exact', head: true }).eq('published', true)),
@@ -273,6 +304,9 @@ export function AdminPanel() {
         supabase.from('site_lead_messages').select('*', { count: 'exact', head: true }).eq('source', 'quote'),
       ),
       countQuery(supabase.from('site_partnership_messages').select('*', { count: 'exact', head: true })),
+      countQuery(supabase.from('site_formations').select('*', { count: 'exact', head: true })),
+      countQuery(supabase.from('site_formations').select('*', { count: 'exact', head: true }).eq('published', true)),
+      countQuery(supabase.from('site_formation_registrations').select('*', { count: 'exact', head: true })),
     ])
 
     const hasAnyMissing = [
@@ -290,6 +324,9 @@ export function AdminPanel() {
       contactsTotal,
       quotesTotal,
       partnershipsTotal,
+      formationsTotal,
+      formationsPublished,
+      formationRegsTotal,
     ].some((v) => v === null)
 
     setDashboard({
@@ -305,6 +342,8 @@ export function AdminPanel() {
         contacts: { total: contactsTotal ?? 0 },
         quotes: { total: quotesTotal ?? 0 },
         partnerships: { total: partnershipsTotal ?? 0 },
+        formations: { total: formationsTotal ?? 0, published: formationsPublished ?? 0 },
+        formationRegs: { total: formationRegsTotal ?? 0 },
       },
     })
     setDashboardUpdatedAt(new Date())
@@ -468,7 +507,9 @@ export function AdminPanel() {
                   ? dashboard.data.contacts.total
                   : module.id === 'quotes'
                     ? dashboard.data.quotes.total
-                    : dashboard.data.partnerships.total}
+                    : module.id === 'partnerships'
+                      ? dashboard.data.partnerships.total
+                      : dashboard.data.formationRegs.total}
               </span>
             </button>
           ))}
@@ -691,10 +732,16 @@ export function AdminPanel() {
                   <p>{dashboard.data.gallery.published} publiées</p>
                 </article>
                 <article className="admin-kpi-card">
+                  <h3>Formations</h3>
+                  <p>{dashboard.data.formations.total} fiches</p>
+                  <p>{dashboard.data.formations.published} publiées</p>
+                </article>
+                <article className="admin-kpi-card">
                   <h3>Messages</h3>
                   <p>{dashboard.data.contacts.total} contacts</p>
                   <p>{dashboard.data.quotes.total} devis</p>
                   <p>{dashboard.data.partnerships.total} partenariats</p>
+                  <p>{dashboard.data.formationRegs.total} inscriptions</p>
                 </article>
               </div>
             </section>

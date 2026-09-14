@@ -58,6 +58,7 @@ export function Header() {
     location.pathname.startsWith('/partenariats')
   const resourcesActive =
     location.pathname.startsWith('/blog') ||
+    location.pathname.startsWith('/formations') ||
     location.pathname.startsWith('/galerie') ||
     location.pathname.startsWith('/gallery') ||
     location.pathname === '/faq'
@@ -211,6 +212,9 @@ export function Header() {
               <Link className="nav-dropdown__link" to="/blog" role="menuitem">
                 {navLabel('nav.blog')}
               </Link>
+              <Link className="nav-dropdown__link" to="/formations" role="menuitem">
+                {navLabel('nav.formations')}
+              </Link>
               <Link className="nav-dropdown__link" to="/galerie" role="menuitem">
                 {navLabel('nav.gallery')}
               </Link>
@@ -340,6 +344,9 @@ export function Header() {
             <div className="nav-mobile__sub">
               <NavLink to="/blog" onClick={closeAll}>
                 {navLabel('nav.blog')}
+              </NavLink>
+              <NavLink to="/formations" onClick={closeAll}>
+                {navLabel('nav.formations')}
               </NavLink>
               <NavLink to="/galerie" onClick={closeAll}>
                 {navLabel('nav.gallery')}

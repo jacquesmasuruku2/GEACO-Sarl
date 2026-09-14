@@ -18,6 +18,7 @@ import { BlogPost } from './pages/BlogPost'
 import { Personnel } from './pages/Personnel'
 import { PersonnelDetail } from './pages/PersonnelDetail'
 import { Gallery } from './pages/Gallery'
+import { Formations } from './pages/Formations'
 import { AuthAdmin } from './pages/admin/AuthAdmin'
 import { AdminPanel } from './pages/admin/AdminPanel'
 import { NotFound } from './pages/NotFound'
@@ -49,6 +50,7 @@ export default function App() {
           <Route path="/projets/wash" element={<Projects />} />
           <Route path="/projets/:slug" element={<ProjectDetail />} />
           <Route path="/projets" element={<Projects />} />
+          <Route path="/formations" element={<Formations />} />
           <Route path="/partenariats" element={<Partnerships />} />
           <Route path="/devis" element={<QuoteRequest />} />
           <Route path="/contact" element={<Contact />} />

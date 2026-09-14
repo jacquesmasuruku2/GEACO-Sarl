@@ -328,3 +328,158 @@ export function PartnershipMessagesAdmin() {
     </section>
   )
 }
+
+export function FormationRegistrationsAdmin() {
+  const [rows, setRows] = useState([])
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [openId, setOpenId] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  const load = useCallback(async () => {
+    if (!supabase) return
+    setLoading(true)
+    const { data, error: qErr } = await supabase
+      .from('site_formation_registrations')
+      .select('*')
+      .order('created_at', { ascending: false })
+    if (qErr) {
+      setError(
+        qErr.message.includes('site_formation_registrations')
+          ? `${qErr.message} — Appliquez la migration 021 (formations) dans Supabase.`
+          : qErr.message,
+      )
+      setRows([])
+      setLoading(false)
+      return
+    }
+    setRows(data ?? [])
+    setError('')
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    load()
+  }, [load])
+
+  async function removeRow(id) {
+    if (!supabase) return
+    if (!window.confirm('Supprimer cette inscription ?')) return
+    const { error: delErr } = await supabase.from('site_formation_registrations').delete().eq('id', id)
+    if (delErr) {
+      setError(delErr.message)
+      return
+    }
+    setMessage('Inscription supprimée.')
+    if (openId === id) setOpenId(null)
+    load()
+  }
+
+  const openRow = rows.find((r) => r.id === openId) ?? null
+
+  return (
+    <section className="admin-section admin-inbox">
+      <div className="admin-section__head">
+        <h2>Inscriptions formations ({rows.length})</h2>
+        <button type="button" className="btn btn--ghost" onClick={load} disabled={loading}>
+          {loading ? 'Chargement…' : 'Actualiser'}
+        </button>
+      </div>
+
+      {message ? (
+        <p className="admin-success admin-feedback" role="status" aria-live="polite">
+          {message}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="admin-error admin-feedback" role="alert" aria-live="assertive">
+          {error}
+        </p>
+      ) : null}
+
+      <p className="admin-muted">Candidatures reçues via la page Formations du site.</p>
+
+      <div className="admin-compact-list">
+        {rows.map((row) => (
+          <article className="admin-compact-item" key={row.id}>
+            <div className="admin-compact-item__main">
+              <div className="admin-compact-item__avatar" aria-hidden="true">
+                <span>🎓</span>
+              </div>
+              <div className="admin-compact-item__text">
+                <h3>{row.full_name || 'Sans nom'}</h3>
+                <p>
+                  {row.formation_title}
+                  {row.email ? ` · ${row.email}` : ''}
+                </p>
+                <p className="admin-status-pill is-live">{formatWhen(row.created_at)}</p>
+              </div>
+            </div>
+            <div className="admin-compact-item__actions">
+              <button
+                type="button"
+                className="btn btn--ghost"
+                onClick={() => setOpenId((prev) => (prev === row.id ? null : row.id))}
+              >
+                {openId === row.id ? 'Fermer' : 'Ouvrir'}
+              </button>
+              <button type="button" className="btn btn--outline" onClick={() => removeRow(row.id)}>
+                Supprimer
+              </button>
+            </div>
+          </article>
+        ))}
+        {!loading && !rows.length ? (
+          <p className="admin-muted">Aucune inscription pour le moment.</p>
+        ) : null}
+      </div>
+
+      {openRow ? (
+        <div className="admin-card admin-card--tight admin-inbox__detail">
+          <h3 style={{ marginTop: 0 }}>{openRow.formation_title}</h3>
+          <dl className="admin-inbox__meta">
+            <div>
+              <dt>Reçu le</dt>
+              <dd>{formatWhen(openRow.created_at)}</dd>
+            </div>
+            <div>
+              <dt>Candidat</dt>
+              <dd>{openRow.full_name}</dd>
+            </div>
+            <div>
+              <dt>E-mail</dt>
+              <dd>
+                <a href={`mailto:${openRow.email}`}>{openRow.email}</a>
+              </dd>
+            </div>
+            <div>
+              <dt>Téléphone</dt>
+              <dd>{openRow.phone || '—'}</dd>
+            </div>
+            <div>
+              <dt>Organisation</dt>
+              <dd>{openRow.organization || '—'}</dd>
+            </div>
+            <div>
+              <dt>Langue</dt>
+              <dd>{openRow.locale === 'en' ? 'EN' : 'FR'}</dd>
+            </div>
+          </dl>
+          <pre className="admin-inbox__body">{openRow.motivation}</pre>
+          <div className="admin-actions">
+            <a
+              className="btn btn--primary"
+              href={`mailto:${openRow.email}?subject=${encodeURIComponent(`Re: ${openRow.formation_title}`)}`}
+            >
+              Répondre par e-mail
+            </a>
+            <button type="button" className="btn btn--ghost" onClick={() => setOpenId(null)}>
+              Fermer
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </section>
+  )
+}
+

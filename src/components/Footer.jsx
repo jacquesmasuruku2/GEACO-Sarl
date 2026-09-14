@@ -79,6 +79,9 @@ export function Footer() {
               <Link to="/blog">{nav('nav.blog')}</Link>
             </li>
             <li>
+              <Link to="/formations">{nav('nav.formations')}</Link>
+            </li>
+            <li>
               <Link to="/galerie">{nav('nav.gallery')}</Link>
             </li>
             <li>
