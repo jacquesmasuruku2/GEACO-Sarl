@@ -1029,6 +1029,8 @@ export const messages = {
         'En envoyant ce formulaire, vous acceptez que nous utilisions vos coordonnées pour répondre à votre demande. Pas de newsletter sans consentement explicite.',
       storedInSupabase:
         'Votre message est enregistré de façon sécurisée dans notre base des données : seule l’équipe habilitée peut le consulter.',
+      consentAccept: 'J’accepte ces conditions et l’enregistrement de mon message.',
+      consentRequired: 'Veuillez accepter les conditions avant d’envoyer le formulaire.',
       supabaseNotConfigured:
         'Envoi impossible : le site n’a pas reçu les clés Supabase au moment du build. Sur Vercel, ouvrez le projet → Settings → Environment Variables : ajoutez exactement VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (mêmes noms que dans .env.example), cochez Production, enregistrez puis Redeploy. En local, placez ces lignes dans le fichier .env à la racine de geaco-sarl (pas seulement dans le chat) et relancez npm run dev.',
       formSending: 'Envoi en cours…',
@@ -2050,6 +2052,8 @@ export const messages = {
         'By submitting this form you agree that we use your details to answer your request. No newsletter without explicit consent.',
       storedInSupabase:
         'Your message is stored securely in our database (Supabase); only authorised staff can read it.',
+      consentAccept: 'I accept these terms and the storage of my message.',
+      consentRequired: 'Please accept the terms before submitting the form.',
       supabaseNotConfigured:
         'Cannot send: Supabase keys were not available at build time. On Vercel: Project → Settings → Environment Variables — add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY (exact names, Production), save, then Redeploy. Locally: put them in .env at the project root and restart npm run dev.',
       formSending: 'Sending…',

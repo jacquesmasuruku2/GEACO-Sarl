@@ -48,6 +48,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
   const [gotcha, setGotcha] = useState('')
+  const [consent, setConsent] = useState(false)
 
   const subjectOptions = source === 'contact' ? t('contact.subjectOptions') : []
   const safeSubjectOptions = Array.isArray(subjectOptions) ? subjectOptions : []
@@ -66,6 +67,7 @@ export function LeadFormSupabase({ source, redirectTo }) {
     setPhone('')
     setMessage('')
     setGotcha('')
+    setConsent(false)
     setError('')
   }
 
@@ -85,6 +87,10 @@ export function LeadFormSupabase({ source, redirectTo }) {
     if (gotcha.trim() !== '') {
       clearForm()
       navigate(redirectTo, { replace: false })
+      return
+    }
+    if (!consent) {
+      setError(t('forms.consentRequired'))
       return
     }
     const loc = locale === 'en' ? 'en' : 'fr'
@@ -485,6 +491,21 @@ export function LeadFormSupabase({ source, redirectTo }) {
         </p>
       ) : null}
 
+      <div className="form-consent">
+        <p className="form-note">{t('forms.privacyNote')}</p>
+        <p className="form-note">{t('forms.storedInSupabase')}</p>
+        <label className="form-consent__check" htmlFor="lead-consent">
+          <input
+            id="lead-consent"
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            required
+          />
+          <span>{t('forms.consentAccept')}</span>
+        </label>
+      </div>
+
       <button
         className={
           source === 'quote'
@@ -494,24 +515,10 @@ export function LeadFormSupabase({ source, redirectTo }) {
               : 'btn btn--primary'
         }
         type="submit"
-        disabled={busy}
+        disabled={busy || !consent}
       >
         {submitLabel}
       </button>
-
-      {source === 'quote' ? (
-        <div className="quote-form__legal">
-          <p className="form-note">{t('forms.privacyNote')}</p>
-          <p className="form-note">{t('forms.storedInSupabase')}</p>
-        </div>
-      ) : source === 'partnership' ? (
-        <p className="form-note partnership-form__note">{t('forms.privacyNote')}</p>
-      ) : (
-        <>
-          <p className="form-note">{t('forms.privacyNote')}</p>
-          <p className="form-note">{t('forms.storedInSupabase')}</p>
-        </>
-      )}
     </form>
   )
 }
