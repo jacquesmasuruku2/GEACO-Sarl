@@ -3509,8 +3509,8 @@ html.site-header-topbar-hidden .site-topbar {
   }
 
   .service-id-card__logo {
-    width: 2.6rem;
-    height: 2.6rem;
+    width: 3.35rem;
+    height: 3.35rem;
   }
 
   .service-id-card__flag {
@@ -4194,10 +4194,10 @@ a.personnel-profile__more {
   z-index: 2;
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: 4.6rem minmax(0, 1fr) 4.6rem;
+  grid-template-columns: 5.2rem minmax(0, 1fr) 4.6rem;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.55rem 0.65rem;
+  padding: 0.45rem 0.65rem;
   background: linear-gradient(180deg, #7ec8f5 0%, #3aa0e0 55%, #1f7fd0 100%);
 }
 
@@ -4216,13 +4216,14 @@ a.personnel-profile__more {
 }
 
 .service-id-card__logo {
-  width: 3.55rem;
-  height: 3.55rem;
+  width: 4.35rem;
+  height: 4.35rem;
   object-fit: contain;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 8px;
-  padding: 0.2rem;
-  box-shadow: 0 2px 8px rgba(0, 40, 80, 0.18);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
 }
 
 .service-id-card__flag {
