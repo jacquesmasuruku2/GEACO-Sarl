@@ -8,6 +8,39 @@ import { SITE_CONTACT } from '../data/siteContact'
 /** Au-delà de ce décalage vertical, la topbar (ligne RDC + email/tél.) se replie. */
 const TOPBAR_HIDE_SCROLL_Y = 36
 
+function IconMail() {
+  return (
+    <svg className="site-topbar__icon" viewBox="0 0 24 24" aria-hidden="true" width="15" height="15">
+      <path
+        fill="currentColor"
+        d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5L4 8V6l8 5 8-5v2Z"
+      />
+    </svg>
+  )
+}
+
+function IconPhone() {
+  return (
+    <svg className="site-topbar__icon" viewBox="0 0 24 24" aria-hidden="true" width="15" height="15">
+      <path
+        fill="currentColor"
+        d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.02l-2.2 2.19Z"
+      />
+    </svg>
+  )
+}
+
+function IconWhatsApp() {
+  return (
+    <svg className="site-topbar__icon" viewBox="0 0 24 24" aria-hidden="true" width="15" height="15">
+      <path
+        fill="currentColor"
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+      />
+    </svg>
+  )
+}
+
 export function Header() {
   const { t, locale, setLocale } = useI18n()
   const [open, setOpen] = useState(false)
@@ -62,16 +95,35 @@ export function Header() {
     <header className="site-header">
       <div className="site-topbar">
         <div className="site-topbar__inner">
-          <span>{t('header.regionLine')}</span>
-          <span>
-            <a href={`mailto:${SITE_CONTACT.email}`}>{SITE_CONTACT.email}</a>
-            {' · '}
-            <a href={`tel:${SITE_CONTACT.phonePrimaryTel}`}>{SITE_CONTACT.phonePrimaryDisplay}</a>
-            {' · '}
-            <a href={SITE_CONTACT.whatsappUrl} target="_blank" rel="noreferrer">
-              WhatsApp
+          <span className="site-topbar__region">{t('header.regionLine')}</span>
+          <div className="site-topbar__actions" role="group" aria-label="Contact rapide">
+            <a
+              className="site-topbar__btn site-topbar__btn--mail"
+              href={`mailto:${SITE_CONTACT.email}`}
+              title={SITE_CONTACT.email}
+            >
+              <IconMail />
+              <span>{SITE_CONTACT.email}</span>
             </a>
-          </span>
+            <a
+              className="site-topbar__btn site-topbar__btn--phone"
+              href={`tel:${SITE_CONTACT.phonePrimaryTel}`}
+              title={SITE_CONTACT.phonePrimaryDisplay}
+            >
+              <IconPhone />
+              <span>{SITE_CONTACT.phonePrimaryDisplay}</span>
+            </a>
+            <a
+              className="site-topbar__btn site-topbar__btn--whatsapp"
+              href={SITE_CONTACT.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`WhatsApp ${SITE_CONTACT.whatsappDisplay}`}
+            >
+              <IconWhatsApp />
+              <span>WhatsApp</span>
+            </a>
+          </div>
         </div>
       </div>
       <div className="site-header__inner">
@@ -83,6 +135,26 @@ export function Header() {
           <NavLink to="/" end>
             {navLabel('nav.home')}
           </NavLink>
+
+          <div className={`nav-dropdown${aboutActive ? ' nav-dropdown--active' : ''}`}>
+            <NavLink className="nav-dropdown__trigger" to="/a-propos" end={false}>
+              {navLabel('nav.about')}
+              <span className="nav-dropdown__caret" aria-hidden="true">
+                ▾
+              </span>
+            </NavLink>
+            <div className="nav-dropdown__panel" role="menu">
+              <Link className="nav-dropdown__link" to="/a-propos" role="menuitem">
+                {navLabel('nav.aboutOverview')}
+              </Link>
+              <Link className="nav-dropdown__link" to="/personnel" role="menuitem">
+                {navLabel('nav.personnel')}
+              </Link>
+              <Link className="nav-dropdown__link" to="/partenariats" role="menuitem">
+                {navLabel('nav.partnerships')}
+              </Link>
+            </div>
+          </div>
 
           <div className={`nav-dropdown${servicesActive ? ' nav-dropdown--active' : ''}`}>
             <NavLink className="nav-dropdown__trigger" to="/services" end={false}>
@@ -124,26 +196,6 @@ export function Header() {
               </Link>
               <Link className="nav-dropdown__link" to="/projets/wash" role="menuitem">
                 {navLabel('nav.projectsWash')}
-              </Link>
-            </div>
-          </div>
-
-          <div className={`nav-dropdown${aboutActive ? ' nav-dropdown--active' : ''}`}>
-            <NavLink className="nav-dropdown__trigger" to="/a-propos" end={false}>
-              {navLabel('nav.about')}
-              <span className="nav-dropdown__caret" aria-hidden="true">
-                ▾
-              </span>
-            </NavLink>
-            <div className="nav-dropdown__panel" role="menu">
-              <Link className="nav-dropdown__link" to="/a-propos" role="menuitem">
-                {navLabel('nav.aboutOverview')}
-              </Link>
-              <Link className="nav-dropdown__link" to="/personnel" role="menuitem">
-                {navLabel('nav.personnel')}
-              </Link>
-              <Link className="nav-dropdown__link" to="/partenariats" role="menuitem">
-                {navLabel('nav.partnerships')}
               </Link>
             </div>
           </div>
@@ -205,6 +257,30 @@ export function Header() {
           <button
             type="button"
             className="nav-mobile__group-toggle"
+            aria-expanded={mobileAboutOpen}
+            onClick={() => setMobileAboutOpen((v) => !v)}
+          >
+            {navLabel('nav.about')} {mobileAboutOpen ? '▴' : '▾'}
+          </button>
+          {mobileAboutOpen ? (
+            <div className="nav-mobile__sub">
+              <NavLink to="/a-propos" onClick={closeAll}>
+                {navLabel('nav.aboutOverview')}
+              </NavLink>
+              <NavLink to="/personnel" onClick={closeAll}>
+                {navLabel('nav.personnel')}
+              </NavLink>
+              <NavLink to="/partenariats" onClick={closeAll}>
+                {navLabel('nav.partnerships')}
+              </NavLink>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="nav-mobile__group">
+          <button
+            type="button"
+            className="nav-mobile__group-toggle"
             aria-expanded={mobileServicesOpen}
             onClick={() => setMobileServicesOpen((v) => !v)}
           >
@@ -246,30 +322,6 @@ export function Header() {
               </NavLink>
               <NavLink to="/projets/wash" onClick={closeAll}>
                 {navLabel('nav.projectsWash')}
-              </NavLink>
-            </div>
-          ) : null}
-        </div>
-
-        <div className="nav-mobile__group">
-          <button
-            type="button"
-            className="nav-mobile__group-toggle"
-            aria-expanded={mobileAboutOpen}
-            onClick={() => setMobileAboutOpen((v) => !v)}
-          >
-            {navLabel('nav.about')} {mobileAboutOpen ? '▴' : '▾'}
-          </button>
-          {mobileAboutOpen ? (
-            <div className="nav-mobile__sub">
-              <NavLink to="/a-propos" onClick={closeAll}>
-                {navLabel('nav.aboutOverview')}
-              </NavLink>
-              <NavLink to="/personnel" onClick={closeAll}>
-                {navLabel('nav.personnel')}
-              </NavLink>
-              <NavLink to="/partenariats" onClick={closeAll}>
-                {navLabel('nav.partnerships')}
               </NavLink>
             </div>
           ) : null}

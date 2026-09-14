@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
@@ -11,7 +10,6 @@ export function Partnerships() {
   const { t } = useI18n()
   const [params] = useSearchParams()
   const merci = params.get('merci') === '1'
-  const [showForm, setShowForm] = useState(merci)
   const types = t('partnerships.types')
   const typesList = Array.isArray(types) ? types : []
   const { rows: partners } = useSitePartners()
@@ -31,14 +29,11 @@ export function Partnerships() {
     return String(partner?.logo_url ?? '').trim().length > 0
   }
 
-  function openPartnershipForm() {
-    setShowForm(true)
-    requestAnimationFrame(() => {
-      const target = document.getElementById('formulaire-partenariat')
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    })
+  function scrollToPartnershipForm() {
+    const target = document.getElementById('formulaire-partenariat')
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
   }
 
   return (
@@ -88,39 +83,39 @@ export function Partnerships() {
             <button
               type="button"
               className="btn btn--primary partners-showcase__cta"
-              onClick={openPartnershipForm}
-              aria-controls="formulaire-partenariat"
-              aria-expanded={showForm}
+              onClick={scrollToPartnershipForm}
             >
-              Devenir partenaire
+              {t('partnerships.becomePartner')}
             </button>
           </div>
-          <div className="partners-form-panel card" id="formulaire-partenariat">
-            <h2>{t('partnerships.formTitle')}</h2>
-            <p className="admin-muted" style={{ marginBottom: '0.9rem' }}>
-              Cliquez sur le bouton « Devenir partenaire » pour ouvrir le formulaire de demande.
-            </p>
-            {showForm ? (
-              <>
-                {merci ? (
-                  <div style={{ marginBottom: '1rem' }}>
-                    <ContactThanksBanner />
-                  </div>
-                ) : null}
-                <p className="admin-muted" style={{ marginBottom: '0.9rem' }}>
-                  {t('partnerships.typesTitle')}
-                </p>
-                <ul style={{ margin: '0 0 1rem', paddingLeft: '1.1rem', color: 'var(--color-text-muted)' }}>
-                  {typesList.map((item) => (
-                    <li key={item} style={{ marginBottom: '0.35rem' }}>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <LeadFormSupabase source="partnership" redirectTo="/partenariats?merci=1" />
-              </>
-            ) : null}
-          </div>
+        </div>
+      </section>
+
+      <section className="section partners-form-section" id="formulaire-partenariat" aria-labelledby="partenariat-form-title">
+        <div className="container partners-form-wrap">
+          {merci ? (
+            <div className="partners-form-thanks">
+              <ContactThanksBanner />
+            </div>
+          ) : null}
+
+          <header className="partners-form-head">
+            <h2 id="partenariat-form-title">{t('partnerships.formTitle')}</h2>
+            <p>{t('partnerships.formIntro')}</p>
+          </header>
+
+          {typesList.length ? (
+            <div className="partners-form-types">
+              <p className="partners-form-types__label">{t('partnerships.typesTitle')}</p>
+              <ul>
+                {typesList.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          <LeadFormSupabase source="partnership" redirectTo="/partenariats?merci=1" />
         </div>
       </section>
     </>

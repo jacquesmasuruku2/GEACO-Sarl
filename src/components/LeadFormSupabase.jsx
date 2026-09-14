@@ -195,7 +195,8 @@ export function LeadFormSupabase({ source, redirectTo }) {
           ? t('quote.formSubmit')
           : t('partnerships.formSubmit')
 
-  const formClassName = source === 'quote' ? 'form form--quote-premium' : 'form'
+  const formClassName =
+    source === 'quote' ? 'form form--quote-premium' : source === 'partnership' ? 'form form--partnership' : 'form'
 
   return (
     <form className={formClassName} onSubmit={onSubmit} noValidate>
@@ -418,54 +419,63 @@ export function LeadFormSupabase({ source, redirectTo }) {
 
       {source === 'partnership' ? (
         <>
-          <label htmlFor="lead-org">{t('partnerships.formOrg')}</label>
-          <input
-            id="lead-org"
-            type="text"
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-            required
-            maxLength={300}
-            autoComplete="organization"
-            aria-describedby="lead-org-hint"
-          />
-          <p id="lead-org-hint" className="form-note" style={{ marginTop: '0.35rem' }}>
-            {t('partnerships.formOrgHint')}
-          </p>
+          <div className="partnership-form__field">
+            <label htmlFor="lead-org">{t('partnerships.formOrg')}</label>
+            <input
+              id="lead-org"
+              type="text"
+              value={organization}
+              onChange={(e) => setOrganization(e.target.value)}
+              required
+              maxLength={300}
+              autoComplete="organization"
+              placeholder={t('partnerships.formOrgPlaceholder')}
+            />
+          </div>
 
-          <label htmlFor="lead-pname">{t('partnerships.formName')}</label>
-          <input
-            id="lead-pname"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            required
-            maxLength={200}
-            autoComplete="name"
-          />
+          <div className="partnership-form__grid">
+            <div className="partnership-form__field">
+              <label htmlFor="lead-pname">{t('partnerships.formName')}</label>
+              <input
+                id="lead-pname"
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                maxLength={200}
+                autoComplete="name"
+                placeholder={t('partnerships.formNamePlaceholder')}
+              />
+            </div>
+            <div className="partnership-form__field">
+              <label htmlFor="lead-pemail">{t('partnerships.formEmail')}</label>
+              <input
+                id="lead-pemail"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                maxLength={254}
+                autoComplete="email"
+                placeholder={t('partnerships.formEmailPlaceholder')}
+              />
+            </div>
+          </div>
 
-          <label htmlFor="lead-pemail">{t('partnerships.formEmail')}</label>
-          <input
-            id="lead-pemail"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            maxLength={254}
-            autoComplete="email"
-          />
-
-          <label htmlFor="lead-pmsg">{t('partnerships.formMessage')}</label>
-          <textarea
-            id="lead-pmsg"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-            minLength={10}
-            maxLength={8000}
-            rows={5}
-            autoComplete="off"
-          />
+          <div className="partnership-form__field">
+            <label htmlFor="lead-pmsg">{t('partnerships.formMessage')}</label>
+            <textarea
+              id="lead-pmsg"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+              minLength={10}
+              maxLength={8000}
+              rows={5}
+              autoComplete="off"
+              placeholder={t('partnerships.formMessagePlaceholder')}
+            />
+          </div>
         </>
       ) : null}
 
@@ -476,7 +486,13 @@ export function LeadFormSupabase({ source, redirectTo }) {
       ) : null}
 
       <button
-        className={source === 'quote' ? 'btn btn--primary btn--quote-submit' : 'btn btn--primary'}
+        className={
+          source === 'quote'
+            ? 'btn btn--primary btn--quote-submit'
+            : source === 'partnership'
+              ? 'btn btn--primary partnership-form__submit'
+              : 'btn btn--primary'
+        }
         type="submit"
         disabled={busy}
       >
@@ -488,6 +504,8 @@ export function LeadFormSupabase({ source, redirectTo }) {
           <p className="form-note">{t('forms.privacyNote')}</p>
           <p className="form-note">{t('forms.storedInSupabase')}</p>
         </div>
+      ) : source === 'partnership' ? (
+        <p className="form-note partnership-form__note">{t('forms.privacyNote')}</p>
       ) : (
         <>
           <p className="form-note">{t('forms.privacyNote')}</p>
