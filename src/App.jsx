@@ -29,7 +29,8 @@ export default function App() {
     <>
       <ScrollToTop />
       <Routes>
-        <Route path="/auth-admin" element={<AuthAdmin />} />
+        <Route path="/login" element={<AuthAdmin />} />
+        <Route path="/auth-admin" element={<Navigate to="/login" replace />} />
         <Route path="/auth-admin/panel" element={<AdminPanel />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />

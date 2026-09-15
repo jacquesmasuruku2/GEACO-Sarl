@@ -5297,11 +5297,12 @@ a.personnel-profile__more {
   flex: 0 0 auto;
   margin: 0.15rem 0.7rem 0.4rem;
   text-align: center;
-  font-size: clamp(0.45rem, 1.05vw, 0.58rem);
+  font-size: clamp(0.52rem, 1.2vw, 0.66rem);
   font-style: italic;
-  font-weight: 400;
-  color: #111;
-  line-height: 1.3;
+  font-weight: 700;
+  color: var(--sid-red);
+  line-height: 1.35;
+  letter-spacing: 0.01em;
 }
 
 /* ——— Verso carte de service ——— */
@@ -5439,13 +5440,12 @@ a.personnel-profile__more {
   z-index: 2;
   flex: 0 0 auto;
   margin: 0;
-  padding: 0.32rem 0.75rem;
+  padding: 0.28rem 0.85rem;
   text-align: center;
-  font-size: clamp(0.52rem, 1.25vw, 0.68rem);
-  font-weight: 700;
-  color: var(--sid-red);
-  line-height: 1.35;
-  letter-spacing: 0.01em;
+  font-size: clamp(0.42rem, 1vw, 0.54rem);
+  font-weight: 400;
+  color: #111;
+  line-height: 1.3;
   background: #fff;
 }
 

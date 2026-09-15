@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase'
 import { useAdminAccess } from '../../hooks/useAdminAccess'
+import { useAdminIdleTimeout } from '../../hooks/useAdminIdleTimeout'
 import { ProjectsAdmin } from './editors/ProjectsAdmin'
 import { PartnersAdmin } from './editors/PartnersAdmin'
 import { ServiceContentAdmin } from './editors/ServiceContentAdmin'
@@ -118,6 +119,7 @@ function formatDashboardTime(date) {
 
 export function AdminPanel() {
   const { loading, session, isAdmin, verificationFailed, recheckAdmin } = useAdminAccess()
+  useAdminIdleTimeout({ enabled: Boolean(session && isAdmin) })
   const allowUnloadRef = useRef(false)
   const modules = useMemo(
     () => [
@@ -399,10 +401,9 @@ export function AdminPanel() {
 
   function signOutSafely() {
     allowUnloadRef.current = true
-    supabase.auth.signOut()
-    window.setTimeout(() => {
-      allowUnloadRef.current = false
-    }, 1500)
+    supabase.auth.signOut().finally(() => {
+      window.location.assign('/login')
+    })
   }
 
   function selectModule(id) {
@@ -422,7 +423,7 @@ export function AdminPanel() {
   }
 
   if (!isSupabaseConfigured || !supabase) {
-    return <Navigate to="/auth-admin" replace />
+    return <Navigate to="/login" replace />
   }
 
   if (loading) {
@@ -434,7 +435,7 @@ export function AdminPanel() {
   }
 
   if (!session) {
-    return <Navigate to="/auth-admin" replace />
+    return <Navigate to="/login" replace />
   }
 
   if (verificationFailed) {

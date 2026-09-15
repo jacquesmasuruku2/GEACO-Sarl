@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { supabase, isSupabaseConfigured } from '../../lib/supabase'
 
 export function AuthAdmin() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const idleExpired = location.state?.reason === 'idle'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -106,6 +108,11 @@ export function AuthAdmin() {
           <img className="admin-login__logo" src="/geaco-logo-transparent.png" alt="GEACO SARL" />
           <h1 className="admin-login__title">Connexion</h1>
           <p className="admin-login__lead">Accédez au studio de contenu GEACO.</p>
+          {idleExpired ? (
+            <p className="admin-login__hint" role="status">
+              Session expirée après inactivité. Reconnectez-vous pour continuer.
+            </p>
+          ) : null}
 
           <form onSubmit={onSubmit} className="admin-login__form">
             <label className="admin-login__field" htmlFor="adm-email">
