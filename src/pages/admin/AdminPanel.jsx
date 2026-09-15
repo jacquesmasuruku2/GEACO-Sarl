@@ -16,6 +16,7 @@ import {
   QuoteMessagesAdmin,
   PartnershipMessagesAdmin,
   FormationRegistrationsAdmin,
+  PersonnelApplicationsAdmin,
 } from './editors/InboxMessagesAdmin'
 
 function PanelIcon({ name }) {
@@ -96,6 +97,13 @@ function PanelIcon({ name }) {
       </svg>
     )
   }
+  if (name === 'cardApps' || name === 'cards') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 5h18v14H3zM7 9h6M7 13h10M7 17h4" />
+      </svg>
+    )
+  }
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 7h16M4 12h16M4 17h16" />
@@ -151,6 +159,13 @@ export function AdminPanel() {
         render: FormationRegistrationsAdmin,
         group: 'inbox',
       },
+      {
+        id: 'cardApps',
+        label: 'Candidatures cartes',
+        description: 'Demandes reçues via /candidature-carte — à approuver avant publication.',
+        render: PersonnelApplicationsAdmin,
+        group: 'inbox',
+      },
       { id: 'projects', label: 'Projets', description: 'Fiches projets type blog : image, date, description.', render: ProjectsAdmin },
       { id: 'partners', label: 'Partenaires', description: 'Cartes partenaires et publication.', render: PartnersAdmin },
       { id: 'blog', label: 'Blog', description: 'Articles, mises en forme et dates.', render: BlogAdmin },
@@ -192,6 +207,7 @@ export function AdminPanel() {
       partnerships: { total: 0 },
       formations: { total: 0, published: 0 },
       formationRegs: { total: 0 },
+      cardApps: { total: 0, pending: 0 },
     },
   })
 
@@ -209,7 +225,8 @@ export function AdminPanel() {
     dashboard.data.contacts.total +
     dashboard.data.quotes.total +
     dashboard.data.partnerships.total +
-    dashboard.data.formationRegs.total
+    dashboard.data.formationRegs.total +
+    dashboard.data.cardApps.pending
 
   const kpiTiles = useMemo(
     () => [
@@ -287,6 +304,8 @@ export function AdminPanel() {
       formationsTotal,
       formationsPublished,
       formationRegsTotal,
+      cardAppsTotal,
+      cardAppsPending,
     ] = await Promise.all([
       countQuery(supabase.from('site_projects').select('*', { count: 'exact', head: true })),
       countQuery(supabase.from('site_projects').select('*', { count: 'exact', head: true }).eq('published', true)),
@@ -309,6 +328,13 @@ export function AdminPanel() {
       countQuery(supabase.from('site_formations').select('*', { count: 'exact', head: true })),
       countQuery(supabase.from('site_formations').select('*', { count: 'exact', head: true }).eq('published', true)),
       countQuery(supabase.from('site_formation_registrations').select('*', { count: 'exact', head: true })),
+      countQuery(supabase.from('site_personnel_applications').select('*', { count: 'exact', head: true })),
+      countQuery(
+        supabase
+          .from('site_personnel_applications')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending'),
+      ),
     ])
 
     const hasAnyMissing = [
@@ -329,6 +355,8 @@ export function AdminPanel() {
       formationsTotal,
       formationsPublished,
       formationRegsTotal,
+      cardAppsTotal,
+      cardAppsPending,
     ].some((v) => v === null)
 
     setDashboard({
@@ -346,6 +374,7 @@ export function AdminPanel() {
         partnerships: { total: partnershipsTotal ?? 0 },
         formations: { total: formationsTotal ?? 0, published: formationsPublished ?? 0 },
         formationRegs: { total: formationRegsTotal ?? 0 },
+        cardApps: { total: cardAppsTotal ?? 0, pending: cardAppsPending ?? 0 },
       },
     })
     setDashboardUpdatedAt(new Date())
@@ -521,7 +550,9 @@ export function AdminPanel() {
                     ? dashboard.data.quotes.total
                     : module.id === 'partnerships'
                       ? dashboard.data.partnerships.total
-                      : dashboard.data.formationRegs.total}
+                      : module.id === 'cardApps'
+                        ? dashboard.data.cardApps.pending
+                        : dashboard.data.formationRegs.total}
               </span>
             </button>
           ))}
@@ -754,6 +785,7 @@ export function AdminPanel() {
                   <p>{dashboard.data.quotes.total} devis</p>
                   <p>{dashboard.data.partnerships.total} partenariats</p>
                   <p>{dashboard.data.formationRegs.total} inscriptions</p>
+                  <p>{dashboard.data.cardApps.pending} candidatures cartes</p>
                 </article>
               </div>
             </section>

@@ -20,6 +20,7 @@ import { PersonnelDetail } from './pages/PersonnelDetail'
 import { Gallery } from './pages/Gallery'
 import { Formations } from './pages/Formations'
 import { FormationDetail } from './pages/FormationDetail'
+import { CardApplication } from './pages/CardApplication'
 import { AuthAdmin } from './pages/admin/AuthAdmin'
 import { AdminPanel } from './pages/admin/AdminPanel'
 import { NotFound } from './pages/NotFound'
@@ -54,6 +55,7 @@ export default function App() {
           <Route path="/projets" element={<Projects />} />
           <Route path="/formations/:slug" element={<FormationDetail />} />
           <Route path="/formations" element={<Formations />} />
+          <Route path="/candidature-carte" element={<CardApplication />} />
           <Route path="/partenariats" element={<Partnerships />} />
           <Route path="/devis" element={<QuoteRequest />} />
           <Route path="/contact" element={<Contact />} />

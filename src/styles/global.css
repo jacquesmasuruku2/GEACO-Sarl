@@ -6376,6 +6376,58 @@ a.personnel-profile__more {
   max-width: 44rem;
 }
 
+.card-application-page__wrap {
+  max-width: 40rem;
+}
+
+.card-application-page__head {
+  margin-bottom: 1.25rem;
+}
+
+.card-application-page__head h2 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.3vw, 1.6rem);
+  font-weight: 600;
+  color: var(--color-vinci-blue-dark);
+}
+
+.card-application-page__head p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.card-application-page__photo-preview {
+  margin-top: 0.65rem;
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid #e5eaf0;
+  overflow: hidden;
+  background: #f3f5f8;
+}
+
+.card-application-page__photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-inbox__photo {
+  margin: 0 0 1rem;
+  width: 8rem;
+  height: 8rem;
+  border: 1px solid #e5eaf0;
+  overflow: hidden;
+  background: #f3f5f8;
+}
+
+.admin-inbox__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .formations-page__thanks {
   margin-bottom: 1.5rem;
 }
