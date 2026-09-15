@@ -18,10 +18,33 @@ function sanitizeName(name) {
     .replace(/^-|-$/g, '')
 }
 
+function GformQuestion({
+  id,
+  label,
+  required = false,
+  hint = '',
+  children,
+}) {
+  return (
+    <div className={`gform-card gform-question${required ? ' is-required' : ''}`}>
+      <label className="gform-question__label" htmlFor={id}>
+        {label}
+        {required ? <span className="gform-question__star" aria-hidden="true"> *</span> : null}
+      </label>
+      {hint ? <p className="gform-question__hint">{hint}</p> : null}
+      <div className="gform-question__control">{children}</div>
+    </div>
+  )
+}
+
 /**
  * Formulaire public partageable pour candidature carte / fiche équipe.
+ * @param {{ redirectTo?: string, variant?: 'simple' | 'gform' }} props
  */
-export function PersonnelApplicationForm({ redirectTo = '/candidature-carte?merci=1' }) {
+export function PersonnelApplicationForm({
+  redirectTo = '/candidature-carte?merci=1',
+  variant = 'gform',
+}) {
   const { t, locale } = useI18n()
   const navigate = useNavigate()
   const [busy, setBusy] = useState(false)
@@ -45,9 +68,11 @@ export function PersonnelApplicationForm({ redirectTo = '/candidature-carte?merc
 
   if (!isSupabaseConfigured || !supabase) {
     return (
-      <p className="admin-error" role="alert">
-        {t('forms.supabaseNotConfigured')}
-      </p>
+      <div className="gform-card">
+        <p className="admin-error" role="alert">
+          {t('forms.supabaseNotConfigured')}
+        </p>
+      </div>
     )
   }
 
@@ -122,8 +147,14 @@ export function PersonnelApplicationForm({ redirectTo = '/candidature-carte?merc
     navigate(redirectTo, { replace: false })
   }
 
+  const isGform = variant === 'gform'
+
   return (
-    <form className="form form--simple card-apply-form" onSubmit={onSubmit} noValidate>
+    <form
+      className={isGform ? 'gform-form' : 'form form--simple card-apply-form'}
+      onSubmit={onSubmit}
+      noValidate
+    >
       <label className="visually-hidden" htmlFor="card-apply-gotcha">
         {t('forms.honeypot')}
       </label>
@@ -138,183 +169,194 @@ export function PersonnelApplicationForm({ redirectTo = '/candidature-carte?merc
         aria-hidden="true"
       />
 
-      <div className="simple-form__grid">
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-last">{t('cardApplication.lastName')}</label>
-          <input
-            id="card-apply-last"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-            maxLength={120}
-            autoComplete="family-name"
-            placeholder={t('cardApplication.lastNamePlaceholder')}
-          />
-        </div>
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-post">{t('cardApplication.postName')}</label>
-          <input
-            id="card-apply-post"
-            value={postName}
-            onChange={(e) => setPostName(e.target.value)}
-            maxLength={120}
-            placeholder={t('cardApplication.postNamePlaceholder')}
-          />
-        </div>
-      </div>
+      <GformQuestion id="card-apply-last" label={t('cardApplication.lastName')} required>
+        <input
+          id="card-apply-last"
+          className="gform-input"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+          maxLength={120}
+          autoComplete="family-name"
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
 
-      <div className="simple-form__grid">
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-first">{t('cardApplication.firstName')}</label>
-          <input
-            id="card-apply-first"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-            maxLength={120}
-            autoComplete="given-name"
-            placeholder={t('cardApplication.firstNamePlaceholder')}
-          />
-        </div>
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-sex">{t('cardApplication.sex')}</label>
-          <select id="card-apply-sex" value={sex} onChange={(e) => setSex(e.target.value)}>
-            <option value="">{t('cardApplication.sexPlaceholder')}</option>
-            <option value="Masculin">{t('cardApplication.sexMale')}</option>
-            <option value="Féminin">{t('cardApplication.sexFemale')}</option>
-          </select>
-        </div>
-      </div>
+      <GformQuestion id="card-apply-post" label={t('cardApplication.postName')}>
+        <input
+          id="card-apply-post"
+          className="gform-input"
+          value={postName}
+          onChange={(e) => setPostName(e.target.value)}
+          maxLength={120}
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
 
-      <div className="simple-form__grid">
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-birth-place">{t('cardApplication.birthPlace')}</label>
-          <input
-            id="card-apply-birth-place"
-            value={birthPlace}
-            onChange={(e) => setBirthPlace(e.target.value)}
-            maxLength={200}
-            placeholder={t('cardApplication.birthPlacePlaceholder')}
-          />
-        </div>
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-birth-date">{t('cardApplication.birthDate')}</label>
-          <input
-            id="card-apply-birth-date"
-            type="date"
-            value={birthDate}
-            onChange={(e) => setBirthDate(e.target.value)}
-          />
-        </div>
-      </div>
+      <GformQuestion id="card-apply-first" label={t('cardApplication.firstName')} required>
+        <input
+          id="card-apply-first"
+          className="gform-input"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+          maxLength={120}
+          autoComplete="given-name"
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
 
-      <div className="simple-form__grid">
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-role">{t('cardApplication.role')}</label>
-          <input
-            id="card-apply-role"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-            maxLength={200}
-            placeholder={t('cardApplication.rolePlaceholder')}
-          />
+      <GformQuestion id="card-apply-sex" label={t('cardApplication.sex')}>
+        <div className="gform-radio-group" role="radiogroup" aria-labelledby="card-apply-sex-label">
+          <span id="card-apply-sex-label" className="visually-hidden">
+            {t('cardApplication.sex')}
+          </span>
+          <label className="gform-radio">
+            <input
+              type="radio"
+              name="card-apply-sex"
+              value="Masculin"
+              checked={sex === 'Masculin'}
+              onChange={(e) => setSex(e.target.value)}
+            />
+            <span>{t('cardApplication.sexMale')}</span>
+          </label>
+          <label className="gform-radio">
+            <input
+              type="radio"
+              name="card-apply-sex"
+              value="Féminin"
+              checked={sex === 'Féminin'}
+              onChange={(e) => setSex(e.target.value)}
+            />
+            <span>{t('cardApplication.sexFemale')}</span>
+          </label>
         </div>
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-dept">{t('cardApplication.department')}</label>
-          <input
-            id="card-apply-dept"
-            value={department}
-            onChange={(e) => setDepartment(e.target.value)}
-            maxLength={200}
-            placeholder={t('cardApplication.departmentPlaceholder')}
-          />
-        </div>
-      </div>
+      </GformQuestion>
 
-      <div className="simple-form__field">
-        <label htmlFor="card-apply-address">{t('cardApplication.address')}</label>
+      <GformQuestion id="card-apply-birth-place" label={t('cardApplication.birthPlace')}>
+        <input
+          id="card-apply-birth-place"
+          className="gform-input"
+          value={birthPlace}
+          onChange={(e) => setBirthPlace(e.target.value)}
+          maxLength={200}
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
+
+      <GformQuestion id="card-apply-birth-date" label={t('cardApplication.birthDate')}>
+        <input
+          id="card-apply-birth-date"
+          className="gform-input gform-input--date"
+          type="date"
+          value={birthDate}
+          onChange={(e) => setBirthDate(e.target.value)}
+        />
+      </GformQuestion>
+
+      <GformQuestion id="card-apply-role" label={t('cardApplication.role')} required>
+        <input
+          id="card-apply-role"
+          className="gform-input"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          required
+          maxLength={200}
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
+
+      <GformQuestion id="card-apply-dept" label={t('cardApplication.department')}>
+        <input
+          id="card-apply-dept"
+          className="gform-input"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          maxLength={200}
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
+
+      <GformQuestion id="card-apply-address" label={t('cardApplication.address')}>
         <input
           id="card-apply-address"
+          className="gform-input"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           maxLength={400}
-          placeholder={t('cardApplication.addressPlaceholder')}
+          placeholder={t('cardApplication.yourAnswer')}
         />
-      </div>
+      </GformQuestion>
 
-      <div className="simple-form__grid">
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-email">{t('cardApplication.email')}</label>
-          <input
-            id="card-apply-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            maxLength={254}
-            autoComplete="email"
-            placeholder={t('cardApplication.emailPlaceholder')}
-          />
-        </div>
-        <div className="simple-form__field">
-          <label htmlFor="card-apply-phone">{t('cardApplication.phone')}</label>
-          <input
-            id="card-apply-phone"
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            maxLength={60}
-            autoComplete="tel"
-            placeholder={t('cardApplication.phonePlaceholder')}
-          />
-        </div>
-      </div>
-
-      <div className="simple-form__field">
-        <label htmlFor="card-apply-photo">{t('cardApplication.photo')}</label>
+      <GformQuestion id="card-apply-email" label={t('cardApplication.email')} required>
         <input
-          id="card-apply-photo"
-          type="file"
-          accept="image/*"
-          disabled={uploading || busy}
-          onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) uploadPhoto(file)
-            e.target.value = ''
-          }}
+          id="card-apply-email"
+          className="gform-input"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          maxLength={254}
+          autoComplete="email"
+          placeholder={t('cardApplication.yourAnswer')}
         />
-        <span className="form-note">
-          {uploading ? t('cardApplication.uploading') : t('cardApplication.photoHint')}
-        </span>
+      </GformQuestion>
+
+      <GformQuestion id="card-apply-phone" label={t('cardApplication.phone')}>
+        <input
+          id="card-apply-phone"
+          className="gform-input"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          maxLength={60}
+          autoComplete="tel"
+          placeholder={t('cardApplication.yourAnswer')}
+        />
+      </GformQuestion>
+
+      <GformQuestion
+        id="card-apply-photo"
+        label={t('cardApplication.photo')}
+        hint={uploading ? t('cardApplication.uploading') : t('cardApplication.photoHint')}
+      >
+        <label className="gform-file">
+          <span className="gform-file__btn">{t('cardApplication.addFile')}</span>
+          <input
+            id="card-apply-photo"
+            type="file"
+            accept="image/*"
+            disabled={uploading || busy}
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (file) uploadPhoto(file)
+              e.target.value = ''
+            }}
+          />
+        </label>
         {photoUrl ? (
-          <div className="card-application-page__photo-preview">
+          <div className="gform-photo-preview">
             <img src={photoUrl} alt="" />
           </div>
         ) : null}
-      </div>
+      </GformQuestion>
 
-      <div className="simple-form__field">
-        <label htmlFor="card-apply-notes">{t('cardApplication.notes')}</label>
+      <GformQuestion id="card-apply-notes" label={t('cardApplication.notes')}>
         <textarea
           id="card-apply-notes"
+          className="gform-input gform-input--area"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           maxLength={2000}
           rows={3}
-          placeholder={t('cardApplication.notesPlaceholder')}
+          placeholder={t('cardApplication.yourAnswer')}
         />
-      </div>
+      </GformQuestion>
 
-      {error ? (
-        <p className="admin-error" role="alert">
-          {error}
-        </p>
-      ) : null}
-
-      <div className="form-consent">
-        <p className="form-note">{t('forms.privacyNote')}</p>
-        <label className="form-consent__check" htmlFor="card-apply-consent">
+      <div className="gform-card gform-question">
+        <p className="gform-question__hint">{t('forms.privacyNote')}</p>
+        <label className="gform-check" htmlFor="card-apply-consent">
           <input
             id="card-apply-consent"
             type="checkbox"
@@ -326,9 +368,40 @@ export function PersonnelApplicationForm({ redirectTo = '/candidature-carte?merc
         </label>
       </div>
 
-      <button className="btn btn--primary simple-form__submit" type="submit" disabled={busy || uploading || !consent}>
-        {busy ? t('forms.formSending') : t('cardApplication.submit')}
-      </button>
+      {error ? (
+        <div className="gform-card gform-card--error" role="alert">
+          {error}
+        </div>
+      ) : null}
+
+      <div className="gform-actions">
+        <button className="gform-submit" type="submit" disabled={busy || uploading || !consent}>
+          {busy ? t('forms.formSending') : t('cardApplication.submit')}
+        </button>
+        <button
+          type="button"
+          className="gform-clear"
+          onClick={() => {
+            setLastName('')
+            setPostName('')
+            setFirstName('')
+            setSex('')
+            setBirthPlace('')
+            setBirthDate('')
+            setRole('')
+            setDepartment('')
+            setAddress(SITE_CONTACT.offices.goma.shortAddress)
+            setEmail('')
+            setPhone('')
+            setPhotoUrl('')
+            setNotes('')
+            setConsent(false)
+            setError('')
+          }}
+        >
+          {t('cardApplication.clearForm')}
+        </button>
+      </div>
     </form>
   )
 }

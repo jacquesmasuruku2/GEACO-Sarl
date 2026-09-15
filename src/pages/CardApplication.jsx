@@ -1,12 +1,14 @@
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
-import { PageHero } from '../components/PageHero'
 import { ContactThanksBanner } from '../components/ContactThanksBanner'
 import { PersonnelApplicationForm } from '../components/PersonnelApplicationForm'
 
+/**
+ * Page partageable type Google Form pour candidature carte de service.
+ */
 export function CardApplication() {
-  const { t } = useI18n()
+  const { t, locale, setLocale } = useI18n()
   const [params] = useSearchParams()
   const merci = params.get('merci') === '1'
 
@@ -18,39 +20,50 @@ export function CardApplication() {
         path="/candidature-carte"
       />
 
-      <PageHero
-        breadcrumbItems={[
-          { href: '/', label: t('nav.home') },
-          { label: t('cardApplication.title') },
-        ]}
-        title={t('cardApplication.title')}
-        lead={t('cardApplication.lead')}
-        heroImage="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1800&q=80"
-      />
+      <div className="gform-page">
+        <div className="gform-page__banner" aria-hidden="true" />
+        <div className="gform-page__inner">
+          <header className="gform-card gform-card--header">
+            <div className="gform-card__accent" aria-hidden="true" />
+            <div className="gform-card__top">
+              <p className="gform-card__brand">GEACO SARL</p>
+              <div className="gform-lang" role="group" aria-label="Language">
+                <button type="button" aria-pressed={locale === 'fr'} onClick={() => setLocale('fr')}>
+                  FR
+                </button>
+                <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')}>
+                  EN
+                </button>
+              </div>
+            </div>
+            <h1 className="gform-card__title">{t('cardApplication.title')}</h1>
+            <p className="gform-card__desc">{t('cardApplication.lead')}</p>
+            <p className="gform-card__note">{t('cardApplication.approvalNote')}</p>
+            <p className="gform-card__required-hint">{t('cardApplication.requiredHint')}</p>
+          </header>
 
-      <section className="section card-application-page">
-        <div className="container card-application-page__wrap">
           {merci ? (
-            <div className="card-application-page__thanks">
+            <div className="gform-card gform-card--thanks">
               <ContactThanksBanner
                 title={t('cardApplication.thanksTitle')}
                 body={t('cardApplication.thanksBody')}
                 closing={t('cardApplication.thanksClosing')}
                 brand={t('cardApplication.thanksBrand')}
               />
+              <p className="gform-card__back">
+                <Link to="/">{t('cardApplication.backHome')}</Link>
+              </p>
             </div>
           ) : (
-            <>
-              <header className="card-application-page__head">
-                <h2>{t('cardApplication.formTitle')}</h2>
-                <p>{t('cardApplication.formIntro')}</p>
-                <p className="form-note">{t('cardApplication.approvalNote')}</p>
-              </header>
-              <PersonnelApplicationForm />
-            </>
+            <PersonnelApplicationForm variant="gform" />
           )}
+
+          <footer className="gform-page__footer">
+            <p>{t('cardApplication.formFooter')}</p>
+            <Link to="/">{t('cardApplication.backHome')}</Link>
+          </footer>
         </div>
-      </section>
+      </div>
     </>
   )
 }

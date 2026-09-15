@@ -6417,6 +6417,362 @@ a.personnel-profile__more {
   object-fit: cover;
 }
 
+/* ——— Formulaire type Google Form (candidature carte) ——— */
+.gform-page {
+  --gform-accent: #1a5fd0;
+  --gform-accent-deep: #0d47a8;
+  --gform-bg: #f0f4f8;
+  --gform-card: #ffffff;
+  --gform-ink: #202124;
+  --gform-muted: #5f6368;
+  --gform-line: #dadce0;
+  min-height: 100vh;
+  background: var(--gform-bg);
+  color: var(--gform-ink);
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  padding: 0 1rem 2.5rem;
+}
+
+.gform-page__banner {
+  height: 10px;
+  margin: 0 -1rem 1.25rem;
+  background: linear-gradient(90deg, var(--gform-accent-deep), var(--gform-accent));
+}
+
+.gform-page__inner {
+  width: min(100%, 640px);
+  margin: 0 auto;
+  padding-top: 0.75rem;
+}
+
+.gform-card {
+  position: relative;
+  background: var(--gform-card);
+  border: 1px solid var(--gform-line);
+  border-radius: 8px;
+  padding: 1.35rem 1.4rem 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.08);
+}
+
+.gform-card--header {
+  padding-top: 1.5rem;
+  overflow: hidden;
+}
+
+.gform-card__accent {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 10px;
+  background: var(--gform-accent);
+}
+
+.gform-card__brand {
+  margin: 0.35rem 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gform-accent);
+}
+
+.gform-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.15rem;
+}
+
+.gform-card__top .gform-card__brand {
+  margin: 0;
+}
+
+.gform-lang {
+  display: inline-flex;
+  gap: 0.2rem;
+}
+
+.gform-lang button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--gform-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.4rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.gform-lang button[aria-pressed='true'] {
+  color: var(--gform-accent);
+  background: rgba(26, 95, 208, 0.08);
+}
+
+.gform-card__title {
+  margin: 0 0 0.55rem;
+  font-size: clamp(1.55rem, 3vw, 2rem);
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--gform-ink);
+}
+
+.gform-card__desc,
+.gform-card__note {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--gform-ink);
+  font-weight: 400;
+}
+
+.gform-card__note {
+  color: var(--gform-muted);
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--gform-line);
+}
+
+.gform-card__required-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.88rem;
+  color: #d93025;
+}
+
+.gform-card__back {
+  margin: 1rem 0 0;
+}
+
+.gform-card__back a,
+.gform-page__footer a {
+  color: var(--gform-accent);
+  text-decoration: none;
+}
+
+.gform-card__back a:hover,
+.gform-page__footer a:hover {
+  text-decoration: underline;
+}
+
+.gform-card--error {
+  border-color: #f6aea9;
+  background: #fce8e6;
+  color: #c5221f;
+  font-size: 0.92rem;
+}
+
+.gform-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.gform-question {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gform-question:focus-within {
+  border-color: var(--gform-accent);
+  box-shadow: 0 0 0 1px var(--gform-accent);
+}
+
+.gform-question__label {
+  display: block;
+  margin: 0 0 0.85rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--gform-ink);
+  line-height: 1.4;
+}
+
+.gform-question__star {
+  color: #d93025;
+}
+
+.gform-question__hint {
+  margin: -0.35rem 0 0.75rem;
+  font-size: 0.86rem;
+  color: var(--gform-muted);
+  line-height: 1.4;
+}
+
+.gform-input {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--gform-line);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.45rem 0;
+  font: inherit;
+  font-size: 0.98rem;
+  color: var(--gform-ink);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.gform-input:hover {
+  border-bottom-color: #202124;
+}
+
+.gform-input:focus {
+  border-bottom: 2px solid var(--gform-accent);
+  padding-bottom: calc(0.45rem - 1px);
+}
+
+.gform-input--area {
+  border: 1px solid var(--gform-line);
+  border-radius: 4px;
+  padding: 0.65rem 0.75rem;
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.gform-input--area:focus {
+  border: 2px solid var(--gform-accent);
+  padding: calc(0.65rem - 1px) calc(0.75rem - 1px);
+}
+
+.gform-input--date {
+  max-width: 14rem;
+}
+
+.gform-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.gform-radio,
+.gform-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.95rem;
+  color: var(--gform-ink);
+  cursor: pointer;
+}
+
+.gform-radio input,
+.gform-check input {
+  margin-top: 0.2rem;
+  accent-color: var(--gform-accent);
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.gform-file {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.gform-file input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.gform-file__btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--gform-line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--gform-accent);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.gform-file:hover .gform-file__btn {
+  background: rgba(26, 95, 208, 0.06);
+}
+
+.gform-photo-preview {
+  margin-top: 0.85rem;
+  width: 8rem;
+  height: 8rem;
+  border: 1px solid var(--gform-line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.gform-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gform-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.35rem 0 1rem;
+}
+
+.gform-submit {
+  appearance: none;
+  border: 0;
+  border-radius: 4px;
+  background: var(--gform-accent);
+  color: #fff;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 0.65rem 1.4rem;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.2);
+}
+
+.gform-submit:hover:not(:disabled) {
+  background: var(--gform-accent-deep);
+}
+
+.gform-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.gform-clear {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--gform-accent);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.4rem 0.2rem;
+}
+
+.gform-clear:hover {
+  text-decoration: underline;
+}
+
+.gform-page__footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--gform-muted);
+}
+
+.gform-page__footer p {
+  margin: 0 0 0.35rem;
+}
+
 .admin-inbox__photo {
   margin: 0 0 1rem;
   width: 8rem;

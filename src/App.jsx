@@ -33,6 +33,7 @@ export default function App() {
         <Route path="/login" element={<AuthAdmin />} />
         <Route path="/auth-admin" element={<Navigate to="/login" replace />} />
         <Route path="/auth-admin/panel" element={<AdminPanel />} />
+        <Route path="/candidature-carte" element={<CardApplication />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/a-propos" element={<About />} />
@@ -55,7 +56,6 @@ export default function App() {
           <Route path="/projets" element={<Projects />} />
           <Route path="/formations/:slug" element={<FormationDetail />} />
           <Route path="/formations" element={<Formations />} />
-          <Route path="/candidature-carte" element={<CardApplication />} />
           <Route path="/partenariats" element={<Partnerships />} />
           <Route path="/devis" element={<QuoteRequest />} />
           <Route path="/contact" element={<Contact />} />
