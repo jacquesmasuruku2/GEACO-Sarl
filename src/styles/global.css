@@ -5143,7 +5143,7 @@ a.personnel-profile__more {
   grid-template-columns: minmax(0, 1.4fr) minmax(7.2rem, 0.78fr);
   gap: 0.85rem;
   align-items: start;
-  padding: 0.55rem 0.8rem 0.2rem;
+  padding: 0.5rem 0.8rem 0;
   min-height: 0;
 }
 
@@ -5277,14 +5277,14 @@ a.personnel-profile__more {
 }
 
 .service-id-card__sign-label {
-  margin: 0.2rem 0 0;
+  margin: 0.12rem 0 0;
   font-size: clamp(0.5rem, 1.05vw, 0.6rem);
   color: #111;
   font-weight: 400;
 }
 
 .service-id-card__validity {
-  margin: 0.2rem 0 0;
+  margin: 0.08rem 0 0;
   font-size: clamp(0.68rem, 1.4vw, 0.82rem);
   font-weight: 800;
   color: var(--sid-red);
@@ -5295,13 +5295,14 @@ a.personnel-profile__more {
   position: relative;
   z-index: 2;
   flex: 0 0 auto;
-  margin: 0.15rem 0.7rem 0.4rem;
+  margin: 0 0.7rem 0.65rem;
+  padding-top: 0.05rem;
   text-align: center;
-  font-size: clamp(0.52rem, 1.2vw, 0.66rem);
+  font-size: clamp(0.5rem, 1.15vw, 0.62rem);
   font-style: italic;
   font-weight: 700;
   color: var(--sid-red);
-  line-height: 1.35;
+  line-height: 1.28;
   letter-spacing: 0.01em;
 }
 
@@ -5515,6 +5516,19 @@ a.personnel-profile__more {
     aspect-ratio: auto;
     box-shadow: none;
     border-color: #9eb2c9;
+  }
+
+  .service-id-card--front .service-id-card__footer {
+    margin: 0 3.5mm 3.2mm;
+    padding-bottom: 0.5mm;
+  }
+
+  .service-id-card--front .service-id-card__body {
+    padding-bottom: 0;
+  }
+
+  .service-id-card--front .service-id-card__photo-col {
+    margin-bottom: 0.15rem;
   }
 }
 
