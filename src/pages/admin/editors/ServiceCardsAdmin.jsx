@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { toPng } from 'html-to-image'
+import JSZip from 'jszip'
 import { supabase } from '../../../lib/supabase'
 import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 import { ServiceIdCard, ServiceIdCardBack, resolveServiceCardData } from '../../../components/admin/ServiceIdCard'
@@ -22,6 +23,30 @@ function slugifyFilename(value) {
   )
 }
 
+function buildCardOwnerParts(row) {
+  const fullName = [row?.card_last_name, row?.card_post_name, row?.card_first_name]
+    .map((v) => String(v ?? '').trim())
+    .filter(Boolean)
+    .join(' ')
+  const displayName = fullName || String(row?.name ?? '').trim()
+  const identifier =
+    String(row?.card_matricule ?? '').trim() ||
+    String(row?.slug ?? '').trim() ||
+    String(row?.id ?? '').trim().slice(0, 8)
+  return {
+    displayName: displayName || 'titulaire',
+    identifier: identifier || 'sans-id',
+  }
+}
+
+function buildCardExportBase(row) {
+  const { displayName, identifier } = buildCardOwnerParts(row)
+  const namePart = slugifyFilename(displayName)
+  const idPart = slugifyFilename(identifier)
+  if (namePart === idPart) return namePart
+  return `${namePart}-${idPart}`
+}
+
 function isLikelyIos() {
   if (typeof navigator === 'undefined') return false
   return (
@@ -30,23 +55,7 @@ function isLikelyIos() {
   )
 }
 
-/** Enregistre un PNG : partage natif (mobile) ou téléchargement ; repli iOS = ouvrir l’image. */
-async function savePngBlob(blob, filename) {
-  const file = new File([blob], filename, { type: 'image/png' })
-  if (typeof navigator !== 'undefined' && typeof navigator.canShare === 'function') {
-    try {
-      if (navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: 'Carte de service GEACO',
-        })
-        return 'shared'
-      }
-    } catch (err) {
-      if (err?.name === 'AbortError') return 'cancelled'
-    }
-  }
-
+function triggerBlobDownload(blob, filename) {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
@@ -55,11 +64,45 @@ async function savePngBlob(blob, filename) {
   document.body.appendChild(a)
   a.click()
   a.remove()
+  window.setTimeout(() => URL.revokeObjectURL(url), 60_000)
+  return url
+}
+
+/**
+ * Exporte recto + verso ensemble :
+ * - partage natif multi-fichiers si dispo
+ * - sinon ZIP unique nommé au titulaire / identifiant
+ */
+async function saveCardFacePair(faces, zipFilename) {
+  const files = faces.map(
+    (face) => new File([face.blob], face.filename, { type: 'image/png' }),
+  )
+
+  if (typeof navigator !== 'undefined' && typeof navigator.canShare === 'function') {
+    try {
+      if (navigator.canShare({ files })) {
+        await navigator.share({
+          files,
+          title: 'Carte de service GEACO — recto et verso',
+          text: 'Recto et verso de la carte de service',
+        })
+        return 'shared'
+      }
+    } catch (err) {
+      if (err?.name === 'AbortError') return 'cancelled'
+    }
+  }
+
+  const zip = new JSZip()
+  for (const face of faces) {
+    zip.file(face.filename, face.blob)
+  }
+  const zipBlob = await zip.generateAsync({ type: 'blob' })
+  const openedUrl = triggerBlobDownload(zipBlob, zipFilename)
 
   if (isLikelyIos()) {
-    window.open(url, '_blank', 'noopener')
+    window.open(openedUrl, '_blank', 'noopener')
   }
-  window.setTimeout(() => URL.revokeObjectURL(url), 60_000)
   return 'downloaded'
 }
 
@@ -320,8 +363,9 @@ export function ServiceCardsAdmin() {
     setMessage('')
     try {
       const pixelRatio = Math.min(3, Math.max(2, window.devicePixelRatio || 2))
-      const base = slugifyFilename(previewRow.card_matricule || previewRow.name)
-      let lastMode = 'downloaded'
+      const base = buildCardExportBase(previewRow)
+      const { displayName, identifier } = buildCardOwnerParts(previewRow)
+      const faces = []
 
       for (const node of nodes) {
         const face = node.getAttribute('data-card-face') || 'recto'
@@ -331,18 +375,31 @@ export function ServiceCardsAdmin() {
           backgroundColor: '#ffffff',
         })
         const blob = await (await fetch(dataUrl)).blob()
-        const filename = `geaco-carte-service-${base}-${face}.png`
-        lastMode = await savePngBlob(blob, filename)
-        if (lastMode === 'cancelled') break
+        faces.push({
+          face,
+          blob,
+          filename: `geaco-carte-${base}-${face}.png`,
+        })
       }
 
-      if (lastMode === 'shared') {
-        setMessage('PNG recto/verso prêts. Enregistrez via le menu de partage.')
-      } else if (lastMode === 'downloaded') {
+      if (faces.length < 2) {
+        throw new Error('Recto et verso introuvables dans l’aperçu.')
+      }
+
+      const mode = await saveCardFacePair(
+        faces,
+        `geaco-carte-${base}-recto-verso.zip`,
+      )
+
+      if (mode === 'shared') {
+        setMessage(
+          `PNG recto + verso prêts pour ${displayName} (${identifier}). Enregistrez via le menu de partage.`,
+        )
+      } else if (mode === 'downloaded') {
         setMessage(
           isLikelyIos()
-            ? 'PNG ouverts. Appui long → Enregistrer dans Photos (recto puis verso).'
-            : 'PNG recto et verso téléchargés.',
+            ? `ZIP ouvert : ${displayName} — recto + verso. Enregistrez le fichier.`
+            : `ZIP téléchargé : recto + verso pour ${displayName} (${identifier}).`,
         )
       }
     } catch (err) {
@@ -485,7 +542,7 @@ export function ServiceCardsAdmin() {
             onClick={exportPreviewPng}
             disabled={!previewRow || exportingPng}
           >
-            {exportingPng ? 'PNG…' : 'Télécharger PNG'}
+            {exportingPng ? 'PNG…' : 'PNG recto+verso'}
           </button>
           <button
             type="button"
@@ -520,7 +577,8 @@ export function ServiceCardsAdmin() {
       <p className="admin-muted">
         Import/export XLS (mêmes colonnes que le formulaire Google) : Nom, Post-nom, Prénom, Sexe,
         dates, photo (URL), fonction, département, téléphone/WhatsApp, groupe sanguin. Les fiches
-        importées sont créées en brouillon.
+        importées sont créées en brouillon. « PNG recto+verso » télécharge les deux faces ensemble
+        (ZIP nommé au titulaire / matricule).
       </p>
 
       <div className="service-cards-admin__layout">
@@ -761,7 +819,7 @@ export function ServiceCardsAdmin() {
                   onClick={exportPreviewPng}
                   disabled={exportingPng}
                 >
-                  {exportingPng ? 'PNG…' : 'PNG'}
+                  {exportingPng ? 'PNG…' : 'PNG recto+verso'}
                 </button>
                 <button type="button" className="btn btn--ghost" onClick={() => printCards('one')}>
                   Imprimer
