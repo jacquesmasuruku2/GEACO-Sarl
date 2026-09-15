@@ -3445,12 +3445,12 @@ html.site-header-topbar-hidden .site-topbar {
 }
 
 .admin-kpi-strip span {
-  border: 1px solid #d7e0ec;
-  border-radius: 999px;
-  padding: 0.35rem 0.7rem;
-  font-size: 0.8rem;
-  color: #475569;
-  background: #f7f9fc;
+  border: 1px solid var(--admin-line, #bdbdbd);
+  border-radius: var(--admin-radius-sm, 2px);
+  padding: 0.15rem 0.4rem;
+  font-size: 0.68rem;
+  color: #555;
+  background: #f7f7f7;
 }
 
 .admin-kpi-strip strong {
