@@ -85,7 +85,7 @@ export function resolveServiceCardData(row) {
     websiteDisplay: SITE_CONTACT.websiteDisplay,
     websiteUrl: SITE_CONTACT.websiteUrl,
     email: SITE_CONTACT.email,
-    phone: SITE_CONTACT.phonePrimaryDisplay,
+    phone: SITE_CONTACT.phoneSecondaryDisplay,
     officeAddress: SITE_CONTACT.offices.goma.address.replace(/\.\s*$/, ''),
   }
 }
