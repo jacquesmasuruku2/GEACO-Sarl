@@ -182,7 +182,7 @@ export function ServiceIdCard({ member, className = '' }) {
               />
             ) : null}
           </div>
-          <p className="service-id-card__sign-label">Signature autorisée</p>
+          <p className="service-id-card__sign-label">Sceau et signature</p>
           <p className="service-id-card__validity">Validité {data.validUntil}</p>
         </div>
       </div>
