@@ -5306,6 +5306,27 @@ a.personnel-profile__more {
   letter-spacing: 0.01em;
 }
 
+/* Recto : ancrer le texte d’assistance au-dessus du bord bas (PVC / PNG). */
+.service-id-card--front {
+  padding-bottom: 0;
+}
+
+.service-id-card--front .service-id-card__body {
+  padding-bottom: 2.15rem;
+}
+
+.service-id-card--front .service-id-card__footer {
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  bottom: 0.95rem;
+  margin: 0;
+  padding: 0;
+  z-index: 5;
+  line-height: 1.22;
+  font-size: clamp(0.48rem, 1.1vw, 0.58rem);
+}
+
 /* ——— Verso carte de service ——— */
 .service-id-card--back {
   display: flex;
@@ -5519,16 +5540,17 @@ a.personnel-profile__more {
   }
 
   .service-id-card--front .service-id-card__footer {
-    margin: 0 3.5mm 3.2mm;
-    padding-bottom: 0.5mm;
+    left: 3.2mm;
+    right: 3.2mm;
+    bottom: 4.2mm;
+    margin: 0;
+    padding: 0;
+    font-size: 2.35mm;
+    line-height: 1.25;
   }
 
   .service-id-card--front .service-id-card__body {
-    padding-bottom: 0;
-  }
-
-  .service-id-card--front .service-id-card__photo-col {
-    margin-bottom: 0.15rem;
+    padding-bottom: 9mm;
   }
 }
 
