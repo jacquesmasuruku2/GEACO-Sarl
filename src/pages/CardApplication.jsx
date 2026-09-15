@@ -28,10 +28,10 @@ export function CardApplication() {
         heroImage="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1800&q=80"
       />
 
-      <section className="section card-apply-page">
-        <div className="container card-apply-page__wrap">
+      <section className="section card-application-page">
+        <div className="container card-application-page__wrap">
           {merci ? (
-            <div className="card-apply-page__thanks">
+            <div className="card-application-page__thanks">
               <ContactThanksBanner
                 title={t('cardApplication.thanksTitle')}
                 body={t('cardApplication.thanksBody')}
@@ -41,7 +41,7 @@ export function CardApplication() {
             </div>
           ) : (
             <>
-              <header className="card-apply-page__head">
+              <header className="card-application-page__head">
                 <h2>{t('cardApplication.formTitle')}</h2>
                 <p>{t('cardApplication.formIntro')}</p>
                 <p className="form-note">{t('cardApplication.approvalNote')}</p>

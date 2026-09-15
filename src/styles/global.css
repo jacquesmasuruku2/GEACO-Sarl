@@ -6380,6 +6380,10 @@ a.personnel-profile__more {
   max-width: 40rem;
 }
 
+.card-application-page__thanks {
+  margin-bottom: 1.25rem;
+}
+
 .card-application-page__head {
   margin-bottom: 1.25rem;
 }

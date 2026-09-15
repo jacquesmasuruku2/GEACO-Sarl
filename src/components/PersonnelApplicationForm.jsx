@@ -288,7 +288,7 @@ export function PersonnelApplicationForm({ redirectTo = '/candidature-carte?merc
           {uploading ? t('cardApplication.uploading') : t('cardApplication.photoHint')}
         </span>
         {photoUrl ? (
-          <div className="card-apply-form__photo-preview">
+          <div className="card-application-page__photo-preview">
             <img src={photoUrl} alt="" />
           </div>
         ) : null}
