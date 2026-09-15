@@ -406,8 +406,19 @@ export function AdminPanel() {
   }
 
   function selectModule(id) {
+    if (id !== activeModuleId && typeof window.__geacoAdminLeaveGuard === 'function') {
+      if (!window.__geacoAdminLeaveGuard()) return
+    }
     setActiveModuleId(id)
     setNavOpen(false)
+  }
+
+  function goToSite(event) {
+    if (typeof window.__geacoAdminLeaveGuard === 'function' && !window.__geacoAdminLeaveGuard()) {
+      event.preventDefault()
+      return
+    }
+    allowUnloadRef.current = true
   }
 
   if (!isSupabaseConfigured || !supabase) {
@@ -531,7 +542,7 @@ export function AdminPanel() {
         </nav>
 
         <div className="admin-app__sidebar-foot">
-          <Link to="/" className="admin-app__side-link">
+          <Link to="/" className="admin-app__side-link" onClick={goToSite}>
             Voir le site
           </Link>
         </div>

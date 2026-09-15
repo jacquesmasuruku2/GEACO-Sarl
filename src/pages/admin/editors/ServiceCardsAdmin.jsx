@@ -74,6 +74,40 @@ function blankCardFields() {
   }
 }
 
+const CARD_EDIT_KEYS = [
+  'name',
+  'role',
+  'slug',
+  'photo_url',
+  'card_last_name',
+  'card_post_name',
+  'card_first_name',
+  'card_sex',
+  'card_birth_place',
+  'card_birth_date',
+  'card_matricule',
+  'card_department',
+  'card_address',
+  'card_signature_url',
+  'card_valid_until',
+]
+
+function snapshotCardFields(row) {
+  const snap = {}
+  for (const key of CARD_EDIT_KEYS) {
+    snap[key] = row?.[key] == null ? '' : String(row[key])
+  }
+  return snap
+}
+
+function isCardDirty(row, baseline) {
+  if (!row || !baseline) return false
+  return CARD_EDIT_KEYS.some((key) => {
+    const current = row[key] == null ? '' : String(row[key])
+    return current !== baseline[key]
+  })
+}
+
 export function ServiceCardsAdmin() {
   const [rows, setRows] = useState([])
   const [message, setMessage] = useState('')
@@ -84,6 +118,7 @@ export function ServiceCardsAdmin() {
   const [printMode, setPrintMode] = useState('one') // one | all
   const [exportingPng, setExportingPng] = useState(false)
   const previewStageRef = useRef(null)
+  const editBaselineRef = useRef(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -112,6 +147,54 @@ export function ServiceCardsAdmin() {
     () => rows.find((r) => r.id === previewId) ?? rows.find((r) => r.id === editingId) ?? rows[0] ?? null,
     [rows, previewId, editingId],
   )
+
+  const editingRow = useMemo(
+    () => (editingId ? rows.find((r) => r.id === editingId) ?? null : null),
+    [rows, editingId],
+  )
+
+  const editorDirty = Boolean(editingRow && isCardDirty(editingRow, editBaselineRef.current))
+
+  useEffect(() => {
+    if (!editingId) {
+      if (window.__geacoAdminLeaveGuard) delete window.__geacoAdminLeaveGuard
+      return undefined
+    }
+
+    window.__geacoAdminLeaveGuard = () => {
+      if (!editBaselineRef.current) return true
+      const row = rows.find((r) => r.id === editingId)
+      if (!row || !isCardDirty(row, editBaselineRef.current)) return true
+      return window.confirm(
+        'Des modifications de la carte ne sont pas enregistrées. Quitter l’édition ?',
+      )
+    }
+
+    function onBeforeUnload(event) {
+      const row = rows.find((r) => r.id === editingId)
+      if (!row || !isCardDirty(row, editBaselineRef.current)) return
+      event.preventDefault()
+      event.returnValue = ''
+    }
+
+    function onKeyDown(event) {
+      const key = String(event.key || '').toLowerCase()
+      const wantsRefresh = key === 'f5' || ((event.ctrlKey || event.metaKey) && key === 'r')
+      if (!wantsRefresh) return
+      const row = rows.find((r) => r.id === editingId)
+      if (!row || !isCardDirty(row, editBaselineRef.current)) return
+      event.preventDefault()
+      window.alert('Enregistrez la carte avant de rafraîchir la page.')
+    }
+
+    window.addEventListener('beforeunload', onBeforeUnload)
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      if (window.__geacoAdminLeaveGuard) delete window.__geacoAdminLeaveGuard
+      window.removeEventListener('beforeunload', onBeforeUnload)
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [editingId, rows])
 
   function updateLocal(id, patch) {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)))
@@ -154,10 +237,11 @@ export function ServiceCardsAdmin() {
     }
     setSavingId(null)
     setMessage('Données de carte enregistrées.')
+    editBaselineRef.current = snapshotCardFields({ ...row, slug })
     load()
   }
 
-  function ensureCardDefaults(row) {
+  function computeCardDefaults(row) {
     const patch = {}
     if (!row.card_last_name && !row.card_first_name && row.name) {
       const parts = String(row.name).trim().split(/\s+/)
@@ -175,13 +259,36 @@ export function ServiceCardsAdmin() {
       d.setFullYear(d.getFullYear() + 1)
       patch.card_valid_until = d.toISOString().slice(0, 10)
     }
-    if (Object.keys(patch).length) updateLocal(row.id, patch)
+    return patch
   }
 
   function openEditor(row) {
-    ensureCardDefaults(row)
+    if (editingId && editingId !== row.id) {
+      const current = rows.find((r) => r.id === editingId)
+      if (current && isCardDirty(current, editBaselineRef.current)) {
+        const ok = window.confirm(
+          'Des modifications de la carte ne sont pas enregistrées. Ouvrir une autre carte ?',
+        )
+        if (!ok) return
+      }
+    }
+    const patch = computeCardDefaults(row)
+    const next = { ...row, ...patch }
+    if (Object.keys(patch).length) updateLocal(row.id, patch)
+    editBaselineRef.current = snapshotCardFields(next)
     setEditingId(row.id)
     setPreviewId(row.id)
+  }
+
+  function closeEditor({ force = false } = {}) {
+    if (!force && editingRow && isCardDirty(editingRow, editBaselineRef.current)) {
+      const ok = window.confirm(
+        'Des modifications de la carte ne sont pas enregistrées. Fermer l’édition ?',
+      )
+      if (!ok) return
+    }
+    editBaselineRef.current = null
+    setEditingId(null)
   }
 
   function printCards(mode) {
@@ -343,8 +450,28 @@ export function ServiceCardsAdmin() {
           {rows
             .filter((row) => row.id === editingId)
             .map((row) => (
-              <div className="admin-card admin-card--tight" key={`card-edit-${row.id}`}>
-                <h3 style={{ marginTop: 0 }}>Édition carte — {row.name}</h3>
+              <form
+                className="admin-card admin-card--tight"
+                key={`card-edit-${row.id}`}
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  saveCard(row)
+                }}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter') return
+                  const tag = String(e.target?.tagName || '').toLowerCase()
+                  if (tag === 'textarea') return
+                  if (tag === 'input' || tag === 'select') e.preventDefault()
+                }}
+              >
+                <h3 style={{ marginTop: 0 }}>
+                  Édition carte — {row.name}
+                  {editorDirty ? (
+                    <span className="admin-muted" style={{ marginLeft: '0.5rem', fontWeight: 400 }}>
+                      (non enregistré)
+                    </span>
+                  ) : null}
+                </h3>
                 <div className="admin-grid">
                   <label>
                     Nom
@@ -456,9 +583,8 @@ export function ServiceCardsAdmin() {
                 </div>
                 <div className="admin-actions admin-actions--sticky">
                   <button
-                    type="button"
+                    type="submit"
                     className="btn btn--primary"
-                    onClick={() => saveCard(row)}
                     disabled={savingId === row.id}
                   >
                     {savingId === row.id ? 'Enregistrement…' : 'Enregistrer la carte'}
@@ -473,11 +599,11 @@ export function ServiceCardsAdmin() {
                   >
                     Réinitialiser champs carte
                   </button>
-                  <button type="button" className="btn btn--ghost" onClick={() => setEditingId(null)}>
+                  <button type="button" className="btn btn--ghost" onClick={() => closeEditor()}>
                     Fermer
                   </button>
                 </div>
-              </div>
+              </form>
             ))}
         </div>
 

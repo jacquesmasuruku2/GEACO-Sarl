@@ -245,8 +245,8 @@ export function ServiceIdCardBack({ member, className = '' }) {
       <div className="service-id-card__stripe" aria-hidden="true" />
 
       <p className="service-id-card__back-assist">
-        Les autorités tant civiles et militaires sont priées d’apporter assistance au porteur de la
-        présente en cas de nécessité.
+        Les autorités civiles et militaires sont priées d’apporter assistance au titulaire de la
+        présente carte.
       </p>
 
       <footer className="service-id-card__back-footer">
