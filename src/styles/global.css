@@ -4361,14 +4361,14 @@ html.site-header-topbar-hidden .site-topbar {
   }
 
   .service-id-card__header {
-    grid-template-columns: 3.2rem minmax(0, 1fr) 3.2rem;
+    grid-template-columns: 4.4rem minmax(0, 1fr) 3.2rem;
     gap: 0.3rem;
     padding: 0.4rem 0.45rem;
   }
 
   .service-id-card__logo {
-    width: 3.35rem;
-    height: 3.35rem;
+    width: 4.25rem;
+    height: 4.25rem;
   }
 
   .service-id-card__flag {
@@ -5052,7 +5052,7 @@ a.personnel-profile__more {
   z-index: 2;
   flex: 0 0 auto;
   display: grid;
-  grid-template-columns: 5.2rem minmax(0, 1fr) 4.6rem;
+  grid-template-columns: 6.4rem minmax(0, 1fr) 4.6rem;
   align-items: center;
   gap: 0.45rem;
   padding: 0.45rem 0.65rem;
@@ -5074,8 +5074,8 @@ a.personnel-profile__more {
 }
 
 .service-id-card__logo {
-  width: 4.35rem;
-  height: 4.35rem;
+  width: 5.75rem;
+  height: 5.75rem;
   object-fit: contain;
   background: transparent;
   border: none;
