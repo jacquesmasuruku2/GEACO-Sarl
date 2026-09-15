@@ -5,6 +5,11 @@ import { ImagePickerField } from '../../../components/admin/ImagePickerField'
 import { ServiceIdCard, ServiceIdCardBack, resolveServiceCardData } from '../../../components/admin/ServiceIdCard'
 import { SITE_CONTACT } from '../../../data/siteContact'
 import { slugifyPersonnel } from '../../../lib/personnelSlug'
+import {
+  downloadPersonnelXls,
+  parsePersonnelXls,
+  personnelToXlsRow,
+} from '../../../lib/personnelCardXls'
 
 function slugifyFilename(value) {
   return (
@@ -69,6 +74,8 @@ function blankCardFields() {
     card_matricule: '',
     card_department: '',
     card_address: SITE_CONTACT.offices.goma.shortAddress,
+    card_phone: '',
+    card_blood_group: '',
     card_signature_url: '',
     card_valid_until: '',
   }
@@ -88,6 +95,8 @@ const CARD_EDIT_KEYS = [
   'card_matricule',
   'card_department',
   'card_address',
+  'card_phone',
+  'card_blood_group',
   'card_signature_url',
   'card_valid_until',
 ]
@@ -117,8 +126,10 @@ export function ServiceCardsAdmin() {
   const [savingId, setSavingId] = useState(null)
   const [printMode, setPrintMode] = useState('one') // one | all
   const [exportingPng, setExportingPng] = useState(false)
+  const [xlsBusy, setXlsBusy] = useState(false)
   const previewStageRef = useRef(null)
   const editBaselineRef = useRef(null)
+  const xlsInputRef = useRef(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -222,6 +233,8 @@ export function ServiceCardsAdmin() {
         card_matricule: row.card_matricule?.trim() || null,
         card_department: row.card_department?.trim() || null,
         card_address: row.card_address?.trim() || null,
+        card_phone: row.card_phone?.trim() || null,
+        card_blood_group: row.card_blood_group?.trim() || null,
         card_signature_url: row.card_signature_url?.trim() || null,
         card_valid_until: row.card_valid_until || null,
       })
@@ -230,7 +243,7 @@ export function ServiceCardsAdmin() {
       setSavingId(null)
       setError(
         upErr.message.includes('card_') || upErr.message.includes('slug')
-          ? `${upErr.message} — Appliquez les migrations 017–019 (cartes / slug) dans Supabase.`
+          ? `${upErr.message} — Appliquez les migrations 017–019 / 025 (cartes) dans Supabase.`
           : upErr.message,
       )
       return
@@ -343,6 +356,93 @@ export function ServiceCardsAdmin() {
     }
   }
 
+  function exportXls() {
+    downloadPersonnelXls(
+      rows.map(personnelToXlsRow),
+      `geaco-cartes-personnel-${new Date().toISOString().slice(0, 10)}.xlsx`,
+    )
+    setMessage(
+      rows.length ? `${rows.length} fiche(s) exportée(s) en XLS.` : 'Modèle XLS téléchargé.',
+    )
+  }
+
+  function downloadXlsTemplate() {
+    downloadPersonnelXls([], 'geaco-modele-personnel-cartes.xlsx')
+    setMessage('Modèle XLS téléchargé.')
+  }
+
+  async function importXlsFile(file) {
+    if (!file || !supabase) return
+    setXlsBusy(true)
+    setError('')
+    setMessage('')
+    try {
+      const buffer = await file.arrayBuffer()
+      const { rows: parsed, errors: parseErrors } = parsePersonnelXls(buffer)
+      if (!parsed.length) {
+        setError(
+          parseErrors.length
+            ? parseErrors.slice(0, 5).join(' ')
+            : 'Aucune ligne valide à importer.',
+        )
+        setXlsBusy(false)
+        return
+      }
+
+      const validUntil = new Date()
+      validUntil.setFullYear(validUntil.getFullYear() + 1)
+      const validUntilStr = validUntil.toISOString().slice(0, 10)
+
+      const payload = parsed.map((r, i) => {
+        const displayName = [r.last_name, r.post_name, r.first_name].filter(Boolean).join(' ').trim()
+        const slugBase = slugifyPersonnel(displayName)
+        return {
+          section_order: 90,
+          section_title: 'Équipe',
+          name: displayName || 'Nouveau membre',
+          slug: `${slugBase}-${Date.now().toString(36).slice(-4)}${i}`,
+          role: r.role,
+          focus: r.department || null,
+          photo_url: r.photo_url || null,
+          email: r.email || null,
+          sort_order: i,
+          locale: 'fr',
+          published: false,
+          card_last_name: r.last_name,
+          card_post_name: r.post_name,
+          card_first_name: r.first_name,
+          card_sex: r.sex,
+          card_birth_place: r.birth_place,
+          card_birth_date: r.birth_date,
+          card_department: r.department,
+          card_address: SITE_CONTACT.offices.goma.shortAddress,
+          card_phone: r.phone,
+          card_blood_group: r.blood_group,
+          card_valid_until: validUntilStr,
+        }
+      })
+
+      const { error: insErr } = await supabase.from('site_personnel').insert(payload)
+      if (insErr) {
+        setError(
+          insErr.message.includes('card_blood') || insErr.message.includes('card_phone')
+            ? `${insErr.message} — Appliquez la migration 025 dans Supabase.`
+            : insErr.message,
+        )
+        setXlsBusy(false)
+        return
+      }
+
+      const warn = parseErrors.length ? ` (${parseErrors.length} ligne(s) ignorée(s))` : ''
+      setMessage(`${payload.length} fiche(s) créée(s) en brouillon depuis le XLS${warn}.`)
+      load()
+    } catch (err) {
+      setError(err?.message || 'Import XLS impossible.')
+    } finally {
+      setXlsBusy(false)
+    }
+  }
+
   function isPhotoUrl(url) {
     return String(url ?? '').trim().startsWith('http')
   }
@@ -353,7 +453,32 @@ export function ServiceCardsAdmin() {
     <section className="admin-section service-cards-admin">
       <div className="admin-section__head">
         <h2>Cartes de service</h2>
-        <div className="admin-dashboard__actions">
+        <div className="admin-dashboard__actions admin-xls-actions">
+          <button type="button" className="btn btn--outline" onClick={downloadXlsTemplate} disabled={xlsBusy}>
+            Modèle XLS
+          </button>
+          <button type="button" className="btn btn--outline" onClick={exportXls} disabled={xlsBusy || !rows.length}>
+            Exporter XLS
+          </button>
+          <button
+            type="button"
+            className="btn btn--outline"
+            disabled={xlsBusy}
+            onClick={() => xlsInputRef.current?.click()}
+          >
+            {xlsBusy ? 'Import…' : 'Importer XLS'}
+          </button>
+          <input
+            ref={xlsInputRef}
+            type="file"
+            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+            className="visually-hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              e.target.value = ''
+              if (file) importXlsFile(file)
+            }}
+          />
           <button
             type="button"
             className="btn btn--primary"
@@ -393,9 +518,9 @@ export function ServiceCardsAdmin() {
       ) : null}
 
       <p className="admin-muted">
-        Chaque carte a un recto (identité) et un verso (QR, contacts, laissez-passer, expiration). Sur
-        téléphone : « Télécharger PNG » exporte les deux faces. Sur ordinateur : PNG ou impression /
-        PDF.
+        Import/export XLS (mêmes colonnes que le formulaire Google) : Nom, Post-nom, Prénom, Sexe,
+        dates, photo (URL), fonction, département, téléphone/WhatsApp, groupe sanguin. Les fiches
+        importées sont créées en brouillon.
       </p>
 
       <div className="service-cards-admin__layout">
@@ -522,6 +647,24 @@ export function ServiceCardsAdmin() {
                       type="date"
                       value={row.card_birth_date ? String(row.card_birth_date).slice(0, 10) : ''}
                       onChange={(e) => updateLocal(row.id, { card_birth_date: e.target.value })}
+                    />
+                  </label>
+                  <label>
+                    Groupe sanguin
+                    <input
+                      value={row.card_blood_group ?? ''}
+                      onChange={(e) => updateLocal(row.id, { card_blood_group: e.target.value })}
+                      placeholder="Ex. O+"
+                      maxLength={20}
+                    />
+                  </label>
+                  <label>
+                    Téléphone / WhatsApp
+                    <input
+                      value={row.card_phone ?? ''}
+                      onChange={(e) => updateLocal(row.id, { card_phone: e.target.value })}
+                      placeholder="+243 …"
+                      maxLength={60}
                     />
                   </label>
                   <label className="admin-span-2">

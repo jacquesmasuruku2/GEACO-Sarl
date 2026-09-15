@@ -1,6 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { supabase } from '../../../lib/supabase'
 import { slugifyPersonnel } from '../../../lib/personnelSlug'
+import {
+  applicationToXlsRow,
+  downloadPersonnelXls,
+  parsePersonnelXls,
+} from '../../../lib/personnelCardXls'
 
 function formatWhen(iso) {
   if (!iso) return '—'
@@ -501,6 +506,8 @@ export function PersonnelApplicationsAdmin() {
   const [openId, setOpenId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [busyId, setBusyId] = useState(null)
+  const [xlsBusy, setXlsBusy] = useState(false)
+  const fileInputRef = useRef(null)
 
   const load = useCallback(async () => {
     if (!supabase) return
@@ -527,6 +534,80 @@ export function PersonnelApplicationsAdmin() {
   useEffect(() => {
     load()
   }, [load])
+
+  function exportXls() {
+    downloadPersonnelXls(
+      rows.map(applicationToXlsRow),
+      `geaco-candidatures-cartes-${new Date().toISOString().slice(0, 10)}.xlsx`,
+    )
+    setMessage(
+      rows.length
+        ? `${rows.length} candidature(s) exportée(s).`
+        : 'Modèle XLS téléchargé (fichier vide).',
+    )
+  }
+
+  function downloadTemplate() {
+    downloadPersonnelXls([], 'geaco-modele-personnel-cartes.xlsx')
+    setMessage('Modèle XLS téléchargé.')
+  }
+
+  async function importXlsFile(file) {
+    if (!file || !supabase) return
+    setXlsBusy(true)
+    setError('')
+    setMessage('')
+    try {
+      const buffer = await file.arrayBuffer()
+      const { rows: parsed, errors: parseErrors } = parsePersonnelXls(buffer)
+      if (!parsed.length) {
+        setError(
+          parseErrors.length
+            ? parseErrors.slice(0, 5).join(' ')
+            : 'Aucune ligne valide à importer.',
+        )
+        setXlsBusy(false)
+        return
+      }
+
+      const payload = parsed.map((r) => ({
+        locale: 'fr',
+        status: 'pending',
+        last_name: r.last_name,
+        post_name: r.post_name,
+        first_name: r.first_name,
+        sex: r.sex,
+        birth_place: r.birth_place,
+        birth_date: r.birth_date,
+        role: r.role,
+        department: r.department,
+        email: r.email,
+        phone: r.phone,
+        photo_url: r.photo_url,
+        blood_group: r.blood_group,
+        notes: 'Import XLS admin',
+      }))
+
+      const { error: insErr } = await supabase.from('site_personnel_applications').insert(payload)
+      if (insErr) {
+        setError(
+          insErr.message.includes('blood_group')
+            ? `${insErr.message} — Appliquez la migration 025 (groupe sanguin) dans Supabase.`
+            : insErr.message,
+        )
+        setXlsBusy(false)
+        return
+      }
+
+      const warn = parseErrors.length ? ` (${parseErrors.length} ligne(s) ignorée(s))` : ''
+      setMessage(`${payload.length} candidature(s) importée(s) en attente${warn}.`)
+      load()
+    } catch (err) {
+      setError(err?.message || 'Import XLS impossible.')
+    } finally {
+      setXlsBusy(false)
+    }
+  }
 
   async function removeRow(id) {
     if (!supabase) return
@@ -602,6 +683,8 @@ export function PersonnelApplicationsAdmin() {
         card_birth_date: row.birth_date || null,
         card_department: row.department || null,
         card_address: row.address || null,
+        card_phone: row.phone || null,
+        card_blood_group: row.blood_group || null,
         card_valid_until: validUntil.toISOString().slice(0, 10),
       })
       .select('id')
@@ -610,8 +693,10 @@ export function PersonnelApplicationsAdmin() {
     if (insErr) {
       setBusyId(null)
       setError(
-        insErr.message.includes('slug') || insErr.message.includes('card_')
-          ? `${insErr.message} — Vérifiez les migrations personnel / cartes.`
+        insErr.message.includes('slug') ||
+          insErr.message.includes('card_') ||
+          insErr.message.includes('blood')
+          ? `${insErr.message} — Vérifiez les migrations personnel / cartes (025 pour groupe sanguin).`
           : insErr.message,
       )
       return
@@ -647,9 +732,36 @@ export function PersonnelApplicationsAdmin() {
           Candidatures cartes ({rows.length}
           {pendingCount ? ` · ${pendingCount} en attente` : ''})
         </h2>
-        <button type="button" className="btn btn--ghost" onClick={load} disabled={loading}>
-          {loading ? 'Chargement…' : 'Actualiser'}
-        </button>
+        <div className="admin-dashboard__actions admin-xls-actions">
+          <button type="button" className="btn btn--ghost" onClick={load} disabled={loading}>
+            {loading ? 'Chargement…' : 'Actualiser'}
+          </button>
+          <button type="button" className="btn btn--outline" onClick={downloadTemplate} disabled={xlsBusy}>
+            Modèle XLS
+          </button>
+          <button type="button" className="btn btn--outline" onClick={exportXls} disabled={xlsBusy}>
+            Exporter XLS
+          </button>
+          <button
+            type="button"
+            className="btn btn--primary"
+            disabled={xlsBusy}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            {xlsBusy ? 'Import…' : 'Importer XLS'}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
+            className="visually-hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              e.target.value = ''
+              if (file) importXlsFile(file)
+            }}
+          />
+        </div>
       </div>
 
       {message ? (
@@ -664,8 +776,9 @@ export function PersonnelApplicationsAdmin() {
       ) : null}
 
       <p className="admin-muted">
-        Formulaire public partageable : <code>/candidature-carte</code>. Approuver crée une fiche Équipe
-        (non publiée) préremplie pour la carte de service.
+        Formulaire public : <code>/candidature-carte</code>. Import/export XLS (Nom, Post-nom, Prénom,
+        Sexe, dates, photo URL, fonction, département, téléphone, groupe sanguin). La colonne photo
+        attend une URL http(s), pas une image embarquée.
       </p>
 
       <div className="admin-compact-list">
@@ -683,6 +796,7 @@ export function PersonnelApplicationsAdmin() {
                   <p>
                     {row.role}
                     {row.email ? ` · ${row.email}` : ''}
+                    {row.blood_group ? ` · ${row.blood_group}` : ''}
                   </p>
                   <p className={`admin-status-pill ${status === 'approved' ? 'is-live' : 'is-draft'}`}>
                     {applicationStatusLabel(status)} · {formatWhen(row.created_at)}
@@ -764,6 +878,10 @@ export function PersonnelApplicationsAdmin() {
               <dd>{openRow.department || '—'}</dd>
             </div>
             <div>
+              <dt>Groupe sanguin</dt>
+              <dd>{openRow.blood_group || '—'}</dd>
+            </div>
+            <div>
               <dt>Adresse</dt>
               <dd>{openRow.address || '—'}</dd>
             </div>
@@ -774,7 +892,7 @@ export function PersonnelApplicationsAdmin() {
               </dd>
             </div>
             <div>
-              <dt>Téléphone</dt>
+              <dt>Téléphone / WhatsApp</dt>
               <dd>{openRow.phone || '—'}</dd>
             </div>
           </dl>

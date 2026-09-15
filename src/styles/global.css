@@ -3321,6 +3321,11 @@ html.site-header-topbar-hidden .site-topbar {
   gap: 0.45rem;
 }
 
+.admin-xls-actions {
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
 .admin-dashboard__actions .btn {
   min-width: 104px;
 }

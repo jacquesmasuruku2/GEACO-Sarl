@@ -64,6 +64,7 @@ export function PersonnelApplicationForm({
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [photoUrl, setPhotoUrl] = useState('')
+  const [bloodGroup, setBloodGroup] = useState('')
   const [notes, setNotes] = useState('')
 
   if (!isSupabaseConfigured || !supabase) {
@@ -133,12 +134,13 @@ export function PersonnelApplicationForm({
       email: mail,
       phone: trimOrNull(phone),
       photo_url: trimOrNull(photoUrl),
+      blood_group: trimOrNull(bloodGroup),
       notes: trimOrNull(notes),
     })
     setBusy(false)
     if (insErr) {
       setError(
-        insErr.message.includes('site_personnel_applications')
+        insErr.message.includes('site_personnel_applications') || insErr.message.includes('blood_group')
           ? `${insErr.message} — ${t('cardApplication.migrationHint')}`
           : insErr.message || t('forms.formErrorSend'),
       )
@@ -316,6 +318,17 @@ export function PersonnelApplicationForm({
         />
       </GformQuestion>
 
+      <GformQuestion id="card-apply-blood" label={t('cardApplication.bloodGroup')}>
+        <input
+          id="card-apply-blood"
+          className="gform-input"
+          value={bloodGroup}
+          onChange={(e) => setBloodGroup(e.target.value)}
+          maxLength={20}
+          placeholder={t('cardApplication.bloodGroupPlaceholder')}
+        />
+      </GformQuestion>
+
       <GformQuestion
         id="card-apply-photo"
         label={t('cardApplication.photo')}
@@ -394,6 +407,7 @@ export function PersonnelApplicationForm({
             setEmail('')
             setPhone('')
             setPhotoUrl('')
+            setBloodGroup('')
             setNotes('')
             setConsent(false)
             setError('')
