@@ -327,7 +327,7 @@ html.site-header-topbar-hidden .site-topbar {
 }
 
 .site-logo__image {
-  width: clamp(58px, 10vw, 82px);
+  width: clamp(90px, 14vw, 140px);
   height: auto;
   display: block;
 }

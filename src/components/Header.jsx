@@ -129,7 +129,7 @@ export function Header() {
       </div>
       <div className="site-header__inner">
         <NavLink to="/" className="site-logo" onClick={closeAll}>
-          <img className="site-logo__image" src="/geaco-logo-transparent.png" alt={t('brand.long')} />
+          <img className="site-logo__image" src="/banniere.png" alt={t('brand.long')} />
         </NavLink>
 
         <nav className="nav-desktop" aria-label="Principal">

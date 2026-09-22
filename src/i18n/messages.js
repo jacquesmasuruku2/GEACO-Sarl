@@ -10,7 +10,7 @@ export const messages = {
       long: "Groupe d'études agronomiques et de construction",
     },
     header: {
-      regionLine: 'République démocratique du Congo · Nord-Kivu',
+      regionLine: "Groupe d'Etudes Agronomiques et de Construction",
     },
     nav: {
       home: 'accueil',
