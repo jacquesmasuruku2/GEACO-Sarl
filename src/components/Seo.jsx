@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-const DEFAULT_OG = '/favicon.svg'
+const DEFAULT_OG = '/geaco-logo-transparent.png'
 
 /**
  * Balises SEO par page — titres et descriptions traduits via clés i18n.

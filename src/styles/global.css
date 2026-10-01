@@ -327,7 +327,7 @@ html.site-header-topbar-hidden .site-topbar {
 }
 
 .site-logo__image {
-  width: clamp(90px, 14vw, 140px);
+  width: clamp(48px, 5vw, 58px);
   height: auto;
   display: block;
 }
@@ -8068,8 +8068,9 @@ a.personnel-profile__more {
 }
 
 .blog-comments {
-  padding-top: 0.85rem;
-  border-top: 1px solid #e8edf3;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
   scroll-margin-top: 5.5rem;
 }
 
@@ -8077,21 +8078,28 @@ a.personnel-profile__more {
   outline: none;
 }
 
+.blog-comments__title {
+  margin: 0 0 0.85rem;
+  color: var(--color-vinci-blue-dark);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
 .blog-comments-list {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-top: 1px solid var(--color-border);
 }
 
 .blog-comment-item {
   display: block;
-  padding: 0.75rem 0;
-  border: none;
-  border-bottom: 1px solid #eef2f6;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
+  min-width: 0;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .blog-comment-item:last-child {
@@ -8099,45 +8107,53 @@ a.personnel-profile__more {
 }
 
 .blog-comment-item__meta {
-  margin: 0 0 0.25rem;
-  color: #64748b;
-  font-size: 0.88rem;
-  font-weight: 400;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.75rem;
+  margin: 0 0 0.35rem;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
   line-height: 1.4;
 }
 
 .blog-comment-item__name {
-  color: #0a1628;
-  font-weight: 400;
+  color: var(--color-vinci-blue-dark);
+  font-weight: 700;
 }
 
 .blog-comment-item__text {
   margin: 0;
-  color: #334155;
+  color: var(--color-text);
   font-size: 0.95rem;
-  font-weight: 400;
   line-height: 1.55;
   white-space: pre-wrap;
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .blog-comments__compose {
-  margin-top: 0.25rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid #e8edf3;
+  margin-top: 0.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.blog-comments__form-title {
+  margin: 0 0 0.35rem;
+  color: var(--color-vinci-blue-dark);
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  font-weight: 650;
 }
 
 .blog-comments__compose-hint {
-  margin: 0 0 0.65rem;
-  color: #7a8fa8;
+  margin: 0 0 0.8rem;
+  color: var(--color-text-muted);
   font-size: 0.88rem;
-  font-weight: 400;
 }
 
 .blog-comments__form {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.55rem;
   margin: 0;
   padding: 0;
   border: none;
@@ -8145,28 +8161,27 @@ a.personnel-profile__more {
 }
 
 .blog-comments__form label {
-  font-weight: 400;
+  font-weight: 600;
   font-size: 0.88rem;
-  color: #334155;
+  color: var(--color-text);
 }
 
 .blog-comments__form textarea {
   width: 100%;
-  min-height: 5.5rem;
-  padding: 0.6rem 0.7rem;
-  border: 1px solid #d0dbe8;
+  min-height: 6rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font: inherit;
-  font-weight: 400;
   line-height: 1.5;
   resize: vertical;
-  background: #fff;
+  background: var(--color-bg);
 }
 
 .blog-comments__form textarea:focus {
   outline: none;
-  border-color: #94a3b8;
-  box-shadow: none;
+  border-color: var(--color-vinci-blue);
+  box-shadow: 0 0 0 3px rgba(0, 91, 163, 0.12);
 }
 
 .blog-comments__form-actions {
@@ -10325,22 +10340,30 @@ a.personnel-profile__more {
 
 .project-article__hero {
   position: relative;
-  min-height: min(52vh, 420px);
+  height: clamp(15rem, 42vw, 32rem);
   background: #0a1628;
   overflow: hidden;
 }
 
 .project-article__hero--plain {
+  height: auto;
   min-height: 8rem;
   background: linear-gradient(120deg, #0a1628, #0038a8);
 }
 
 .project-article__hero img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  min-height: min(52vh, 420px);
   object-fit: cover;
   display: block;
+}
+
+@media (max-width: 640px) {
+  .project-article__hero {
+    height: clamp(15rem, 72vw, 24rem);
+  }
 }
 
 .project-article__hero-veil {

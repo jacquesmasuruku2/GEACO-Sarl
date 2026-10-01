@@ -356,10 +356,15 @@ export function BlogPost() {
               )}
             </div>
 
-            <div className="blog-comments" id="commentaires" tabIndex={-1}>
-              <p className="blog-section-label">
+            <section
+              className="blog-comments"
+              id="commentaires"
+              tabIndex={-1}
+              aria-labelledby="blog-comments-title"
+            >
+              <h2 className="blog-comments__title" id="blog-comments-title">
                 {String(t('blog.commentsCountTitle')).replace('{count}', String(comments.length))}
-              </p>
+              </h2>
 
               <div className="blog-comments-list">
                 {comments.map((comment) => {
@@ -377,7 +382,8 @@ export function BlogPost() {
                   return (
                     <article key={comment.id} className="blog-comment-item">
                       <p className="blog-comment-item__meta">
-                        <span className="blog-comment-item__name">{name} :</span> {when}
+                        <span className="blog-comment-item__name">{name}</span>
+                        <time dateTime={comment.created_at}>{when}</time>
                       </p>
                       <p className="blog-comment-item__text">{comment.comment}</p>
                     </article>
@@ -389,7 +395,7 @@ export function BlogPost() {
               </div>
 
               <div className="blog-comments__compose">
-                <p className="blog-section-label">{t('blog.commentFormTitle')}</p>
+                <h3 className="blog-comments__form-title">{t('blog.commentFormTitle')}</h3>
                 <p className="blog-comments__compose-hint">{t('blog.memberToComment')}</p>
                 <form onSubmit={submitComment} className="blog-comments__form">
                   <label htmlFor="blog-comment-text">{t('blog.commentLabel')}</label>
@@ -401,13 +407,13 @@ export function BlogPost() {
                     placeholder={t('blog.commentPlaceholder')}
                   />
                   <div className="blog-comments__form-actions">
-                    <button type="submit" className="btn btn--outline" disabled={busy}>
+                    <button type="submit" className="btn btn--primary" disabled={busy}>
                       {busy ? t('forms.formSending') : t('blog.publishComment')}
                     </button>
                   </div>
                 </form>
               </div>
-            </div>
+            </section>
           </section>
           <BlogShareBar articleTitle={row.title} />
           <p style={{ marginTop: '2rem' }}>
