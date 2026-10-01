@@ -42,19 +42,26 @@ export function Services() {
           </div>
 
           <div className="service-hub-list">
-            {SERVICE_ROUTES.map(({ slug, detailKey }) => {
+            {SERVICE_ROUTES.map(({ slug, detailKey, image, imageAlt }) => {
               const title = serviceNavLabel(detailKey, t)
               const short = t(`services.${detailKey}.short`)
               const lead = String(short).length > 200 ? `${String(short).slice(0, 197)}…` : short
               return (
                 <article className={`service-hub-row ${PILLAR_TONE[detailKey] || ''}`} key={slug}>
-                  <div className="service-hub-row__icon" aria-hidden="true">
-                    <PillarIcon name={PILLAR_ICON[detailKey] || 'agriculture'} />
-                  </div>
+                  <Link
+                    className="service-hub-row__media"
+                    to={`/domaines/${slug}`}
+                    aria-label={`${t('services.hub.cardCta')}: ${title}`}
+                  >
+                    <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+                  </Link>
                   <div className="service-hub-row__body">
+                    <div className="service-hub-row__icon" aria-hidden="true">
+                      <PillarIcon name={PILLAR_ICON[detailKey] || 'agriculture'} />
+                    </div>
                     <h3>{title}</h3>
                     <p>{lead}</p>
-                    <Link className="service-hub-row__link" to={`/services/${slug}`}>
+                    <Link className="service-hub-row__link" to={`/domaines/${slug}`}>
                       {t('services.hub.cardCta')}
                     </Link>
                   </div>

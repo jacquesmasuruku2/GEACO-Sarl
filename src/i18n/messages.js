@@ -50,6 +50,9 @@ export const messages = {
       pillarsLead:
         'Une architecture claire pour orienter partenaires et clients institutionnels vers le bon domaine, du diagnostic à la mise en œuvre.',
       pillarsCta: 'Explorer ce domaine',
+      trainingKicker: 'Renforcement des capacités',
+      trainingTitle: 'Formations offertes',
+      trainingLead: 'Découvrez les prochaines sessions ouvertes à l’inscription.',
       integratedTitle: 'Une approche intégrée',
       integratedLead:
         'Agriculture, infrastructures et eau se renforcent : produire durablement suppose des accès, des ouvrages et un service WASH fiable.',
@@ -1216,6 +1219,9 @@ export const messages = {
       pillarsLead:
         'A clear architecture so partners and institutional clients quickly reach the right domain—from diagnostics to delivery.',
       pillarsCta: 'Explore this domain',
+      trainingKicker: 'Capacity building',
+      trainingTitle: 'Training programmes',
+      trainingLead: 'Explore the upcoming sessions currently open for applications.',
       integratedTitle: 'An integrated approach',
       integratedLead:
         'Agriculture, infrastructure and water reinforce each other: sustainable production needs access, works and a reliable WASH service.',

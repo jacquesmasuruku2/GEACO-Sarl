@@ -2,7 +2,7 @@ import { Navigate, useParams, Link } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
-import { detailKeyFromSlug, isValidServiceSlug, SERVICE_SLUG_REDIRECTS } from '../data/servicesNav'
+import { detailKeyFromSlug, isValidServiceSlug, SERVICE_ROUTES, SERVICE_SLUG_REDIRECTS } from '../data/servicesNav'
 import { serviceKeyFromDetailKey } from '../lib/serviceDbKeys'
 import { useSiteServiceContent } from '../hooks/useSiteServiceContent'
 import { pickNonEmptyString, pickSections } from '../lib/mergePublishedContent'
@@ -37,7 +37,7 @@ export function ServiceDetail() {
   const { row: contentRow } = useSiteServiceContent(dbKey)
 
   if (redirectSlug) {
-    return <Navigate to={`/services/${redirectSlug}`} replace />
+    return <Navigate to={`/domaines/${redirectSlug}`} replace />
   }
 
   if (!valid || !dk) {
@@ -52,8 +52,9 @@ export function ServiceDetail() {
   const i18nSections = t(`${base}.sections`)
   const sections = pickSections(contentRow?.sections, Array.isArray(i18nSections) ? i18nSections : [])
   const heroFromDb = pickNonEmptyString(contentRow?.hero_image_url, '')
-  const heroRaw = heroFromDb || t(`${base}.heroImage`)
-  const heroImage = typeof heroRaw === 'string' && heroRaw.startsWith('http') ? heroRaw : undefined
+  const domainImage = SERVICE_ROUTES.find((route) => route.detailKey === dk)?.image
+  const heroRaw = heroFromDb || domainImage || t(`${base}.heroImage`)
+  const heroImage = typeof heroRaw === 'string' && /^(https?:\/\/|\/)/i.test(heroRaw) ? heroRaw : undefined
   const deliverables = t(`${base}.deliverables`)
   const safeDeliverables = Array.isArray(deliverables) ? deliverables : []
   const approachTitle = t(`${base}.approachTitle`)
@@ -89,10 +90,10 @@ export function ServiceDetail() {
 
   return (
     <>
-      <Seo title={metaTitle} description={metaDesc} path={`/services/${slug}`} />
+      <Seo title={metaTitle} description={metaDesc} path={`/domaines/${slug}`} />
 
       <PageHero
-        className={dk === 'agriculture' ? 'page-hero--agriculture' : ''}
+        className={`page-hero--domain${dk === 'agriculture' ? ' page-hero--agriculture' : ''}`}
         breadcrumbItems={[
           { href: '/', label: t('nav.home') },
           { href: '/domaines', label: t('nav.solutions') },

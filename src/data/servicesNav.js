@@ -3,9 +3,30 @@
  * Solution Café est un projet agricole → /projets/solution-cafe
  */
 export const SERVICE_ROUTES = [
-  { slug: 'agriculture', detailKey: 'agriculture', pillar: 'ag', dbKey: 'agronomie' },
-  { slug: 'construction', detailKey: 'construction', pillar: 'civil', dbKey: 'civil' },
-  { slug: 'wash', detailKey: 'wash', pillar: 'wash', dbKey: 'hydro' },
+  {
+    slug: 'agriculture',
+    detailKey: 'agriculture',
+    pillar: 'ag',
+    dbKey: 'agronomie',
+    image: '/media/geaco/Agriculture.png',
+    imageAlt: 'Cultures agricoles en plein champ',
+  },
+  {
+    slug: 'construction',
+    detailKey: 'construction',
+    pillar: 'civil',
+    dbKey: 'civil',
+    image: '/media/geaco/geaco-construction-hero.png',
+    imageAlt: 'Chantier de construction et infrastructure',
+  },
+  {
+    slug: 'wash',
+    detailKey: 'wash',
+    pillar: 'wash',
+    dbKey: 'hydro',
+    image: '/media/geaco/eha.jpg',
+    imageAlt: 'Eau, hygiène et assainissement (EHA)',
+  },
 ]
 
 /** Anciennes URLs services → nouvelles. */

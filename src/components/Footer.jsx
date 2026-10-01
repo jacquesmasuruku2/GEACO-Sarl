@@ -47,7 +47,7 @@ export function Footer() {
           <ul>
             {PILLAR_ROUTES.map(({ slug, detailKey }) => (
               <li key={slug}>
-                <Link to={`/services/${slug}`}>
+                <Link to={`/domaines/${slug}`}>
                   {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
                 </Link>
               </li>

@@ -169,7 +169,7 @@ export function Header() {
                 <Link
                   key={slug}
                   className="nav-dropdown__link"
-                  to={`/services/${slug}`}
+                  to={`/domaines/${slug}`}
                   role="menuitem"
                 >
                   {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
@@ -296,7 +296,7 @@ export function Header() {
                 {navLabel('nav.solutions')}
               </NavLink>
               {SERVICE_ROUTES.map(({ slug, detailKey }) => (
-                <NavLink key={slug} to={`/services/${slug}`} onClick={closeAll}>
+                <NavLink key={slug} to={`/domaines/${slug}`} onClick={closeAll}>
                   {formatNavLabel(serviceNavLabel(detailKey, t), locale)}
                 </NavLink>
               ))}

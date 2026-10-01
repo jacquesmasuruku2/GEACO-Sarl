@@ -4,35 +4,33 @@ import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PillarIcon } from '../components/PillarIcon'
 import { PILLAR_ROUTES } from '../data/servicesNav'
+import { useSiteFormations } from '../hooks/useSiteFormations'
 import { useSitePartners } from '../hooks/useSitePartners'
+import { formatFormationDate, formationPath } from '../lib/formationDisplay'
+import { isFormationRegistrationOpen } from '../lib/formationStatus'
 
 const PILLAR_META = {
   agriculture: {
     icon: 'agriculture',
     className: 'pillar-card--agriculture',
-    image: '/media/geaco/Agriculture.png',
-    imageAlt: 'Rangées de cultures dans un champ agricole',
-    href: '/services/agriculture',
+    href: '/domaines/agriculture',
   },
   construction: {
     icon: 'construction',
     className: 'pillar-card--construction',
-    image: '/media/geaco/geaco-construction-hero.png',
-    imageAlt: 'Travaux de construction et infrastructures',
-    href: '/services/construction',
+    href: '/domaines/construction',
   },
   wash: {
     icon: 'wash',
     className: 'pillar-card--wash',
-    image: '/media/geaco/geaco-24.jpeg',
-    imageAlt: 'Activité de terrain liée à l’eau et à l’hydraulique',
-    href: '/services/wash',
+    href: '/domaines/wash',
   },
 }
 
 export function Home() {
   const { t, locale } = useI18n()
   const { rows: partners } = useSitePartners()
+  const { rows: formationRows, loading: formationsLoading, error: formationsError } = useSiteFormations(locale)
   const heroSlides = [
     '/media/geaco/geaco-24.jpeg',
     '/media/geaco/geaco-29.jpeg',
@@ -47,6 +45,19 @@ export function Home() {
   const safeNews = Array.isArray(newsItems) ? newsItems : []
   const safeStats = Array.isArray(stats) ? stats : []
   const safeMethod = Array.isArray(methodSteps) ? methodSteps : []
+  const latestFormations = formationRows
+    .filter((formation) => {
+      const imageUrl = String(formation.image_url ?? '').trim()
+      return isFormationRegistrationOpen(formation) && /^(https?:\/\/|\/)/i.test(imageUrl)
+    })
+    .sort((left, right) => {
+      const leftStart = String(left.starts_on ?? '')
+      const rightStart = String(right.starts_on ?? '')
+      if (!leftStart) return 1
+      if (!rightStart) return -1
+      return leftStart.localeCompare(rightStart)
+    })
+    .slice(0, 3)
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -69,7 +80,7 @@ export function Home() {
     return String(partner?.logo_url ?? '').trim().length > 0
   }
 
-  const pillars = PILLAR_ROUTES.map(({ slug, detailKey }) => {
+  const pillars = PILLAR_ROUTES.map(({ slug, detailKey, image, imageAlt }) => {
     const meta = PILLAR_META[detailKey] || PILLAR_META.agriculture
     return {
       slug,
@@ -77,7 +88,9 @@ export function Home() {
       title: t(`services.${detailKey}.title`),
       short: t(`services.${detailKey}.short`),
       ...meta,
-      href: `/services/${slug}`,
+      image,
+      imageAlt,
+      href: `/domaines/${slug}`,
     }
   })
 
@@ -146,6 +159,66 @@ export function Home() {
         </div>
       </section>
 
+      <section className="section home-trainings" aria-labelledby="home-trainings-title">
+        <div className="container">
+          <header className="section__head section__head--wide home-trainings__head">
+            <p className="section-kicker">{t('home.trainingKicker')}</p>
+            <h2 id="home-trainings-title" className="section__title">
+              {t('home.trainingTitle')}
+            </h2>
+            <p>{t('home.trainingLead')}</p>
+          </header>
+
+          {formationsLoading ? <p className="home-trainings__message">{t('formations.loading')}</p> : null}
+          {formationsError ? (
+            <p className="home-trainings__message" role="alert">
+              {t('formations.loadError')}
+            </p>
+          ) : null}
+          {!formationsLoading && !formationsError && latestFormations.length ? (
+            <div className="home-trainings__grid">
+              {latestFormations.map((formation) => {
+                const startDate = formatFormationDate(formation.starts_on, locale)
+                return (
+                  <article className="home-training-card" key={formation.id}>
+                    <Link
+                      className="home-training-card__media"
+                      to={formationPath(formation.slug)}
+                      aria-label={`${t('formations.readOffer')}: ${formation.title}`}
+                    >
+                      <img src={String(formation.image_url).trim()} alt="" loading="lazy" decoding="async" />
+                    </Link>
+                    <div className="home-training-card__body">
+                      <p className="home-training-card__status">{t('formations.statusOpen')}</p>
+                      <h3>
+                        <Link to={formationPath(formation.slug)}>{formation.title}</Link>
+                      </h3>
+                      {formation.summary ? <p className="home-training-card__summary">{formation.summary}</p> : null}
+                      <ul className="home-training-card__meta">
+                        {startDate ? <li>{startDate}</li> : null}
+                        {formation.location ? <li>{formation.location}</li> : null}
+                      </ul>
+                      <Link className="home-training-card__link" to={formationPath(formation.slug)}>
+                        {t('formations.readOffer')}
+                      </Link>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          ) : null}
+          {!formationsLoading && !formationsError && !latestFormations.length ? (
+            <p className="home-trainings__message">{t('formations.registrationClosed')}</p>
+          ) : null}
+
+          <p className="home-trainings__all">
+            <Link className="btn btn--outline" to="/formations">
+              {t('formations.backToList')}
+            </Link>
+          </p>
+        </div>
+      </section>
+
       <section className="section section--muted" aria-labelledby="integrated-title">
         <div className="container home-integrated">
           <div className="section__head section__head--wide">
@@ -156,9 +229,9 @@ export function Home() {
             <p>{t('home.integratedLead')}</p>
           </div>
           <div className="home-integrated__links">
-            <Link to="/services/agriculture">{t('services.agriculture.title')}</Link>
-            <Link to="/services/construction">{t('services.construction.title')}</Link>
-            <Link to="/services/wash">{t('services.wash.title')}</Link>
+            <Link to="/domaines/agriculture">{t('services.agriculture.title')}</Link>
+            <Link to="/domaines/construction">{t('services.construction.title')}</Link>
+            <Link to="/domaines/wash">{t('services.wash.title')}</Link>
           </div>
         </div>
       </section>

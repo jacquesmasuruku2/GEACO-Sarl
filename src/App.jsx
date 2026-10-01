@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useParams } from 'react-router-dom'
 import { Layout } from './components/Layout'
 import { ScrollToTop } from './components/ScrollToTop'
 import { Home } from './pages/Home'
@@ -25,6 +25,11 @@ import { AuthAdmin } from './pages/admin/AuthAdmin'
 import { AdminPanel } from './pages/admin/AdminPanel'
 import { NotFound } from './pages/NotFound'
 
+function LegacyServiceRedirect() {
+  const { slug } = useParams()
+  return <Navigate to={slug ? `/domaines/${slug}` : '/domaines'} replace />
+}
+
 export default function App() {
   return (
     <>
@@ -45,8 +50,9 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/services/solution-cafe" element={<Navigate to="/projets/solution-cafe" replace />} />
-          <Route path="/services/:slug" element={<ServiceDetail />} />
           <Route path="/domaines" element={<Services />} />
+          <Route path="/domaines/:slug" element={<ServiceDetail />} />
+          <Route path="/services/:slug" element={<LegacyServiceRedirect />} />
           <Route path="/services" element={<Navigate to="/domaines" replace />} />
           <Route path="/projets/solution-cafe" element={<ProjectSolutionCafe />} />
           <Route path="/projets/construction" element={<Projects />} />
