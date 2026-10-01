@@ -33,7 +33,7 @@ export function Blog() {
         ]}
         title={t('blog.title')}
         lead={t('blog.lead')}
-        heroImage="https://images.unsplash.com/photo-1455849318747-b3291b98f1b0?auto=format&fit=crop&w=1800&q=80"
+        heroImage="/media/geaco/blog.jpg"
       />
 
       <section className="section">

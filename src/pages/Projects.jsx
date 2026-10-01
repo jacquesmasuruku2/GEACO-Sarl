@@ -47,7 +47,7 @@ export function Projects() {
         : t('projects.lead')
 
   const heroImage = onlyAgricole
-    ? 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1800&q=80'
+    ? '/media/geaco/Agriculture.png'
     : onlyWash
       ? 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=1800&q=80'
       : '/media/geaco/geaco-construction-hero.png'
