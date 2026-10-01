@@ -16,8 +16,8 @@ export const messages = {
       home: 'accueil',
       about: 'à propos',
       personnel: 'notre equipe',
-      services: 'services',
-      solutions: 'nos solutions',
+      services: 'domaines',
+      solutions: 'domaines',
       resources: 'ressources',
       projects: 'projets',
       projectsConstruction: 'projets de construction',
@@ -42,7 +42,7 @@ export const messages = {
       heroTitle: 'Produire mieux. Construire durablement. Garantir l’eau et l’assainissement.',
       heroLead:
         'GEACO SARL accompagne bailleurs, collectivités et opérateurs au Nord-Kivu : agriculture, construction & infrastructures, WASH — du diagnostic à la mise en œuvre.',
-      ctaExpertises: 'Découvrir nos solutions',
+      ctaExpertises: 'Découvrir nos domaines',
       ctaQuote: 'Demander une mission / un devis',
       ctaContact: 'Nous contacter',
       ctaProjects: 'Découvrir nos projets',
@@ -276,7 +276,7 @@ export const messages = {
       homeCta: 'Retour à l’accueil',
       contactCta: 'Nous contacter',
       quickTitle: 'Poursuivre sur le site',
-      tileServicesTitle: 'Services',
+      tileServicesTitle: 'Domaines',
       tileServicesDesc: 'Agronomie, génie civil, hydraulique rurale et filières.',
       tileProjectsTitle: 'Projets',
       tileProjectsDesc: 'Réalisations et références représentatives.',
@@ -286,10 +286,10 @@ export const messages = {
       tilePartnersDesc: 'Proposer une collaboration avec GEACO.',
     },
     services: {
-      metaTitle: 'Services — GEACO SARL',
+      metaTitle: 'Domaines d’intervention — GEACO SARL',
       metaDesc:
         'Agriculture, construction & génie civil, WASH (eau, hygiène, assainissement) et filière Solution Café — études, travaux et accompagnement.',
-      title: 'Nos expertises',
+      title: 'Domaines d’intervention',
       lead:
         'Trois piliers complémentaires — Agriculture, Construction et WASH — plus la filière Solution Café, pour des missions cohérentes du diagnostic à la livraison.',
       agriculture: {
@@ -1182,8 +1182,8 @@ export const messages = {
       home: 'home',
       about: 'about',
       personnel: 'staff',
-      services: 'services',
-      solutions: 'our solutions',
+      services: 'areas',
+      solutions: 'service areas',
       resources: 'resources',
       projects: 'projects',
       projectsConstruction: 'construction projects',
@@ -1208,7 +1208,7 @@ export const messages = {
       heroTitle: 'Produce better. Build sustainably. Secure water and sanitation.',
       heroLead:
         'GEACO SARL supports donors, local authorities and operators in North Kivu: agriculture, construction & infrastructure, WASH—from diagnostics to delivery.',
-      ctaExpertises: 'Discover our solutions',
+      ctaExpertises: 'Discover our areas',
       ctaQuote: 'Request a mission / quote',
       ctaContact: 'Contact us',
       ctaProjects: 'Explore our projects',
@@ -1430,7 +1430,7 @@ export const messages = {
       homeCta: 'Back to home',
       contactCta: 'Contact us',
       quickTitle: 'Continue on the site',
-      tileServicesTitle: 'Services',
+      tileServicesTitle: 'Areas',
       tileServicesDesc: 'Agronomy, civil engineering, rural hydraulics and value chains.',
       tileProjectsTitle: 'Projects',
       tileProjectsDesc: 'Selected works and field references.',
@@ -1440,10 +1440,10 @@ export const messages = {
       tilePartnersDesc: 'Explore collaboration with GEACO.',
     },
     services: {
-      metaTitle: 'Services — GEACO SARL',
+      metaTitle: 'Areas of intervention — GEACO SARL',
       metaDesc:
         'Agriculture, construction & civil engineering, WASH (water, sanitation, hygiene) and the Solution Café value chain—studies, works and advisory.',
-      title: 'Our expertise',
+      title: 'Areas of intervention',
       lead:
         'Three complementary pillars—Agriculture, Construction and WASH—plus the Solution Café programme, for coherent missions from diagnostics to handover.',
       agriculture: {

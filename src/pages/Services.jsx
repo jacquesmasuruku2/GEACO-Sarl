@@ -22,7 +22,7 @@ export function Services() {
 
   return (
     <>
-      <Seo title={t('services.metaTitle')} description={t('services.metaDesc')} path="/services" />
+      <Seo title={t('services.metaTitle')} description={t('services.metaDesc')} path="/domaines" />
 
       <PageHero
         breadcrumbItems={[

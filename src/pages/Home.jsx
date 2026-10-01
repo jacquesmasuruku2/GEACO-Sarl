@@ -105,7 +105,7 @@ export function Home() {
           <h1>{t('home.heroTitle')}</h1>
           <p className="home-hero-immersive__lead">{t('home.heroLead')}</p>
           <div className="page-hero__actions">
-            <Link className="btn btn--on-dark" to="/services">
+            <Link className="btn btn--on-dark" to="/domaines">
               {t('home.ctaExpertises')}
             </Link>
             <Link className="btn btn--ghost-on-dark" to="/devis">

@@ -139,7 +139,7 @@ export function Projects() {
                 {t('nav.projectsSolutionCafe')}
               </Link>
             ) : (
-              <Link className="btn btn--ghost-on-dark" to="/services">
+              <Link className="btn btn--ghost-on-dark" to="/domaines">
                 {t('home.ctaExpertises')}
               </Link>
             )}

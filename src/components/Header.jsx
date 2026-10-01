@@ -50,7 +50,7 @@ export function Header() {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false)
   const location = useLocation()
 
-  const servicesActive = location.pathname.startsWith('/services')
+  const servicesActive = location.pathname.startsWith('/services') || location.pathname.startsWith('/domaines')
   const projectsActive = location.pathname.startsWith('/projets')
   const aboutActive =
     location.pathname.startsWith('/a-propos') ||
@@ -158,7 +158,7 @@ export function Header() {
           </div>
 
           <div className={`nav-dropdown${servicesActive ? ' nav-dropdown--active' : ''}`}>
-            <NavLink className="nav-dropdown__trigger" to="/services" end={false}>
+            <NavLink className="nav-dropdown__trigger" to="/domaines" end={false}>
               {navLabel('nav.solutions')}
               <span className="nav-dropdown__caret" aria-hidden="true">
                 ▾
@@ -292,7 +292,7 @@ export function Header() {
           </button>
           {mobileServicesOpen ? (
             <div className="nav-mobile__sub">
-              <NavLink to="/services" onClick={closeAll}>
+              <NavLink to="/domaines" onClick={closeAll}>
                 {navLabel('nav.solutions')}
               </NavLink>
               {SERVICE_ROUTES.map(({ slug, detailKey }) => (

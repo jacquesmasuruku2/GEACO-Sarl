@@ -41,7 +41,7 @@ export function ServiceDetail() {
   }
 
   if (!valid || !dk) {
-    return <Navigate to="/services" replace />
+    return <Navigate to="/domaines" replace />
   }
 
   const base = `services.detail.${dk}`
@@ -95,7 +95,7 @@ export function ServiceDetail() {
         className={dk === 'agriculture' ? 'page-hero--agriculture' : ''}
         breadcrumbItems={[
           { href: '/', label: t('nav.home') },
-          { href: '/services', label: t('nav.solutions') },
+          { href: '/domaines', label: t('nav.solutions') },
           { label: title },
         ]}
         title={title}
@@ -149,7 +149,7 @@ export function ServiceDetail() {
                 <Link className="btn btn--outline" to={`/contact?domaine=${encodeURIComponent(slug)}`}>
                   {t('services.hub.contactCta')}
                 </Link>
-                <Link className="btn btn--ghost" to="/services">
+                <Link className="btn btn--ghost" to="/domaines">
                   {t('services.hub.backToHub')}
                 </Link>
               </div>
@@ -175,7 +175,7 @@ export function ServiceDetail() {
             <Link className="service-aside__link" to={projectsHref}>
               {t('nav.projects')}
             </Link>
-            <Link className="service-aside__link" to="/services">
+            <Link className="service-aside__link" to="/domaines">
               {t('services.hub.backToHub')}
             </Link>
           </aside>

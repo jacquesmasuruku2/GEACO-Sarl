@@ -18,7 +18,7 @@ export function NotFound() {
   const displayPath = trimPath(pathname)
 
   const tiles = [
-    { to: '/services', title: t('notFound.tileServicesTitle'), desc: t('notFound.tileServicesDesc') },
+    { to: '/domaines', title: t('notFound.tileServicesTitle'), desc: t('notFound.tileServicesDesc') },
     { to: '/projets', title: t('notFound.tileProjectsTitle'), desc: t('notFound.tileProjectsDesc') },
     { to: '/blog', title: t('notFound.tileBlogTitle'), desc: t('notFound.tileBlogDesc') },
     { to: '/partenariats', title: t('notFound.tilePartnersTitle'), desc: t('notFound.tilePartnersDesc') },
