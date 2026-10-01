@@ -7,9 +7,27 @@ import { PILLAR_ROUTES } from '../data/servicesNav'
 import { useSitePartners } from '../hooks/useSitePartners'
 
 const PILLAR_META = {
-  agriculture: { icon: 'agriculture', className: 'pillar-card--agriculture', href: '/services/agriculture' },
-  construction: { icon: 'construction', className: 'pillar-card--construction', href: '/services/construction' },
-  wash: { icon: 'wash', className: 'pillar-card--wash', href: '/services/wash' },
+  agriculture: {
+    icon: 'agriculture',
+    className: 'pillar-card--agriculture',
+    image: '/media/geaco/Agriculture.png',
+    imageAlt: 'Rangées de cultures dans un champ agricole',
+    href: '/services/agriculture',
+  },
+  construction: {
+    icon: 'construction',
+    className: 'pillar-card--construction',
+    image: '/media/geaco/geaco-construction-hero.png',
+    imageAlt: 'Travaux de construction et infrastructures',
+    href: '/services/construction',
+  },
+  wash: {
+    icon: 'wash',
+    className: 'pillar-card--wash',
+    image: '/media/geaco/geaco-24.jpeg',
+    imageAlt: 'Activité de terrain liée à l’eau et à l’hydraulique',
+    href: '/services/wash',
+  },
 }
 
 export function Home() {
@@ -20,13 +38,6 @@ export function Home() {
     '/media/geaco/geaco-29.jpeg',
     '/media/geaco/geaco-25.jpeg',
     '/media/geaco/geaco-16.jpeg',
-  ]
-  const fieldPhotos = [
-    { src: '/media/geaco/geaco-24.jpeg', featured: true },
-    { src: '/media/geaco/geaco-29.jpeg', featured: false },
-    { src: '/media/geaco/geaco-09.jpeg', featured: false },
-    { src: '/media/geaco/geaco-16.jpeg', featured: false },
-    { src: '/media/geaco/geaco-25.jpeg', featured: false },
   ]
   const [activeHeroSlide, setActiveHeroSlide] = useState(0)
 
@@ -65,7 +76,6 @@ export function Home() {
       detailKey,
       title: t(`services.${detailKey}.title`),
       short: t(`services.${detailKey}.short`),
-      items: t(`services.${detailKey}.items`),
       ...meta,
       href: `/services/${slug}`,
     }
@@ -117,52 +127,22 @@ export function Home() {
           <div className="pillar-grid">
             {pillars.map((pillar) => (
               <article className={`pillar-card ${pillar.className}`} key={pillar.slug}>
-                <div className="pillar-card__icon">
-                  <PillarIcon name={pillar.icon} />
+                <div className="pillar-card__media">
+                  <img src={pillar.image} alt={pillar.imageAlt} loading="lazy" decoding="async" />
                 </div>
-                <h3>{pillar.title}</h3>
-                <p>{pillar.short}</p>
-                {Array.isArray(pillar.items) ? (
-                  <ul>
-                    {pillar.items.slice(0, 4).map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
-                ) : null}
-                <Link className="btn btn--outline pillar-card__cta" to={pillar.href}>
-                  {t('home.pillarsCta')}
-                </Link>
+                <div className="pillar-card__content">
+                  <div className="pillar-card__icon">
+                    <PillarIcon name={pillar.icon} />
+                  </div>
+                  <h3>{pillar.title}</h3>
+                  <p>{pillar.short}</p>
+                  <Link className="btn btn--outline pillar-card__cta" to={pillar.href}>
+                    {t('home.pillarsCta')}
+                  </Link>
+                </div>
               </article>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="section section--tight" aria-labelledby="home-field-title">
-        <div className="container">
-          <div className="section__head section__head--wide">
-            <p className="section-kicker">{t('home.fieldKicker')}</p>
-            <h2 id="home-field-title" className="section__title">
-              {t('home.fieldTitle')}
-            </h2>
-            <p>{t('home.fieldLead')}</p>
-          </div>
-          <div className="home-gallery-grid">
-            {fieldPhotos.map((photo) => (
-              <Link
-                key={photo.src}
-                to="/galerie"
-                className={`home-gallery-card${photo.featured ? ' is-featured' : ''}`}
-              >
-                <img src={photo.src} alt="" loading="lazy" decoding="async" />
-              </Link>
-            ))}
-          </div>
-          <p style={{ marginTop: '1.1rem' }}>
-            <Link className="btn btn--outline" to="/galerie">
-              {t('home.fieldCta')}
-            </Link>
-          </p>
         </div>
       </section>
 

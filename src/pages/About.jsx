@@ -3,15 +3,31 @@ import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { SITE_OFFICES } from '../data/siteContact'
+import { useSitePersonnel } from '../hooks/useSitePersonnel'
+
+function normalizePersonName(value) {
+  return String(value ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase()
+}
 
 export function About() {
   const { t, locale } = useI18n()
+  const { groups: personnelGroups } = useSitePersonnel(locale)
   const team = t('about.team')
   const values = t('about.values')
   const objectItems = t('about.objectItems')
   const safeTeam = Array.isArray(team) ? team : []
   const safeValues = Array.isArray(values) ? values : []
   const safeObject = Array.isArray(objectItems) ? objectItems : []
+  const manager = personnelGroups
+    .flatMap((group) => group.members ?? [])
+    .find((member) => normalizePersonName(member.name) === normalizePersonName(safeTeam[0]?.name))
+  const managerPhoto = /^https?:\/\//i.test(String(manager?.photo_url ?? '').trim())
+    ? String(manager.photo_url).trim()
+    : ''
 
   const identityRows = [
     { label: t('about.legalNameLabel'), value: t('about.legalNameValue') },
@@ -27,6 +43,7 @@ export function About() {
       <Seo title={t('about.metaTitle')} description={t('about.metaDesc')} path="/a-propos" />
 
       <PageHero
+        className="page-hero--brand"
         breadcrumbItems={[
           { href: '/', label: t('nav.home') },
           { label: t('about.title') },
@@ -95,11 +112,22 @@ export function About() {
             <p>{t('about.teamLead')}</p>
           </header>
           <ul className="about-team">
-            {safeTeam.map((member) => (
-              <li key={member.name}>
-                <h3>{member.name}</h3>
-                <p className="about-team__role">{member.role}</p>
-                <p className="about-prose">{member.bio}</p>
+            {safeTeam.map((member, index) => (
+              <li className={index === 0 ? 'about-team__member about-team__member--lead' : 'about-team__member'} key={member.name}>
+                {index === 0 ? (
+                  <div className="about-team__portrait" aria-hidden="true">
+                    {managerPhoto ? (
+                      <img src={managerPhoto} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <span>{member.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('')}</span>
+                    )}
+                  </div>
+                ) : null}
+                <div className="about-team__copy">
+                  <h3>{member.name}</h3>
+                  <p className="about-team__role">{member.role}</p>
+                  <p className="about-prose">{member.bio}</p>
+                </div>
               </li>
             ))}
           </ul>

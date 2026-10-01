@@ -117,6 +117,7 @@ export function Personnel() {
       <Seo title={t('personnel.metaTitle')} description={t('personnel.metaDesc')} path="/personnel" />
 
       <PageHero
+        className="page-hero--brand"
         breadcrumbItems={[
           { href: '/', label: formatNavLabel(t('nav.home'), locale) },
           { label: t('personnel.title') },

@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom'
  * Hero type pages expertises VINCI : fil d’Ariane, titre, chapô sur image + dégradé bleu/rouge.
  * @param {{ immersive?: boolean, heroImage?: string, actions?: import('react').ReactNode }} props
  */
-export function PageHero({ title, lead, breadcrumbItems, immersive = true, heroImage, actions, children }) {
-  const sectionClass = immersive ? 'page-hero page-hero--immersive' : 'page-hero page-hero--plain'
+export function PageHero({ title, lead, breadcrumbItems, immersive = true, heroImage, actions, children, className = '' }) {
+  const sectionClass = `${immersive ? 'page-hero page-hero--immersive' : 'page-hero page-hero--plain'} ${className}`.trim()
   const style =
     immersive && heroImage ? { ['--hero-image']: `url("${heroImage}")` } : undefined
 

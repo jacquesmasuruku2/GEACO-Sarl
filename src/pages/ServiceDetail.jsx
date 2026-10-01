@@ -92,6 +92,7 @@ export function ServiceDetail() {
       <Seo title={metaTitle} description={metaDesc} path={`/services/${slug}`} />
 
       <PageHero
+        className={dk === 'agriculture' ? 'page-hero--agriculture' : ''}
         breadcrumbItems={[
           { href: '/', label: t('nav.home') },
           { href: '/services', label: t('nav.solutions') },
@@ -112,7 +113,7 @@ export function ServiceDetail() {
         }
       />
 
-      <section className="section service-detail-page">
+      <section className={`section service-detail-page${dk === 'agriculture' ? ' service-detail-page--agriculture' : ''}`}>
         <div className="container service-detail-layout">
           <div className="service-detail-main">
             {hasApproach ? (
