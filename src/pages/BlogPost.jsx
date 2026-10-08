@@ -234,7 +234,13 @@ export function BlogPost() {
 
   return (
     <>
-      <Seo title={row.title} description={row.excerpt || row.title} path={`/blog/${slug}`} />
+      <Seo
+        title={row.title}
+        description={row.excerpt || row.title}
+        path={`/blog/${slug}`}
+        image={coverUrl}
+        type="article"
+      />
 
       <PageHero
         immersive={false}
@@ -286,9 +292,11 @@ export function BlogPost() {
                 <label>
                   {t('blog.commenterNameLabel')}
                   <input
+                    type="text"
                     value={authorName}
                     onChange={(e) => setAuthorName(e.target.value)}
                     placeholder={t('blog.commenterNamePlaceholder')}
+                    autoComplete="name"
                   />
                 </label>
                 <label>
@@ -298,6 +306,7 @@ export function BlogPost() {
                     value={authorEmail}
                     onChange={(e) => setAuthorEmail(e.target.value)}
                     placeholder={t('blog.commenterEmailPlaceholder')}
+                    autoComplete="email"
                   />
                 </label>
                 <label className="admin-check blog-member-controls__like">

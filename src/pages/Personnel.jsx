@@ -84,7 +84,8 @@ export function Personnel() {
     linkedin: t('personnel.cardLinkLinkedin'),
   }
 
-  const totalMembers = displayGroups.reduce((n, g) => n + (g.members?.length ?? 0), 0)
+  const displayMembers = displayGroups.flatMap((group) => group.members ?? [])
+  const totalMembers = displayMembers.length
   const selectedHasPhoto = selected ? isPhotoUrl(selected.photo_url) : false
 
   useEffect(() => {
@@ -148,91 +149,82 @@ export function Personnel() {
             </p>
           ) : null}
 
-          {!loading
-            ? displayGroups.map((group) => (
-                <div className="personnel-group" key={group.key}>
-                  <div className="personnel-group__head">
-                    <h3 className="personnel-group__title">{group.title}</h3>
-                    <span className="personnel-group__rule" aria-hidden="true" />
-                  </div>
+          {!loading ? (
+            <div className="personnel-grid personnel-grid--compact">
+              {displayMembers.map((member) => {
+                const hasPhoto = isPhotoUrl(member.photo_url)
+                const profileSlug = String(member.slug || '').trim() || slugifyPersonnel(member.name)
+                const profileHref = fromDb ? `/personnel/${profileSlug}` : null
+                const openLabel = `${t('personnel.openProfile')} — ${member.name}`
+                return (
+                  <article className="personnel-profile" key={member.key}>
+                    {profileHref ? (
+                      <Link
+                        to={profileHref}
+                        className="personnel-profile__media personnel-profile__media--button"
+                        data-has-photo={hasPhoto ? 'true' : 'false'}
+                        aria-label={openLabel}
+                      >
+                        <MemberPortrait member={member} hasPhoto={hasPhoto} />
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        className="personnel-profile__media personnel-profile__media--button"
+                        data-has-photo={hasPhoto ? 'true' : 'false'}
+                        onClick={() => openProfile(member)}
+                        aria-label={openLabel}
+                      >
+                        <MemberPortrait member={member} hasPhoto={hasPhoto} />
+                      </button>
+                    )}
 
-                  <div className="personnel-grid">
-                    {group.members.map((member) => {
-                      const hasPhoto = isPhotoUrl(member.photo_url)
-                      const profileSlug = String(member.slug || '').trim() || slugifyPersonnel(member.name)
-                      const profileHref = fromDb ? `/personnel/${profileSlug}` : null
-                      const openLabel = `${t('personnel.openProfile')} — ${member.name}`
-                      return (
-                        <article className="personnel-profile" key={member.key}>
-                          {profileHref ? (
-                            <Link
-                              to={profileHref}
-                              className="personnel-profile__media personnel-profile__media--button"
-                              data-has-photo={hasPhoto ? 'true' : 'false'}
-                              aria-label={openLabel}
-                            >
-                              <MemberPortrait member={member} hasPhoto={hasPhoto} />
-                            </Link>
-                          ) : (
-                            <button
-                              type="button"
-                              className="personnel-profile__media personnel-profile__media--button"
-                              data-has-photo={hasPhoto ? 'true' : 'false'}
-                              onClick={() => openProfile(member)}
-                              aria-label={openLabel}
-                            >
-                              <MemberPortrait member={member} hasPhoto={hasPhoto} />
-                            </button>
-                          )}
-
-                          <div className="personnel-profile__body">
-                            <h4 className="personnel-profile__name">
-                              {profileHref ? (
-                                <Link className="personnel-profile__name-btn" to={profileHref}>
-                                  {member.name}
-                                </Link>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className="personnel-profile__name-btn"
-                                  onClick={() => openProfile(member)}
-                                >
-                                  {member.name}
-                                </button>
-                              )}
-                            </h4>
-                            {member.role ? <p className="personnel-profile__role">{member.role}</p> : null}
-                            {member.focus ? <p className="personnel-profile__focus">{member.focus}</p> : null}
-                            {member.bio ? (
-                              <p className="personnel-profile__bio personnel-profile__bio--preview">{member.bio}</p>
-                            ) : null}
-                            {profileHref ? (
-                              <Link className="personnel-profile__more" to={profileHref}>
-                                {t('personnel.readProfile')}
-                              </Link>
-                            ) : (
-                              <button
-                                type="button"
-                                className="personnel-profile__more"
-                                onClick={() => openProfile(member)}
-                              >
-                                {t('personnel.readProfile')}
-                              </button>
-                            )}
-                            <PersonnelCardLinks
-                              email={member.email}
-                              facebookUrl={member.facebook_url}
-                              linkedinUrl={member.linkedin_url}
-                              labels={linkLabels}
-                            />
-                          </div>
-                        </article>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))
-            : null}
+                    <div className="personnel-profile__body">
+                      <h4 className="personnel-profile__name">
+                        {profileHref ? (
+                          <Link className="personnel-profile__name-btn" to={profileHref}>
+                            {member.name}
+                          </Link>
+                        ) : (
+                          <button
+                            type="button"
+                            className="personnel-profile__name-btn"
+                            onClick={() => openProfile(member)}
+                          >
+                            {member.name}
+                          </button>
+                        )}
+                      </h4>
+                      {member.role ? <p className="personnel-profile__role">{member.role}</p> : null}
+                      {member.focus ? <p className="personnel-profile__focus">{member.focus}</p> : null}
+                      {member.bio ? (
+                        <p className="personnel-profile__bio personnel-profile__bio--preview">{member.bio}</p>
+                      ) : null}
+                      {profileHref ? (
+                        <Link className="personnel-profile__more" to={profileHref}>
+                          {t('personnel.readProfile')}
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className="personnel-profile__more"
+                          onClick={() => openProfile(member)}
+                        >
+                          {t('personnel.readProfile')}
+                        </button>
+                      )}
+                      <PersonnelCardLinks
+                        email={member.email}
+                        facebookUrl={member.facebook_url}
+                        linkedinUrl={member.linkedin_url}
+                        labels={linkLabels}
+                      />
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          ) : null}
         </div>
       </section>
 

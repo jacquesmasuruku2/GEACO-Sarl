@@ -1179,7 +1179,7 @@ export const messages = {
       long: 'Agronomic studies & construction group',
     },
     header: {
-      regionLine: 'Democratic Republic of the Congo · North Kivu',
+      regionLine: "Groupe d'Etudes Agronomiques et de Construction",
     },
     nav: {
       home: 'home',

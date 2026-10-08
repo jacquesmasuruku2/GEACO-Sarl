@@ -3,31 +3,34 @@ import { useI18n } from '../i18n/useI18n'
 import { Seo } from '../components/Seo'
 import { PageHero } from '../components/PageHero'
 import { SITE_OFFICES } from '../data/siteContact'
+import { slugifyPersonnel } from '../lib/personnelSlug'
 import { useSitePersonnel } from '../hooks/useSitePersonnel'
 
-function normalizePersonName(value) {
-  return String(value ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .trim()
-    .toLowerCase()
+function isPhotoUrl(value) {
+  return typeof value === 'string' && /^(https?:\/\/|\/)/i.test(value.trim())
+}
+
+function memberInitials(name) {
+  const parts = String(name ?? '').trim().split(/\s+/).filter(Boolean)
+  if (!parts.length) return '?'
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
 }
 
 export function About() {
   const { t, locale } = useI18n()
-  const { groups: personnelGroups } = useSitePersonnel(locale)
+  const { groups: personnelGroups, error: personnelError } = useSitePersonnel(locale)
   const team = t('about.team')
   const values = t('about.values')
   const objectItems = t('about.objectItems')
   const safeTeam = Array.isArray(team) ? team : []
   const safeValues = Array.isArray(values) ? values : []
   const safeObject = Array.isArray(objectItems) ? objectItems : []
-  const manager = personnelGroups
-    .flatMap((group) => group.members ?? [])
-    .find((member) => normalizePersonName(member.name) === normalizePersonName(safeTeam[0]?.name))
-  const managerPhoto = /^https?:\/\//i.test(String(manager?.photo_url ?? '').trim())
-    ? String(manager.photo_url).trim()
-    : ''
+  const databaseMembers = personnelGroups.flatMap((group) => group.members ?? [])
+  const hasDatabaseMembers = databaseMembers.length > 0
+  const displayedMembers = hasDatabaseMembers
+    ? databaseMembers
+    : safeTeam.map((member) => ({ ...member, photo_url: '' }))
 
   const identityRows = [
     { label: t('about.legalNameLabel'), value: t('about.legalNameValue') },
@@ -50,7 +53,7 @@ export function About() {
         ]}
         title={t('about.title')}
         lead={t('about.intro')}
-        heroImage="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1800&q=80"
+        heroImage="/media/geaco/about-us.webp"
       />
 
       <section className="section about-page" aria-labelledby="about-identity-title">
@@ -70,7 +73,7 @@ export function About() {
           </dl>
           <p className="about-identity__note">{t('about.registrationNote')}</p>
 
-          <header className="about-block__head about-block__head--spaced">
+          <header className="about-block__head about-block__head--spaced about-team__head">
             <h2>{t('about.officesTitle')}</h2>
             <p>{t('about.officesLead')}</p>
           </header>
@@ -108,29 +111,38 @@ export function About() {
           </div>
 
           <header className="about-block__head about-block__head--spaced">
-            <h2>{t('about.teamTitle')}</h2>
-            <p>{t('about.teamLead')}</p>
+            <h2>{hasDatabaseMembers ? t('personnel.expertsTitle') : t('about.teamTitle')}</h2>
+            <p>{hasDatabaseMembers ? t('personnel.expertsLead') : t('about.teamLead')}</p>
           </header>
-          <ul className="about-team">
-            {safeTeam.map((member, index) => (
-              <li className={index === 0 ? 'about-team__member about-team__member--lead' : 'about-team__member'} key={member.name}>
-                {index === 0 ? (
-                  <div className="about-team__portrait" aria-hidden="true">
-                    {managerPhoto ? (
-                      <img src={managerPhoto} alt="" loading="lazy" decoding="async" />
+          {personnelError ? (
+            <p className="about-prose" role="alert">
+              {t('personnel.loadError')}: {personnelError.message}
+            </p>
+          ) : null}
+          <div className="personnel-grid personnel-grid--compact">
+            {displayedMembers.map((member) => {
+              const profileSlug = String(member.slug || '').trim() || slugifyPersonnel(member.name)
+              return (
+                <article className="personnel-profile" key={member.id || profileSlug}>
+                  <div className="personnel-profile__media" aria-hidden="true">
+                    {isPhotoUrl(member.photo_url) ? (
+                      <img src={member.photo_url.trim()} alt="" loading="lazy" decoding="async" />
                     ) : (
-                      <span>{member.name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('')}</span>
+                      <span className="personnel-profile__initials">{memberInitials(member.name)}</span>
                     )}
                   </div>
-                ) : null}
-                <div className="about-team__copy">
-                  <h3>{member.name}</h3>
-                  <p className="about-team__role">{member.role}</p>
-                  <p className="about-prose">{member.bio}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  <div className="personnel-profile__body">
+                    <h3 className="personnel-profile__name">
+                      <Link className="personnel-profile__name-btn" to={`/personnel/${profileSlug}`}>
+                        {member.name}
+                      </Link>
+                    </h3>
+                    {member.role ? <p className="personnel-profile__role">{member.role}</p> : null}
+                  </div>
+                </article>
+              )
+            })}
+          </div>
 
           <div className="about-page__links">
             <Link className="btn btn--outline" to="/mentions-legales">
