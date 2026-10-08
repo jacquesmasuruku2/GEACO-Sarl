@@ -9027,7 +9027,7 @@ a.personnel-profile__more {
 
 .home-trainings__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
   gap: 1.25rem;
 }
 
@@ -9068,9 +9068,13 @@ a.personnel-profile__more {
 
 .home-training-card__status {
   margin: 0 0 0.55rem;
-  color: #24683d;
+  color: var(--color-text-muted);
   font-size: 0.78rem;
   font-weight: 700;
+}
+
+.home-training-card__status--open {
+  color: #24683d;
 }
 
 .home-training-card h3 {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
 const FORMATION_SELECT =
-  'id,slug,title,summary,description,location,starts_on,ends_on,duration_label,seats_label,image_url,registration_open,registration_status,sort_order'
+  'id,slug,title,summary,description,location,starts_on,ends_on,duration_label,seats_label,image_url,registration_open,registration_status,sort_order,created_at'
 
 /**
  * Formations publiées pour la page publique /formations.

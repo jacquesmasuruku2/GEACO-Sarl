@@ -7,7 +7,7 @@ import { PILLAR_ROUTES } from '../data/servicesNav'
 import { useSiteFormations } from '../hooks/useSiteFormations'
 import { useSitePartners } from '../hooks/useSitePartners'
 import { formatFormationDate, formationPath } from '../lib/formationDisplay'
-import { isFormationRegistrationOpen } from '../lib/formationStatus'
+import { resolveFormationRegistrationStatus } from '../lib/formationStatus'
 
 const PILLAR_META = {
   agriculture: {
@@ -46,18 +46,14 @@ export function Home() {
   const safeStats = Array.isArray(stats) ? stats : []
   const safeMethod = Array.isArray(methodSteps) ? methodSteps : []
   const latestFormations = formationRows
-    .filter((formation) => {
-      const imageUrl = String(formation.image_url ?? '').trim()
-      return isFormationRegistrationOpen(formation) && /^(https?:\/\/|\/)/i.test(imageUrl)
-    })
+    .slice()
     .sort((left, right) => {
-      const leftStart = String(left.starts_on ?? '')
-      const rightStart = String(right.starts_on ?? '')
-      if (!leftStart) return 1
-      if (!rightStart) return -1
-      return leftStart.localeCompare(rightStart)
+      const createdDifference =
+        Date.parse(String(right.created_at ?? '')) - Date.parse(String(left.created_at ?? ''))
+      if (Number.isFinite(createdDifference) && createdDifference !== 0) return createdDifference
+      return String(right.starts_on ?? '').localeCompare(String(left.starts_on ?? ''))
     })
-    .slice(0, 3)
+    .slice(0, 4)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
@@ -90,7 +86,7 @@ export function Home() {
     revealElements.forEach((element) => observer.observe(element))
 
     return () => observer.disconnect()
-  }, [])
+  }, [formationRows, formationsLoading])
 
   function getInitials(name) {
     return String(name ?? '')
@@ -232,17 +228,23 @@ export function Home() {
             <div className="home-trainings__grid">
               {latestFormations.map((formation) => {
                 const startDate = formatFormationDate(formation.starts_on, locale)
+                const status = resolveFormationRegistrationStatus(formation)
+                const imageUrl = String(formation.image_url ?? '').trim()
                 return (
                   <article className="home-training-card" key={formation.id} data-home-reveal>
-                    <Link
-                      className="home-training-card__media"
-                      to={formationPath(formation.slug)}
-                      aria-label={`${t('formations.readOffer')}: ${formation.title}`}
-                    >
-                      <img src={String(formation.image_url).trim()} alt="" loading="lazy" decoding="async" />
-                    </Link>
+                    {imageUrl ? (
+                      <Link
+                        className="home-training-card__media"
+                        to={formationPath(formation.slug)}
+                        aria-label={`${t('formations.readOffer')}: ${formation.title}`}
+                      >
+                        <img src={imageUrl} alt="" loading="lazy" decoding="async" />
+                      </Link>
+                    ) : null}
                     <div className="home-training-card__body">
-                      <p className="home-training-card__status">{t('formations.statusOpen')}</p>
+                      <p className={`home-training-card__status home-training-card__status--${status}`}>
+                        {t(`formations.status${status[0].toUpperCase()}${status.slice(1)}`)}
+                      </p>
                       <h3>
                         <Link to={formationPath(formation.slug)}>{formation.title}</Link>
                       </h3>
@@ -261,7 +263,7 @@ export function Home() {
             </div>
           ) : null}
           {!formationsLoading && !formationsError && !latestFormations.length ? (
-            <p className="home-trainings__message">{t('formations.registrationClosed')}</p>
+            <p className="home-trainings__message">{t('formations.empty')}</p>
           ) : null}
 
           <p className="home-trainings__all">
