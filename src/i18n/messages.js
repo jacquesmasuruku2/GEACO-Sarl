@@ -230,6 +230,10 @@ export const messages = {
       approachTitle: 'Approche intégrée',
       approachText:
         'Combiner études agronomiques, aménagements hydro-agricoles et travaux de génie civil permet d’aligner la production, l’accès à l’eau et la connectivité physique des exploitations et villages.',
+      partnersTitle: 'Nos partenaires',
+      partnersLead:
+        'Nous avançons avec des organisations qui partagent notre engagement pour des projets durables et utiles aux communautés.',
+      partnersCta: 'Découvrir nos partenaires',
       legalLink: 'Voir les mentions légales complètes',
       contactLink: 'Nous contacter',
     },
@@ -731,6 +735,7 @@ export const messages = {
       activeEmpty:
         'Aucun partenaire public pour le moment. Revenez prochainement pour découvrir nos collaborations.',
       loading: 'Chargement des partenaires…',
+      loadError: 'Impossible de charger les partenaires',
       visitWebsite: 'Site web',
       partnersScrollHint:
         'Faites défiler horizontalement pour parcourir tous les partenaires publiés (souris, trackpad ou glissement au doigt).',
@@ -746,6 +751,13 @@ export const messages = {
       formEmailPlaceholder: 'vous@exemple.com',
       formMessage: 'Votre proposition',
       formMessagePlaceholder: 'Objet, périmètre et ce que vous proposez…',
+      formImage: 'Image de présentation (facultatif)',
+      formImageHint: 'Ajoutez une image JPEG, PNG ou WebP de 2 Mo maximum.',
+      formImageTypeError: 'Choisissez une image JPEG, PNG ou WebP.',
+      formImageSizeError: 'L’image ne peut pas dépasser 2 Mo.',
+      formImageUploadError: 'Impossible de téléverser l’image. Réessayez.',
+      formImageMigrationError:
+        'Le formulaire de partenariat nécessite la migration Supabase 026. Contactez l’administrateur du site.',
       formSubmit: 'Envoyer',
       formValidationError:
         'Veuillez renseigner l’organisation, le nom, l’email et un message d’au moins 10 caractères.',
@@ -1387,6 +1399,10 @@ export const messages = {
       approachTitle: 'Integrated approach',
       approachText:
         'Combining agronomic studies, hydro-agricultural schemes and civil works aligns production, water access and physical connectivity for farms and villages.',
+      partnersTitle: 'Our partners',
+      partnersLead:
+        'We work with organisations that share our commitment to sustainable projects that serve local communities.',
+      partnersCta: 'Meet our partners',
       legalLink: 'Read the full legal notice',
       contactLink: 'Contact us',
     },
@@ -1872,6 +1888,7 @@ export const messages = {
       activeEmpty:
         'No public partners yet. Please check back soon to discover our collaborations.',
       loading: 'Loading partners…',
+      loadError: 'Unable to load partners',
       visitWebsite: 'Website',
       partnersScrollHint:
         'Scroll horizontally to browse all published partners (mouse, trackpad or swipe).',
@@ -1887,6 +1904,13 @@ export const messages = {
       formEmailPlaceholder: 'you@example.com',
       formMessage: 'Your proposal',
       formMessagePlaceholder: 'Purpose, scope and what you propose…',
+      formImage: 'Presentation image (optional)',
+      formImageHint: 'Add a JPEG, PNG or WebP image up to 2 MB.',
+      formImageTypeError: 'Choose a JPEG, PNG or WebP image.',
+      formImageSizeError: 'The image must be no larger than 2 MB.',
+      formImageUploadError: 'Unable to upload the image. Please try again.',
+      formImageMigrationError:
+        'The partnership form requires Supabase migration 026. Please contact the site administrator.',
       formSubmit: 'Send',
       formValidationError:
         'Please provide the organization, name, email and a message of at least 10 characters.',

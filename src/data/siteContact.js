@@ -4,7 +4,7 @@
  *
  * Téléphone principal (affichage public) : +243 808 368 955
  * WhatsApp terrain : +243 977 472 158
- * Email : geacosarl@gmail.com
+ * Emails : geacosarl@gmail.com, contact@geacosarl.org
  *
  * TODO GEACO : confirmer si +243 836 895 855 reste un numéro secondaire valide.
  */
@@ -14,6 +14,7 @@ export const SITE_CONTACT = {
   websiteDisplay: 'www.geacosarl.org',
   websiteUrl: 'https://www.geacosarl.org',
   email: 'geacosarl@gmail.com',
+  emails: ['geacosarl@gmail.com', 'contact@geacosarl.org'],
   phonePrimaryDisplay: '+243 808 368 955',
   phonePrimaryTel: '+243808368955',
   /** Ancien numéro encore présent sur certains supports — à confirmer */

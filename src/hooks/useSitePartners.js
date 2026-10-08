@@ -19,14 +19,26 @@ export function useSitePartners() {
       .select('id,name,subtitle,logo_url,website_url,notes,partnership_motive,sort_order')
       .eq('published', true)
       .order('sort_order', { ascending: true })
-      .then(({ data, error: qErr }) => {
+      .then(async ({ data, error: qErr }) => {
         if (cancelled) return
-        if (qErr) {
-          setError(qErr)
+        let partnerRows = data
+        let queryError = qErr
+        if (qErr?.code === '42703' && /logo_url/i.test(qErr.message)) {
+          const fallback = await supabase
+            .from('site_partners')
+            .select('id,name,subtitle,website_url,notes,partnership_motive,sort_order')
+            .eq('published', true)
+            .order('sort_order', { ascending: true })
+          if (cancelled) return
+          partnerRows = fallback.data?.map((partner) => ({ ...partner, logo_url: '' })) ?? null
+          queryError = fallback.error
+        }
+        if (queryError) {
+          setError(queryError)
           setRows([])
         } else {
           setError(null)
-          setRows(data ?? [])
+          setRows(partnerRows ?? [])
         }
         setLoading(false)
       })

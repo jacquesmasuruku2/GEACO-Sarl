@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useI18n } from '../i18n/useI18n'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 
 const PARTNERSHIP_SUBJECT = '[GEACO] Proposition de partenariat'
+const PARTNERSHIP_UPLOAD_BUCKET = 'partnership-uploads'
+const MAX_PARTNERSHIP_IMAGE_BYTES = 2 * 1024 * 1024
+const PARTNERSHIP_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp'])
 
 const DOMAINE_SLUG_MAP = {
   agriculture: 0,
@@ -27,6 +30,8 @@ export function LeadFormSupabase({ source, redirectTo }) {
   const [params] = useSearchParams()
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [partnershipImage, setPartnershipImage] = useState(null)
+  const partnershipImageInput = useRef(null)
 
   const domainOptions = source === 'contact' ? t('contact.domainOptions') : []
   const safeDomainOptions = Array.isArray(domainOptions) ? domainOptions : []
@@ -66,9 +71,33 @@ export function LeadFormSupabase({ source, redirectTo }) {
     setEmail('')
     setPhone('')
     setMessage('')
+    setPartnershipImage(null)
+    if (partnershipImageInput.current) partnershipImageInput.current.value = ''
     setGotcha('')
     setConsent(false)
     setError('')
+  }
+
+  function onPartnershipImageChange(event) {
+    const file = event.target.files?.[0] || null
+    setError('')
+    if (!file) {
+      setPartnershipImage(null)
+      return
+    }
+    if (!PARTNERSHIP_IMAGE_TYPES.has(file.type)) {
+      event.target.value = ''
+      setPartnershipImage(null)
+      setError(t('partnerships.formImageTypeError'))
+      return
+    }
+    if (file.size > MAX_PARTNERSHIP_IMAGE_BYTES) {
+      event.target.value = ''
+      setPartnershipImage(null)
+      setError(t('partnerships.formImageSizeError'))
+      return
+    }
+    setPartnershipImage(file)
   }
 
   if (!isSupabaseConfigured || !supabase) {
@@ -110,18 +139,83 @@ export function LeadFormSupabase({ source, redirectTo }) {
         return
       }
       setBusy(true)
-      const { error: insErr } = await supabase.from('site_partnership_messages').insert({
-        locale: loc,
-        subject: subj,
-        full_name: name,
-        organization: org,
-        email: mail,
-        message: msg,
-      })
-      setBusy(false)
-      if (insErr) {
-        setError(insErr.message || t('forms.formErrorSend'))
+      let attachmentPath = null
+      let attachmentMayExist = false
+      try {
+        if (partnershipImage) {
+          const extension = {
+            'image/jpeg': 'jpg',
+            'image/png': 'png',
+            'image/webp': 'webp',
+          }[partnershipImage.type]
+          attachmentPath = `requests/${crypto.randomUUID()}.${extension}`
+          attachmentMayExist = true
+          const { error: uploadErr } = await supabase.storage
+            .from(PARTNERSHIP_UPLOAD_BUCKET)
+            .upload(attachmentPath, partnershipImage, {
+              cacheControl: '3600',
+              contentType: partnershipImage.type,
+              upsert: false,
+            })
+          if (uploadErr) {
+            attachmentMayExist = false
+            const missingBucket = /bucket not found/i.test(uploadErr.message)
+            setError(
+              missingBucket
+                ? t('partnerships.formImageMigrationError')
+                : uploadErr.message || t('partnerships.formImageUploadError'),
+            )
+            return
+          }
+        }
+
+        const { error: insErr } = await supabase.from('site_partnership_messages').insert({
+          locale: loc,
+          subject: subj,
+          full_name: name,
+          organization: org,
+          email: mail,
+          message: msg,
+          attachment_path: attachmentPath,
+        })
+        if (insErr) {
+          if (attachmentPath) {
+            const { error: cleanupError } = await supabase.storage
+              .from(PARTNERSHIP_UPLOAD_BUCKET)
+              .remove([attachmentPath])
+            if (cleanupError) {
+              console.error('Could not remove an unlinked partnership attachment.', cleanupError)
+            } else {
+              attachmentMayExist = false
+            }
+          }
+          const migrationMissing =
+            insErr.code === '42703' || /attachment_path|partnership-uploads|bucket not found/i.test(insErr.message)
+          setError(
+            migrationMissing
+              ? t('partnerships.formImageMigrationError')
+              : insErr.message || t('forms.formErrorSend'),
+          )
+          return
+        }
+      } catch (submitError) {
+        console.error('Partnership request submission failed.', submitError)
+        if (attachmentPath && attachmentMayExist) {
+          try {
+            const { error: cleanupError } = await supabase.storage
+              .from(PARTNERSHIP_UPLOAD_BUCKET)
+              .remove([attachmentPath])
+            if (cleanupError) {
+              console.error('Could not remove an unlinked partnership attachment.', cleanupError)
+            }
+          } catch (cleanupError) {
+            console.error('Could not remove an unlinked partnership attachment.', cleanupError)
+          }
+        }
+        setError(submitError.message || t('forms.formErrorSend'))
         return
+      } finally {
+        setBusy(false)
       }
       clearForm()
       navigate(redirectTo, { replace: false })
@@ -506,6 +600,27 @@ export function LeadFormSupabase({ source, redirectTo }) {
               autoComplete="off"
               placeholder={t('partnerships.formMessagePlaceholder')}
             />
+          </div>
+
+          <div className="simple-form__field partnership-image-field">
+            <label htmlFor="lead-pimage">{t('partnerships.formImage')}</label>
+            <input
+              ref={partnershipImageInput}
+              id="lead-pimage"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={onPartnershipImageChange}
+              aria-describedby="lead-pimage-hint"
+            />
+            <p className="form-note" id="lead-pimage-hint">
+              {t('partnerships.formImageHint')}
+            </p>
+            {partnershipImage ? (
+              <p className="partnership-image-field__selected">
+                {partnershipImage.name} · {(partnershipImage.size / (1024 * 1024)).toFixed(2)}{' '}
+                {locale === 'en' ? 'MB' : 'Mo'}
+              </p>
+            ) : null}
           </div>
         </>
       ) : null}

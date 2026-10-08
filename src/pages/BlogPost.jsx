@@ -263,7 +263,12 @@ export function BlogPost() {
 
           {coverUrl ? (
             <figure className="blog-post__cover">
-              <img src={coverUrl} alt="" loading="eager" decoding="async" />
+              <img
+                src={coverUrl}
+                alt=""
+                loading="eager"
+                decoding="async"
+              />
             </figure>
           ) : null}
 

@@ -52,9 +52,11 @@ export function Contact() {
               >
                 {t('contact.quickWhatsapp')}
               </a>
-              <a className="btn btn--outline" href={`mailto:${SITE_CONTACT.email}`}>
-                {SITE_CONTACT.email}
-              </a>
+              {SITE_CONTACT.emails.map((email) => (
+                <a key={email} className="btn btn--outline" href={`mailto:${email}`}>
+                  {email}
+                </a>
+              ))}
               <a className="btn btn--outline" href={`tel:${SITE_CONTACT.phonePrimaryTel}`}>
                 {SITE_CONTACT.phonePrimaryDisplay}
               </a>

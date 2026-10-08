@@ -60,11 +60,37 @@ export function Home() {
     .slice(0, 3)
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+
     const intervalId = window.setInterval(() => {
       setActiveHeroSlide((current) => (current + 1) % heroSlides.length)
     }, 4000)
     return () => window.clearInterval(intervalId)
   }, [heroSlides.length])
+
+  useEffect(() => {
+    const revealElements = document.querySelectorAll('[data-home-reveal]')
+    const revealAll = () => revealElements.forEach((element) => element.classList.add('is-visible'))
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      revealAll()
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -48px 0px' },
+    )
+    revealElements.forEach((element) => observer.observe(element))
+
+    return () => observer.disconnect()
+  }, [])
 
   function getInitials(name) {
     return String(name ?? '')
@@ -128,9 +154,36 @@ export function Home() {
         </div>
       </section>
 
+      <section className="home-impact" aria-labelledby="home-impact-title">
+        <div className="container">
+          <h2 className="visually-hidden" id="home-impact-title">
+            {t('home.statsSectionTitle')}
+          </h2>
+          <div className="home-impact__panel">
+            <div className="home-impact__metrics">
+              {safeStats.map((row) => (
+                <div key={row.label} className="stat-block" data-home-reveal>
+                  <div className="stat-block__value">{row.value}</div>
+                  <p className="stat-block__label">{row.label}</p>
+                </div>
+              ))}
+            </div>
+            <Link className="home-impact__link" to="/projets" data-home-reveal>
+              <span className="home-impact__eyebrow">
+                {locale === 'en' ? 'Our impact' : 'Notre impact'}
+              </span>
+              <strong>{t('home.trustCta')}</strong>
+              <span className="home-impact__arrow" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="section" id="expertises" aria-labelledby="pillars-title">
         <div className="container">
-          <div className="section__head section__head--wide">
+          <div className="section__head section__head--wide" data-home-reveal>
             <p className="section-kicker">{t('nav.solutions')}</p>
             <h2 id="pillars-title" className="section__title">
               {t('home.pillarsTitle')}
@@ -139,7 +192,7 @@ export function Home() {
           </div>
           <div className="pillar-grid">
             {pillars.map((pillar) => (
-              <article className={`pillar-card ${pillar.className}`} key={pillar.slug}>
+              <article className={`pillar-card ${pillar.className}`} key={pillar.slug} data-home-reveal>
                 <div className="pillar-card__media">
                   <img src={pillar.image} alt={pillar.imageAlt} loading="lazy" decoding="async" />
                 </div>
@@ -161,7 +214,7 @@ export function Home() {
 
       <section className="section home-trainings" aria-labelledby="home-trainings-title">
         <div className="container">
-          <header className="section__head section__head--wide home-trainings__head">
+          <header className="section__head section__head--wide home-trainings__head" data-home-reveal>
             <p className="section-kicker">{t('home.trainingKicker')}</p>
             <h2 id="home-trainings-title" className="section__title">
               {t('home.trainingTitle')}
@@ -180,7 +233,7 @@ export function Home() {
               {latestFormations.map((formation) => {
                 const startDate = formatFormationDate(formation.starts_on, locale)
                 return (
-                  <article className="home-training-card" key={formation.id}>
+                  <article className="home-training-card" key={formation.id} data-home-reveal>
                     <Link
                       className="home-training-card__media"
                       to={formationPath(formation.slug)}
@@ -221,7 +274,7 @@ export function Home() {
 
       <section className="section section--muted" aria-labelledby="integrated-title">
         <div className="container home-integrated">
-          <div className="section__head section__head--wide">
+          <div className="section__head section__head--wide" data-home-reveal>
             <p className="section-kicker">{locale === 'en' ? 'Approach' : 'Approche'}</p>
             <h2 id="integrated-title" className="section__title">
               {t('home.integratedTitle')}
@@ -229,16 +282,16 @@ export function Home() {
             <p>{t('home.integratedLead')}</p>
           </div>
           <div className="home-integrated__links">
-            <Link to="/domaines/agriculture">{t('services.agriculture.title')}</Link>
-            <Link to="/domaines/construction">{t('services.construction.title')}</Link>
-            <Link to="/domaines/wash">{t('services.wash.title')}</Link>
+            <Link to="/domaines/agriculture" data-home-reveal>{t('services.agriculture.title')}</Link>
+            <Link to="/domaines/construction" data-home-reveal>{t('services.construction.title')}</Link>
+            <Link to="/domaines/wash" data-home-reveal>{t('services.wash.title')}</Link>
           </div>
         </div>
       </section>
 
       <section className="section" aria-labelledby="trust-title">
         <div className="container">
-          <div className="section__head section__head--wide">
+          <div className="section__head section__head--wide" data-home-reveal>
             <p className="section-kicker">{t('nav.projects')}</p>
             <h2 id="trust-title" className="section__title">
               {t('home.trustTitle')}
@@ -251,6 +304,7 @@ export function Home() {
                 key={item.title}
                 to={`/projets/${item.pillar === 'agriculture' ? 'agriculture' : item.pillar === 'wash' ? 'wash' : 'construction'}`}
                 className={`trust-row trust-row--${item.pillar || 'default'}`}
+                data-home-reveal
               >
                 <span className="trust-row__date">{item.date}</span>
                 <div className="trust-row__body">
@@ -274,7 +328,7 @@ export function Home() {
 
       <section className="section section--deep" aria-labelledby="method-title">
         <div className="container">
-          <div className="section__head section__head--wide">
+          <div className="section__head section__head--wide" data-home-reveal>
             <p className="section-kicker" style={{ color: '#7dd3fc' }}>
               {locale === 'en' ? 'Method' : 'Méthode'}
             </p>
@@ -285,7 +339,7 @@ export function Home() {
           </div>
           <ol className="method-steps">
             {safeMethod.map((step, index) => (
-              <li className="method-steps__item" key={step.title}>
+              <li className="method-steps__item" key={step.title} data-home-reveal>
                 <span className="method-steps__index" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>
@@ -297,29 +351,20 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="section__head section__head--wide">
+      <section className="section home-vision" data-home-reveal>
+        <div className="container home-vision__inner">
+          <div>
+            <p className="section-kicker">{t('home.visionTitle')}</p>
             <h2 className="section__title">{t('home.statsSectionTitle')}</h2>
-            <p>{t('home.visionText')}</p>
           </div>
-          <div className="stats-strip__grid stats-strip__grid--compact">
-            {safeStats.map((row) => (
-              <div key={row.label} className="stat-block">
-                <div className="stat-block__value">{row.value}</div>
-                <p className="stat-block__label">{row.label}</p>
-              </div>
-            ))}
-          </div>
-          <p style={{ marginTop: '1.25rem' }}>
-            <Link className="btn btn--outline" to="/a-propos">
-              {t('home.promoCta')}
-            </Link>
-          </p>
+          <p>{t('home.visionText')}</p>
+          <Link className="btn btn--outline" to="/a-propos">
+            {t('home.promoCta')}
+          </Link>
         </div>
       </section>
 
-      <section className="cta-band">
+      <section className="cta-band" data-home-reveal>
         <div className="cta-band__inner">
           <div>
             <h2>{t('home.ctaBandTitle')}</h2>
@@ -339,7 +384,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section section--tight section--muted">
+      <section className="section section--tight section--muted" data-home-reveal>
         <div className="container">
           <div className="partners-showcase__head">
             <h2 className="partners-showcase__title">

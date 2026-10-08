@@ -98,14 +98,17 @@ export function Header() {
         <div className="site-topbar__inner">
           <span className="site-topbar__region">{t('header.regionLine')}</span>
           <div className="site-topbar__actions" role="group" aria-label="Contact rapide">
-            <a
-              className="site-topbar__btn site-topbar__btn--mail"
-              href={`mailto:${SITE_CONTACT.email}`}
-              title={SITE_CONTACT.email}
-            >
-              <IconMail />
-              <span>{SITE_CONTACT.email}</span>
-            </a>
+            {SITE_CONTACT.emails.map((email) => (
+              <a
+                key={email}
+                className="site-topbar__btn site-topbar__btn--mail"
+                href={`mailto:${email}`}
+                title={email}
+              >
+                <IconMail />
+                <span>{email}</span>
+              </a>
+            ))}
             <a
               className="site-topbar__btn site-topbar__btn--phone"
               href={`tel:${SITE_CONTACT.phonePrimaryTel}`}

@@ -56,7 +56,12 @@ export function Blog() {
                           tabIndex={-1}
                           aria-hidden="true"
                         >
-                          <img src={cover} alt="" loading="lazy" decoding="async" />
+                          <img
+                            src={cover}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
                         </Link>
                       ) : null}
                       <div className="blog-wada-item__content">

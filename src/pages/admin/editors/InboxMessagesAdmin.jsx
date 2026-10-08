@@ -193,6 +193,8 @@ export function PartnershipMessagesAdmin() {
   const [rows, setRows] = useState([])
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [attachmentUrl, setAttachmentUrl] = useState('')
+  const [attachmentError, setAttachmentError] = useState('')
   const [openId, setOpenId] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -218,15 +220,57 @@ export function PartnershipMessagesAdmin() {
     load()
   }, [load])
 
+  useEffect(() => {
+    let cancelled = false
+    const attachmentPath = rows.find((row) => row.id === openId)?.attachment_path
+    setAttachmentUrl('')
+    setAttachmentError('')
+    if (!attachmentPath || !supabase) return undefined
+
+    supabase.storage
+      .from('partnership-uploads')
+      .createSignedUrl(attachmentPath, 300)
+      .then(({ data, error: signedUrlError }) => {
+        if (cancelled) return
+        if (signedUrlError) {
+          setAttachmentError(signedUrlError.message)
+          return
+        }
+        setAttachmentUrl(data.signedUrl)
+      })
+      .catch((signedUrlError) => {
+        if (!cancelled) setAttachmentError(signedUrlError.message || 'Impossible de charger l’image jointe.')
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [openId, rows])
+
   async function removeRow(id) {
     if (!supabase) return
     if (!window.confirm('Supprimer cette demande de partenariat ?')) return
+    const attachmentPath = rows.find((row) => row.id === id)?.attachment_path
     const { error: delErr } = await supabase.from('site_partnership_messages').delete().eq('id', id)
     if (delErr) {
       setError(delErr.message)
       return
     }
-    setMessage('Demande supprimée.')
+    const successMessage = 'Demande supprimée.'
+    if (attachmentPath) {
+      try {
+        const { error: removeError } = await supabase.storage
+          .from('partnership-uploads')
+          .remove([attachmentPath])
+        if (removeError) {
+          setError(`Demande supprimée, mais l’image jointe n’a pas pu être supprimée : ${removeError.message}`)
+        }
+      } catch (removeError) {
+        const details = removeError instanceof Error ? removeError.message : String(removeError)
+        setError(`Demande supprimée, mais l’image jointe n’a pas pu être supprimée : ${details}`)
+      }
+    }
+    setMessage(successMessage)
     if (openId === id) setOpenId(null)
     load()
   }
@@ -316,6 +360,27 @@ export function PartnershipMessagesAdmin() {
               <dt>Langue</dt>
               <dd>{openRow.locale === 'en' ? 'EN' : 'FR'}</dd>
             </div>
+            {openRow.attachment_path ? (
+              <div>
+                <dt>Image jointe</dt>
+                <dd>
+                  {attachmentUrl ? (
+                    <a href={attachmentUrl} target="_blank" rel="noreferrer noopener">
+                      <img
+                        src={attachmentUrl}
+                        alt={`Image jointe par ${openRow.organization}`}
+                        style={{ display: 'block', maxWidth: 'min(100%, 20rem)', maxHeight: '14rem', marginBottom: '0.5rem' }}
+                      />
+                      Ouvrir l’image
+                    </a>
+                  ) : attachmentError ? (
+                    <span role="alert">{attachmentError}</span>
+                  ) : (
+                    'Chargement…'
+                  )}
+                </dd>
+              </div>
+            ) : null}
           </dl>
           <pre className="admin-inbox__body">{openRow.message}</pre>
           <div className="admin-actions">
@@ -938,4 +1003,3 @@ export function PersonnelApplicationsAdmin() {
     </section>
   )
 }
-

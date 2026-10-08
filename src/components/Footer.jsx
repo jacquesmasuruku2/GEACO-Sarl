@@ -95,7 +95,11 @@ export function Footer() {
           <ul className="site-footer__contact-list">
             <li>
               <span className="site-footer__contact-label">{t('footer.labelEmail')}</span>
-              <a href={`mailto:${SITE_CONTACT.email}`}>{SITE_CONTACT.email}</a>
+              {SITE_CONTACT.emails.map((email) => (
+                <a key={email} href={`mailto:${email}`}>
+                  {email}
+                </a>
+              ))}
             </li>
             <li>
               <span className="site-footer__contact-label">{t('footer.labelPhone')}</span>

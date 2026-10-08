@@ -30,7 +30,9 @@ Pour `/blog/:slug`, `vercel.json` envoie les robots des médias sociaux vers cet
 
 ### Formulaires Contact & Partenariats
 
-Les envois passent par **Supabase** : **contact** dans `public.site_lead_messages` (migration `005_site_lead_messages.sql`), **partenariat** dans `public.site_partnership_messages` (migration `006_site_partnership_messages.sql`). Exécuter `005` puis `006` après `001`–`004`. Les messages sont visibles en SQL ou pour une future vue admin (policies `SELECT` réservées aux comptes `app_admins`).
+Les envois passent par **Supabase** : **contact** dans `public.site_lead_messages` (migration `005_site_lead_messages.sql`), **partenariat** dans `public.site_partnership_messages` (migration `006_site_partnership_messages.sql`). Exécuter `005` puis `006` après `001`–`004`. Les messages sont disponibles dans la boîte de réception admin et les policies `SELECT` sont réservées aux comptes `app_admins`. Pour afficher les logos dans l’annuaire des partenaires, appliquer aussi `009_site_partners_logo_url.sql` si cette migration n’a pas encore été exécutée.
+
+Le formulaire partenariat peut joindre une image JPEG, PNG ou WebP de 2 Mo maximum. Appliquer aussi `supabase/migrations/026_partnership_request_images.sql` après `006` et `007` : cette migration crée le bucket privé de téléversement et le champ de pièce jointe visible dans la boîte de réception admin.
 
 ### Page blanche ou « rien » sur mobile / ordinateur
 

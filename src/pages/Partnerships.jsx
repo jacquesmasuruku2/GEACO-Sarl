@@ -5,6 +5,7 @@ import { PageHero } from '../components/PageHero'
 import { LeadFormSupabase } from '../components/LeadFormSupabase'
 import { ContactThanksBanner } from '../components/ContactThanksBanner'
 import { useSitePartners } from '../hooks/useSitePartners'
+import { normalizeExternalUrl } from '../lib/externalUrl'
 
 export function Partnerships() {
   const { t } = useI18n()
@@ -73,7 +74,7 @@ export function Partnerships() {
           {partners.length ? (
             <ul className="partners-directory__list">
               {partners.map((partner) => {
-                const website = String(partner.website_url ?? '').trim()
+                const website = normalizeExternalUrl(partner.website_url)
                 const blurb = partnerBlurb(partner)
                 const subtitle = String(partner.subtitle ?? '').trim()
                 return (

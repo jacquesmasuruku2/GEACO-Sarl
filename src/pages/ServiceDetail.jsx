@@ -158,7 +158,11 @@ export function ServiceDetail() {
                 <a href={SITE_CONTACT.whatsappUrl} target="_blank" rel="noreferrer">
                   WhatsApp {SITE_CONTACT.whatsappDisplay}
                 </a>
-                <a href={`mailto:${SITE_CONTACT.email}`}>{SITE_CONTACT.email}</a>
+                {SITE_CONTACT.emails.map((email) => (
+                  <a key={email} href={`mailto:${email}`}>
+                    {email}
+                  </a>
+                ))}
                 <a href={`tel:${SITE_CONTACT.phonePrimaryTel}`}>{SITE_CONTACT.phonePrimaryDisplay}</a>
               </div>
             </aside>

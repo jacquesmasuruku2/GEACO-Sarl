@@ -5,6 +5,8 @@ import { PageHero } from '../components/PageHero'
 import { SITE_OFFICES } from '../data/siteContact'
 import { slugifyPersonnel } from '../lib/personnelSlug'
 import { useSitePersonnel } from '../hooks/useSitePersonnel'
+import { useSitePartners } from '../hooks/useSitePartners'
+import { normalizeExternalUrl } from '../lib/externalUrl'
 
 function isPhotoUrl(value) {
   return typeof value === 'string' && /^(https?:\/\/|\/)/i.test(value.trim())
@@ -20,6 +22,7 @@ function memberInitials(name) {
 export function About() {
   const { t, locale } = useI18n()
   const { groups: personnelGroups, error: personnelError } = useSitePersonnel(locale)
+  const { rows: partners, loading: partnersLoading, error: partnersError } = useSitePartners()
   const team = t('about.team')
   const values = t('about.values')
   const objectItems = t('about.objectItems')
@@ -143,6 +146,67 @@ export function About() {
               )
             })}
           </div>
+
+          <section className="about-partners" aria-labelledby="about-partners-title">
+            <header className="about-block__head about-block__head--spaced">
+              <h2 id="about-partners-title">{t('about.partnersTitle')}</h2>
+              <p>{t('about.partnersLead')}</p>
+            </header>
+
+            {partnersError ? (
+              <p className="about-prose" role="alert">
+                {t('partnerships.loadError')}: {partnersError.message}
+              </p>
+            ) : null}
+            {partnersLoading ? <p className="about-prose">{t('partnerships.loading')}</p> : null}
+            {!partnersLoading && !partnersError && partners.length ? (
+              <div className="about-partners__grid">
+                {partners.map((partner) => {
+                  const website = normalizeExternalUrl(partner.website_url)
+                  const initials = String(partner.name ?? '')
+                    .trim()
+                    .split(/\s+/)
+                    .slice(0, 2)
+                    .map((part) => part[0] ?? '')
+                    .join('')
+                    .toUpperCase()
+                  const description = String(
+                    partner.partnership_motive || partner.notes || partner.subtitle || '',
+                  ).trim()
+
+                  return (
+                    <article className="about-partner-card" key={partner.id}>
+                      <div className="about-partner-card__logo" aria-hidden="true">
+                        {partner.logo_url ? (
+                          <img src={String(partner.logo_url).trim()} alt="" loading="lazy" decoding="async" />
+                        ) : (
+                          <span>{initials}</span>
+                        )}
+                      </div>
+                      <div className="about-partner-card__body">
+                        <h3>{partner.name}</h3>
+                        {partner.subtitle ? <p className="about-partner-card__subtitle">{partner.subtitle}</p> : null}
+                        {description ? <p>{description}</p> : null}
+                        {website ? (
+                          <a href={website} target="_blank" rel="noreferrer noopener">
+                            {t('partnerships.visitWebsite')}
+                          </a>
+                        ) : null}
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+            ) : null}
+            {!partnersLoading && !partnersError && !partners.length ? (
+              <p className="about-prose">{t('partnerships.activeEmpty')}</p>
+            ) : null}
+            <div className="about-partners__footer">
+              <Link className="btn btn--primary" to="/partenariats">
+                {t('about.partnersCta')}
+              </Link>
+            </div>
+          </section>
 
           <div className="about-page__links">
             <Link className="btn btn--outline" to="/mentions-legales">

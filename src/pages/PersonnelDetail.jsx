@@ -5,6 +5,7 @@ import { PageHero } from '../components/PageHero'
 import { formatNavLabel } from '../lib/formatNavLabel'
 import { useSitePersonnelBySlug } from '../hooks/useSitePersonnelBySlug'
 import { PersonnelCardLinks } from '../components/PersonnelCardLinks'
+import { personnelContactEmail } from '../data/personnelContacts'
 
 function isPhotoUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim())
@@ -118,7 +119,7 @@ export function PersonnelDetail() {
               <p className="personnel-modal__bio personnel-modal__bio--empty">{t('personnel.noBio')}</p>
             )}
             <PersonnelCardLinks
-              email={member.email}
+              email={personnelContactEmail({ slug, name: member.name, email: member.email })}
               facebookUrl={member.facebook_url}
               linkedinUrl={member.linkedin_url}
               labels={linkLabels}

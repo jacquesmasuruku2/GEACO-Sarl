@@ -7,6 +7,7 @@ import { formatNavLabel } from '../lib/formatNavLabel'
 import { useSitePersonnel } from '../hooks/useSitePersonnel'
 import { PersonnelCardLinks } from '../components/PersonnelCardLinks'
 import { slugifyPersonnel } from '../lib/personnelSlug'
+import { personnelContactEmail } from '../data/personnelContacts'
 
 function isPhotoUrl(url) {
   return typeof url === 'string' && /^https?:\/\//i.test(url.trim())
@@ -33,7 +34,7 @@ function normalizeMember(m, key) {
     focus: m.focus,
     bio: m.bio,
     photo_url: m.photo_url,
-    email: m.email,
+    email: personnelContactEmail({ slug: m.slug, name: m.name, email: m.email }),
     facebook_url: m.facebook_url,
     linkedin_url: m.linkedin_url,
   }

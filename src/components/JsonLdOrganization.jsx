@@ -13,7 +13,7 @@ export function JsonLdOrganization() {
     description:
       'Études, conception et réalisation de projets intégrés en agriculture, construction et WASH — RDC.',
     url: base || undefined,
-    email: SITE_CONTACT.email,
+    email: SITE_CONTACT.emails,
     telephone: [SITE_CONTACT.phonePrimaryTel, SITE_CONTACT.whatsappTel],
     address: [
       {
