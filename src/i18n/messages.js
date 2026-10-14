@@ -66,11 +66,10 @@ export const messages = {
         { title: 'Former', text: 'Transférer les pratiques aux équipes et communautés locales.' },
         { title: 'Suivre', text: 'Mesurer, ajuster et documenter pour la durabilité.' },
       ],
-      trustTitle: 'Confiance & réalisations récentes',
-      trustLead:
-        'Aperçu de missions représentatives. Les typologies illustratives ne remplacent pas une fiche projet documentée.',
+      trustTitle: 'Projets récents',
+      trustLead: 'Découvrez les derniers projets publiés par GEACO en agriculture, construction et WASH.',
       trustCta: 'Voir tous les projets',
-      trustStatusNote: 'Statut à préciser (réalisé / en cours / capacité) — voir CONTENT-VALIDATION.md',
+      projectsEmpty: 'Aucun projet publié pour le moment.',
       visionTitle: 'Vision',
       visionText:
         'Devenir un acteur majeur en Afrique centrale dans la mise en œuvre de solutions durables en agriculture et en infrastructures rurales.',
@@ -93,6 +92,7 @@ export const messages = {
       partnersTeaserTitle: 'Partenariats',
       partnersTeaser:
         'Nous recherchons des partenaires semenciers, organisations agricoles, bailleurs et ONG internationales.',
+      partnerLogosEmpty: 'Les logos des partenaires seront affichés ici après leur ajout.',
       partnersCta: 'Proposer un partenariat',
       fieldKicker: 'Terrain',
       fieldTitle: 'Nos chantiers, en images',
@@ -125,28 +125,6 @@ export const messages = {
         ],
         cta: 'Voir le projet Solution Café',
       },
-      newsSectionTitle: 'Actualités & projets',
-      newsMore: 'Voir toutes les actualités',
-      newsItems: [
-        {
-          date: '14.04.2026',
-          cats: ['WASH', 'Hydraulique'],
-          title: 'Évaluation et optimisation d’un système d’adduction d’eau communautaire',
-          pillar: 'wash',
-        },
-        {
-          date: '09.04.2026',
-          cats: ['Construction', 'Génie civil'],
-          title: 'Évaluation de site et renforcement d’un axe rural pour l’écoulement des récoltes',
-          pillar: 'construction',
-        },
-        {
-          date: '02.04.2026',
-          cats: ['Agriculture', 'Chaîne de valeur'],
-          title: 'Étude d’impact et encadrement technique sur itinéraires agro-pastoraux durables',
-          pillar: 'agriculture',
-        },
-      ],
       promoEyebrow: 'Essentiel GEACO',
       promoTitle: 'Une entreprise intégrée au service des territoires',
       promoText:
@@ -1249,11 +1227,10 @@ export const messages = {
         { title: 'Train', text: 'Transfer practices to local teams and communities.' },
         { title: 'Follow up', text: 'Measure, adjust and document for sustainability.' },
       ],
-      trustTitle: 'Trust & recent assignments',
-      trustLead:
-        'A snapshot of representative missions. Illustrative typologies do not replace a documented project sheet.',
+      trustTitle: 'Recent projects',
+      trustLead: 'Explore GEACO’s latest published projects in agriculture, construction and WASH.',
       trustCta: 'View all projects',
-      trustStatusNote: 'Status to confirm (delivered / ongoing / capacity) — see CONTENT-VALIDATION.md',
+      projectsEmpty: 'No projects have been published yet.',
       visionTitle: 'Vision',
       visionText:
         'Become a leading actor in Central Africa for sustainable agriculture and rural infrastructure delivery.',
@@ -1276,6 +1253,7 @@ export const messages = {
       partnersTeaserTitle: 'Partnerships',
       partnersTeaser:
         'We seek partnerships with seed companies, farmer organizations, donors and international NGOs.',
+      partnerLogosEmpty: 'Partner logos will appear here once they have been added.',
       partnersCta: 'Start a partnership',
       fieldKicker: 'In the field',
       fieldTitle: 'Our sites, in pictures',
@@ -1296,28 +1274,6 @@ export const messages = {
       panelHydroKicker: 'Hydraulics',
       panelHydroLead:
         'Irrigation, drainage, drilling and water supply—securing water for crops and communities.',
-      newsSectionTitle: 'News & projects',
-      newsMore: 'View all news',
-      newsItems: [
-        {
-          date: '14 Apr 2026',
-          cats: ['WASH', 'Hydraulics'],
-          title: 'Assessment and optimisation of a community water supply system',
-          pillar: 'wash',
-        },
-        {
-          date: '9 Apr 2026',
-          cats: ['Construction', 'Civil works'],
-          title: 'Site assessment and upgrade of a rural corridor for crop evacuation',
-          pillar: 'construction',
-        },
-        {
-          date: '2 Apr 2026',
-          cats: ['Agriculture', 'Value chain'],
-          title: 'Impact study and technical coaching on sustainable agro-pastoral itineraries',
-          pillar: 'agriculture',
-        },
-      ],
       promoEyebrow: 'GEACO essentials',
       promoTitle: 'An integrated company serving territories',
       promoText:

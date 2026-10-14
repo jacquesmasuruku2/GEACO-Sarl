@@ -6232,6 +6232,22 @@ a.personnel-profile__more {
   justify-content: flex-start;
 }
 
+.home-partner-logos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  align-items: center;
+  justify-items: center;
+  gap: 1.5rem 2rem;
+  padding: 0.75rem 0;
+}
+
+.home-partner-logos img {
+  display: block;
+  width: min(100%, 160px);
+  height: 88px;
+  object-fit: contain;
+}
+
 .partners-directory__wrap {
   max-width: 52rem;
 }

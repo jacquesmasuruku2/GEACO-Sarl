@@ -26,9 +26,11 @@ export function About() {
   const team = t('about.team')
   const values = t('about.values')
   const objectItems = t('about.objectItems')
+  const methodSteps = t('home.methodSteps')
   const safeTeam = Array.isArray(team) ? team : []
   const safeValues = Array.isArray(values) ? values : []
   const safeObject = Array.isArray(objectItems) ? objectItems : []
+  const safeMethod = Array.isArray(methodSteps) ? methodSteps : []
   const databaseMembers = personnelGroups.flatMap((group) => group.members ?? [])
   const hasDatabaseMembers = databaseMembers.length > 0
   const displayedMembers = hasDatabaseMembers
@@ -112,6 +114,31 @@ export function About() {
               <p className="about-prose">{t('about.approachText')}</p>
             </div>
           </div>
+
+          <section className="section section--deep about-method" aria-labelledby="about-method-title">
+            <div className="container">
+              <div className="section__head section__head--wide">
+                <p className="section-kicker" style={{ color: '#7dd3fc' }}>
+                  {locale === 'en' ? 'Method' : 'Méthode'}
+                </p>
+                <h2 id="about-method-title" className="section__title">
+                  {t('home.methodTitle')}
+                </h2>
+                <p>{t('home.methodLead')}</p>
+              </div>
+              <ol className="method-steps">
+                {safeMethod.map((step, index) => (
+                  <li className="method-steps__item" key={step.title}>
+                    <span className="method-steps__index" aria-hidden="true">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                    <h3>{step.title}</h3>
+                    <p>{step.text}</p>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
 
           <header className="about-block__head about-block__head--spaced">
             <h2>{hasDatabaseMembers ? t('personnel.expertsTitle') : t('about.teamTitle')}</h2>

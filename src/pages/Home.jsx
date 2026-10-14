@@ -6,9 +6,13 @@ import { PillarIcon } from '../components/PillarIcon'
 import { PILLAR_ROUTES } from '../data/servicesNav'
 import { useSiteFormations } from '../hooks/useSiteFormations'
 import { useSitePartners } from '../hooks/useSitePartners'
+import { useSitePersonnel } from '../hooks/useSitePersonnel'
 import { useBlogPosts } from '../hooks/useBlogPosts'
+import { useSiteProjects } from '../hooks/useSiteProjects'
 import { formatFormationDate, formationPath } from '../lib/formationDisplay'
+import { formatProjectDate, plainExcerpt, projectCategoryLabel } from '../lib/projectDisplay'
 import { resolveFormationRegistrationStatus } from '../lib/formationStatus'
+import { slugifyPersonnel } from '../lib/personnelSlug'
 
 const PILLAR_META = {
   agriculture: {
@@ -33,6 +37,8 @@ export function Home() {
   const { rows: partners } = useSitePartners()
   const { rows: formationRows, loading: formationsLoading, error: formationsError } = useSiteFormations(locale)
   const { rows: blogPosts, loading: blogLoading, error: blogError } = useBlogPosts(locale, 3, true, true)
+  const { groups: personnelGroups, loading: personnelLoading } = useSitePersonnel(locale)
+  const { rows: projectRows, loading: projectsLoading, error: projectsError } = useSiteProjects()
   const heroSlides = [
     '/media/geaco/geaco-24.jpeg',
     '/media/geaco/geaco-29.jpeg',
@@ -41,16 +47,32 @@ export function Home() {
   ]
   const [activeHeroSlide, setActiveHeroSlide] = useState(0)
 
-  const newsItems = t('home.newsItems')
   const stats = t('home.stats')
-  const methodSteps = t('home.methodSteps')
-  const safeNews = Array.isArray(newsItems) ? newsItems : []
   const safeStats = Array.isArray(stats) ? stats : []
-  const safeMethod = Array.isArray(methodSteps) ? methodSteps : []
+  const partnersWithLogos = partners.filter((partner) => String(partner.logo_url ?? '').trim())
+  const fallbackPersonnelGroups = t('personnel.staffGroups')
   const latestImageBlogPosts = blogPosts.filter((post) => {
     const imageUrl = String(post.hero_image_url ?? '').trim()
     return imageUrl.startsWith('https://') || imageUrl.startsWith('http://') || imageUrl.startsWith('/')
   })
+  const personnelMembers = (
+    personnelGroups.length
+      ? personnelGroups.flatMap((group) => group.members ?? [])
+      : Array.isArray(fallbackPersonnelGroups)
+        ? fallbackPersonnelGroups.flatMap((group) => group.members ?? [])
+        : []
+  ).slice(0, 4)
+  const recentProjects = [...projectRows]
+    .sort((left, right) => {
+      const leftDate = Date.parse(String(left.executed_at ?? ''))
+      const rightDate = Date.parse(String(right.executed_at ?? ''))
+      const leftHasDate = Number.isFinite(leftDate)
+      const rightHasDate = Number.isFinite(rightDate)
+      if (leftHasDate && rightHasDate && leftDate !== rightDate) return rightDate - leftDate
+      if (leftHasDate !== rightHasDate) return leftHasDate ? -1 : 1
+      return Number(left.sort_order ?? 0) - Number(right.sort_order ?? 0)
+    })
+    .slice(0, 3)
   const latestFormations = formationRows
     .slice()
     .sort((left, right) => {
@@ -92,20 +114,23 @@ export function Home() {
     revealElements.forEach((element) => observer.observe(element))
 
     return () => observer.disconnect()
-  }, [formationRows, formationsLoading])
+  }, [
+    formationRows,
+    formationsLoading,
+    blogPosts,
+    blogLoading,
+    personnelGroups,
+    personnelLoading,
+    projectRows,
+    projectsLoading,
+    projectsError,
+  ])
 
-  function getInitials(name) {
-    return String(name ?? '')
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((word) => word[0] ?? '')
-      .join('')
-      .toUpperCase()
-  }
-
-  function hasLogoUrl(partner) {
-    return String(partner?.logo_url ?? '').trim().length > 0
+  function getPersonnelInitials(name) {
+    const parts = String(name ?? '').trim().split(/\s+/).filter(Boolean)
+    if (!parts.length) return '?'
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+    return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase()
   }
 
   const pillars = PILLAR_ROUTES.map(({ slug, detailKey, image, imageAlt }) => {
@@ -316,6 +341,54 @@ export function Home() {
         </section>
       ) : null}
 
+      {personnelMembers.length ? (
+        <section className="section home-personnel" aria-labelledby="home-personnel-title">
+          <div className="container">
+            <header className="personnel-page__intro home-personnel__intro" data-home-reveal>
+              <p className="personnel-page__kicker">{t('personnel.expertsKicker')}</p>
+              <h2 className="personnel-page__title" id="home-personnel-title">
+                {t('personnel.expertsTitle')}
+              </h2>
+              <p className="personnel-page__lead">{t('personnel.expertsLead')}</p>
+            </header>
+            <div className="personnel-grid personnel-grid--compact home-personnel__grid">
+              {personnelMembers.map((member, index) => {
+                const photoUrl = String(member.photo_url ?? '').trim()
+                const hasPhoto = /^(https?:\/\/|\/)/i.test(photoUrl)
+                const profileSlug = String(member.slug ?? '').trim() || slugifyPersonnel(member.name)
+                const profileHref = member.slug ? `/personnel/${profileSlug}` : '/personnel'
+                return (
+                  <article className="personnel-profile" key={member.id ?? `${member.name}-${index}`} data-home-reveal>
+                    <Link
+                      to={profileHref}
+                      className="personnel-profile__media personnel-profile__media--button"
+                      aria-label={`${t('personnel.openProfile')} — ${member.name}`}
+                    >
+                      {hasPhoto ? (
+                        <img src={photoUrl} alt="" loading="lazy" decoding="async" />
+                      ) : (
+                        <span className="personnel-profile__initials" aria-hidden="true">
+                          {getPersonnelInitials(member.name)}
+                        </span>
+                      )}
+                    </Link>
+                    <div className="personnel-profile__body">
+                      <h3 className="personnel-profile__name">
+                        <Link className="personnel-profile__name-btn" to={profileHref}>
+                          {member.name}
+                        </Link>
+                      </h3>
+                      {member.role ? <p className="personnel-profile__role">{member.role}</p> : null}
+                      {member.focus ? <p className="personnel-profile__focus">{member.focus}</p> : null}
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       <section className="section section--muted" aria-labelledby="integrated-title">
         <div className="container home-integrated">
           <div className="section__head section__head--wide" data-home-reveal>
@@ -333,7 +406,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section" aria-labelledby="trust-title">
+      <section className="section home-projects" aria-labelledby="trust-title">
         <div className="container">
           <div className="section__head section__head--wide" data-home-reveal>
             <p className="section-kicker">{t('nav.projects')}</p>
@@ -342,56 +415,48 @@ export function Home() {
             </h2>
             <p>{t('home.trustLead')}</p>
           </div>
-          <div className="trust-list">
-            {safeNews.map((item) => (
-              <Link
-                key={item.title}
-                to={`/projets/${item.pillar === 'agriculture' ? 'agriculture' : item.pillar === 'wash' ? 'wash' : 'construction'}`}
-                className={`trust-row trust-row--${item.pillar || 'default'}`}
-                data-home-reveal
-              >
-                <span className="trust-row__date">{item.date}</span>
-                <div className="trust-row__body">
-                  <div className="trust-row__cats">{(item.cats || []).join(' · ')}</div>
-                  <p className="trust-row__title">{item.title}</p>
-                  <p className="trust-row__note">{t('home.trustStatusNote')}</p>
-                </div>
-                <span className="trust-row__arrow" aria-hidden="true">
-                  →
-                </span>
-              </Link>
-            ))}
-          </div>
+          {projectsLoading ? <p className="projects-empty">{t('projects.loading')}</p> : null}
+          {projectsError ? (
+            <p className="admin-error" role="alert">
+              {t('projects.loadError')}: {projectsError.message}
+            </p>
+          ) : null}
+          {!projectsLoading && !projectsError && recentProjects.length ? (
+            <div className="project-blog-grid home-projects__grid">
+              {recentProjects.map((project) => {
+                const cover = String(project.image_url ?? '').trim()
+                const dateLabel = formatProjectDate(project.executed_at, locale)
+                const excerpt = plainExcerpt(project.description, 150)
+                return (
+                  <article className="project-blog-card" key={project.slug} data-home-reveal>
+                    <Link to={`/projets/${project.slug}`} className="project-blog-card__link">
+                      <div className={`project-blog-card__media${cover ? '' : ' is-empty'}`}>
+                        {cover ? <img src={cover} alt="" loading="lazy" decoding="async" /> : null}
+                      </div>
+                      <div className="project-blog-card__body">
+                        <div className="project-blog-card__meta">
+                          <span>{projectCategoryLabel(project.project_category, t)}</span>
+                          {dateLabel ? <time dateTime={project.executed_at}>{dateLabel}</time> : null}
+                          {project.location ? <span>{project.location}</span> : null}
+                        </div>
+                        <h2>{project.title}</h2>
+                        {excerpt ? <p>{excerpt}</p> : null}
+                        <span className="project-blog-card__cta">{t('projects.readArticle')}</span>
+                      </div>
+                    </Link>
+                  </article>
+                )
+              })}
+            </div>
+          ) : null}
+          {!projectsLoading && !projectsError && !recentProjects.length ? (
+            <p className="projects-empty">{t('home.projectsEmpty')}</p>
+          ) : null}
           <p style={{ marginTop: '1.25rem' }}>
             <Link className="btn btn--outline" to="/projets">
               {t('home.trustCta')}
             </Link>
           </p>
-        </div>
-      </section>
-
-      <section className="section section--deep" aria-labelledby="method-title">
-        <div className="container">
-          <div className="section__head section__head--wide" data-home-reveal>
-            <p className="section-kicker" style={{ color: '#7dd3fc' }}>
-              {locale === 'en' ? 'Method' : 'Méthode'}
-            </p>
-            <h2 id="method-title" className="section__title">
-              {t('home.methodTitle')}
-            </h2>
-            <p>{t('home.methodLead')}</p>
-          </div>
-          <ol className="method-steps">
-            {safeMethod.map((step, index) => (
-              <li className="method-steps__item" key={step.title} data-home-reveal>
-                <span className="method-steps__index" aria-hidden="true">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3>{step.title}</h3>
-                <p>{step.text}</p>
-              </li>
-            ))}
-          </ol>
         </div>
       </section>
 
@@ -408,26 +473,6 @@ export function Home() {
         </div>
       </section>
 
-      <section className="cta-band" data-home-reveal>
-        <div className="cta-band__inner">
-          <div>
-            <h2>{t('home.ctaBandTitle')}</h2>
-            <p>{t('home.ctaBandText')}</p>
-          </div>
-          <div className="cta-band__actions">
-            <Link className="btn btn--on-dark" to="/devis">
-              {t('home.ctaQuote')}
-            </Link>
-            <Link className="btn btn--ghost-on-dark" to="/contact">
-              {t('home.ctaVisit')}
-            </Link>
-            <Link className="btn btn--ghost-on-dark" to="/partenariats">
-              {t('home.ctaPartner')}
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <section className="section section--tight section--muted" data-home-reveal>
         <div className="container">
           <div className="partners-showcase__head">
@@ -437,25 +482,20 @@ export function Home() {
             </h2>
           </div>
           <p className="partners-showcase__lead">{t('home.partnersTeaser')}</p>
-          {partners.length ? (
-            <div className="partners-carousel" role="region" aria-label={t('home.partnersTeaserTitle')}>
-              <div className="partners-carousel__track">
-                {[...partners, ...partners].map((p, index) => (
-                  <article className="partners-logo-card" key={`${p.id}-${index}`}>
-                    <div className="partners-logo-card__logo" aria-hidden="true">
-                      {hasLogoUrl(p) ? (
-                        <img src={String(p.logo_url).trim()} alt="" loading="lazy" decoding="async" />
-                      ) : (
-                        getInitials(p.name)
-                      )}
-                    </div>
-                    <h3>{p.name}</h3>
-                  </article>
-                ))}
-              </div>
+          {partnersWithLogos.length ? (
+            <div className="home-partner-logos" aria-label={t('home.partnersTeaserTitle')}>
+              {partnersWithLogos.map((partner) => (
+                <img
+                  key={partner.id}
+                  src={String(partner.logo_url).trim()}
+                  alt={partner.name}
+                  loading="lazy"
+                  decoding="async"
+                />
+              ))}
             </div>
           ) : (
-            <p className="admin-muted">{t('home.partnersEmpty')}</p>
+            <p className="admin-muted">{partners.length ? t('home.partnerLogosEmpty') : t('home.partnersEmpty')}</p>
           )}
           <div className="partners-showcase__footer">
             <Link className="btn btn--primary partners-showcase__cta" to="/partenariats">
