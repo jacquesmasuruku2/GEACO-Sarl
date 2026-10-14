@@ -11,6 +11,10 @@ export const messages = {
     },
     header: {
       regionLine: "Groupe d'Etudes Agronomiques et de Construction",
+      switchToDark: 'Activer le mode sombre',
+      switchToLight: 'Activer le mode clair',
+      darkMode: 'Sombre',
+      lightMode: 'Clair',
     },
     nav: {
       home: 'accueil',
@@ -1172,6 +1176,10 @@ export const messages = {
     },
     header: {
       regionLine: "Groupe d'Etudes Agronomiques et de Construction",
+      switchToDark: 'Switch to dark mode',
+      switchToLight: 'Switch to light mode',
+      darkMode: 'Dark',
+      lightMode: 'Light',
     },
     nav: {
       home: 'home',

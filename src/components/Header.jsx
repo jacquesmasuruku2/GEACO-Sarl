@@ -4,6 +4,7 @@ import { useI18n } from '../i18n/useI18n'
 import { SERVICE_ROUTES, serviceNavLabel } from '../data/servicesNav'
 import { formatNavLabel } from '../lib/formatNavLabel'
 import { SITE_CONTACT } from '../data/siteContact'
+import { ThemeToggle } from './ThemeToggle'
 
 /** Au-delà de ce décalage vertical, la topbar (ligne RDC + email/tél.) se replie. */
 const TOPBAR_HIDE_SCROLL_Y = 36
@@ -241,6 +242,7 @@ export function Header() {
               EN
             </button>
           </div>
+          <ThemeToggle />
         </nav>
 
         <button
@@ -376,6 +378,7 @@ export function Header() {
             EN
           </button>
         </div>
+        <ThemeToggle />
       </nav>
     </header>
   )

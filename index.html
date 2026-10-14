@@ -12,6 +12,17 @@
       content="GEACO SARL — études, conception et réalisation de projets intégrés en agronomie, génie civil et hydraulique rurale. Goma et Butembo, Nord-Kivu, RDC."
     />
     <meta name="theme-color" content="#0a1628" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem('geaco-theme');
+        const theme = savedTheme === 'light' || savedTheme === 'dark'
+          ? savedTheme
+          : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.dataset.theme = theme;
+      } catch {
+        document.documentElement.dataset.theme = 'light';
+      }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

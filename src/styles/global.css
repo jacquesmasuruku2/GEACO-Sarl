@@ -11276,3 +11276,280 @@ a.personnel-profile__more {
     transform: none;
   }
 }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font: 600 0.76rem/1 var(--font-display);
+  cursor: pointer;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  border-color: #f4a51c;
+  color: #f4a51c;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid #f4a51c;
+  outline-offset: 2px;
+}
+
+.theme-toggle span:first-child {
+  font-size: 1.05rem;
+}
+
+@media (min-width: 961px) and (max-width: 1220px) {
+  .theme-toggle span:last-child {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .nav-mobile .theme-toggle {
+    margin: 0.75rem 0.5rem 1rem;
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #0d1522;
+  --color-bg-muted: #131f2e;
+  --color-bg-warm: #1b293a;
+  --color-surface: #182536;
+  --color-text: #e7edf5;
+  --color-text-muted: #b2bfd0;
+  --color-border: #334458;
+  --color-border-strong: #53677e;
+  --color-sky-soft: rgba(96, 165, 250, 0.16);
+  --shadow-header: 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-card: 0 2px 16px rgba(0, 0, 0, 0.2);
+}
+
+:root[data-theme='dark'] body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+:root[data-theme='dark'] .site-header {
+  background: #102d37;
+}
+
+:root[data-theme='dark'] .nav-dropdown__panel,
+:root[data-theme='dark'] .nav-mobile,
+:root[data-theme='dark'] .nav-mobile__sub {
+  background: #142838;
+  border-color: var(--color-border);
+}
+
+:root[data-theme='dark'] .section--muted,
+:root[data-theme='dark'] .home-trainings,
+:root[data-theme='dark'] .home-blog,
+:root[data-theme='dark'] .home-vision,
+:root[data-theme='dark'] .partners-showcase,
+:root[data-theme='dark'] .service-detail-page--agriculture {
+  background: var(--color-bg-muted);
+  border-color: var(--color-border);
+}
+
+:root[data-theme='dark'] :is(
+  .home-wada-intro__focus,
+  .admin-login__panel,
+  .admin-login__card,
+  .admin-login__field input,
+  .admin-status-card,
+  .admin-app__user,
+  .admin-app__btn-ghost,
+  .admin-app__menu-btn,
+  .admin-shell,
+  .admin-card,
+  .admin-section,
+  .admin-dashboard,
+  .admin-dashboard__tile,
+  .admin-dashboard__inbox-btn,
+  .admin-dashboard__inbox > div,
+  .admin-inbox__body,
+  .admin-dashboard__shortcut,
+  .admin-kpi-strip span,
+  .admin-kpi-card,
+  .cms-record__main,
+  .cms-record__side,
+  .admin-module-panel,
+  .admin-grid input,
+  .admin-grid textarea,
+  .admin-grid select,
+  .image-picker-field,
+  .image-picker-field__preview,
+  .image-picker-field__library-item,
+  .cms-editor,
+  .cms-editor__toolbar button,
+  .admin-compact-item,
+  .admin-compact-item__avatar,
+  .personnel-page,
+  .personnel-modal__dialog,
+  .service-cards-admin__preview,
+  .partners-directory__item,
+  .partners-directory__logo,
+  .partners-form-section,
+  .partnership-image-field input[type='file'],
+  .about-partner-card,
+  .about-partner-card__logo,
+  .form--simple .simple-form__field input,
+  .form--simple .simple-form__field select,
+  .form--simple .simple-form__field textarea,
+  .blog-wada-widget,
+  .blog-list-card,
+  .blog-member-panel,
+  .blog-member-controls input[type='text'],
+  .blog-member-controls input[type='email'],
+  .gallery-wada-figure,
+  .gallery-card,
+  .home-training-card,
+  .home-blog-card,
+  .pillar-card,
+  .service-hub-row,
+  .quote-form-shell,
+  .home-impact__panel,
+  .trust-row
+) {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+:root[data-theme='dark'] :is(
+  .home-trainings__message,
+  .home-blog__error,
+  .projects-empty,
+  .admin-muted,
+  .admin-dashboard__tile-icon,
+  .admin-dashboard__inbox > div,
+  .admin-inbox__body,
+  .admin-dashboard__shortcut,
+  .admin-grid input,
+  .admin-grid textarea,
+  .admin-grid select,
+  .service-id-card__photo,
+  .personnel-detail__media,
+  .home-training-card__media,
+  .home-blog-card__media,
+  .pillar-card__media,
+  .service-hub-row__media
+) {
+  background-color: #223247;
+  color: var(--color-text-muted);
+}
+
+:root[data-theme='dark'] :is(
+  .admin-app__topbar,
+  .admin-app .btn--ghost,
+  .admin-app .btn--outline,
+  .admin-dashboard .btn--ghost,
+  .admin-app__topbar .btn--ghost,
+  .admin-app .btn--ghost:hover,
+  .admin-app .btn--outline:hover,
+  .admin-dashboard .btn--ghost:hover,
+  .admin-app__topbar .btn--ghost:hover,
+  .admin-dashboard__inbox-btn:hover,
+  .admin-dashboard__shortcut:hover,
+  .admin-feedback.admin-success,
+  .admin-feedback.admin-error,
+  .admin-status-pill.is-live,
+  .admin-status-pill.is-draft,
+  .home-integrated__links a,
+  .section--quote-premium
+) {
+  background: var(--color-bg-muted);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+:root[data-theme='dark'] :is(
+  .admin-login__field input:focus,
+  .form input,
+  .form textarea,
+  .form select,
+  .form--simple .simple-form__field input:hover,
+  .form--simple .simple-form__field select:hover,
+  .form--simple .simple-form__field textarea:hover,
+  .form--simple .simple-form__field input:focus,
+  .form--simple .simple-form__field select:focus,
+  .form--simple .simple-form__field textarea:focus,
+  .form--quote-premium .quote-form__field input,
+  .form--quote-premium .quote-form__field select,
+  .form--quote-premium .quote-form__field textarea,
+  .form--quote-premium .quote-form__field input:hover,
+  .form--quote-premium .quote-form__field select:hover,
+  .form--quote-premium .quote-form__field textarea:hover,
+  .form--quote-premium .quote-form__field input:focus,
+  .form--quote-premium .quote-form__field select:focus,
+  .form--quote-premium .quote-form__field textarea:focus
+) {
+  background: #101c2a;
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+:root[data-theme='dark'] .pillar-card {
+  background: linear-gradient(180deg, #182536 0%, #1b2b3e 100%);
+}
+
+:root[data-theme='dark'] .home-vision {
+  background:
+    radial-gradient(ellipse at 10% 15%, rgba(36, 76, 155, 0.16), transparent 42%),
+    #131f2e;
+}
+
+:root[data-theme='dark'] .home-integrated__links a {
+  background: linear-gradient(145deg, #182536 25%, #1b2b3e);
+}
+
+:root[data-theme='dark'] .site-main :is(h1, h2, h3, h4, h5) {
+  color: #e7edf5;
+}
+
+:root[data-theme='dark'] .site-main a:not(.btn) {
+  color: #8fc4ff;
+}
+
+:root[data-theme='dark'] .site-main a:not(.btn):hover,
+:root[data-theme='dark'] .site-main a:not(.btn):focus-visible {
+  color: #f4a51c;
+}
+
+:root[data-theme='dark'] :is(input, textarea, select) {
+  color-scheme: dark;
+}
+
+:root[data-theme='dark'] input::placeholder,
+:root[data-theme='dark'] textarea::placeholder {
+  color: #93a4b8;
+}
+
+:root[data-theme='dark'] .home-impact__metrics .stat-block + .stat-block {
+  border-color: var(--color-border);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  .site-header,
+  .section--muted,
+  .home-trainings,
+  .home-blog,
+  .home-personnel,
+  .home-projects,
+  .partners-showcase {
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+}
