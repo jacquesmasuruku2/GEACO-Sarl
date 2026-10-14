@@ -514,19 +514,6 @@ export function Home() {
         </div>
       </section>
 
-      <section className="section home-vision" data-home-reveal>
-        <div className="container home-vision__inner">
-          <div>
-            <p className="section-kicker">{t('home.visionTitle')}</p>
-            <h2 className="section__title">{t('home.statsSectionTitle')}</h2>
-          </div>
-          <p>{t('home.visionText')}</p>
-          <Link className="btn btn--outline" to="/a-propos">
-            {t('home.promoCta')}
-          </Link>
-        </div>
-      </section>
-
       <section className="section section--tight section--muted" data-home-reveal>
         <div className="container">
           <div className="partners-showcase__head">
