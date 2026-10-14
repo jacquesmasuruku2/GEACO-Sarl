@@ -53,6 +53,7 @@ export const messages = {
       trainingKicker: 'Renforcement des capacités',
       trainingTitle: 'Formations offertes',
       trainingLead: 'Découvrez les prochaines sessions ouvertes à l’inscription.',
+      blogSectionTitle: 'Nos dernières publications',
       integratedTitle: 'Une approche intégrée',
       integratedLead:
         'Agriculture, infrastructures et eau se renforcent : produire durablement suppose des accès, des ouvrages et un service WASH fiable.',
@@ -770,6 +771,7 @@ export const messages = {
       empty:
         'Aucun article pour cette langue pour le moment. Publiez un article depuis l’administration (Supabase) ou revenez plus tard.',
       loading: 'Chargement des articles…',
+      loadError: 'Impossible de charger les articles.',
       readMore: 'Lire la suite',
       backToList: 'Tous les articles',
       shareNav: 'Partager cet article',
@@ -1234,6 +1236,7 @@ export const messages = {
       trainingKicker: 'Capacity building',
       trainingTitle: 'Training programmes',
       trainingLead: 'Explore the upcoming sessions currently open for applications.',
+      blogSectionTitle: 'Latest articles',
       integratedTitle: 'An integrated approach',
       integratedLead:
         'Agriculture, infrastructure and water reinforce each other: sustainable production needs access, works and a reliable WASH service.',
@@ -1923,6 +1926,7 @@ export const messages = {
       empty:
         'No articles in this language yet. Publish from the admin panel (Supabase) or check back later.',
       loading: 'Loading articles…',
+      loadError: 'Could not load articles.',
       readMore: 'Read more',
       backToList: 'All articles',
       shareNav: 'Share this article',

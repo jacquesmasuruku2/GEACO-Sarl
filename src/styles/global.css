@@ -9138,14 +9138,83 @@ a.personnel-profile__more {
   text-align: center;
 }
 
+.home-blog {
+  background: #f7f8f3;
+}
+
+.home-blog__head {
+  margin-bottom: 1.25rem;
+}
+
+.home-blog__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.home-blog-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e1e6e1;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.home-blog-card__media {
+  display: block;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #e8ece7;
+}
+
+.home-blog-card__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.home-blog-card__media:hover img {
+  transform: scale(1.035);
+}
+
+.home-blog__error {
+  margin: 1rem auto;
+  color: var(--color-vinci-red);
+  text-align: center;
+}
+
+.home-blog-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.home-blog-card__title {
+  display: block;
+  padding: 0.9rem 1rem 1rem;
+  color: #155365;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.home-blog-card__link:hover .home-blog-card__title,
+.home-blog-card__link:focus-visible .home-blog-card__title {
+  color: var(--color-vinci-red);
+}
+
 @media (max-width: 820px) {
-  .home-trainings__grid {
+  .home-trainings__grid,
+  .home-blog__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 560px) {
-  .home-trainings__grid {
+  .home-trainings__grid,
+  .home-blog__grid {
     grid-template-columns: 1fr;
   }
 

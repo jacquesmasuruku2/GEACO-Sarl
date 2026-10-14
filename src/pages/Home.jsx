@@ -6,6 +6,7 @@ import { PillarIcon } from '../components/PillarIcon'
 import { PILLAR_ROUTES } from '../data/servicesNav'
 import { useSiteFormations } from '../hooks/useSiteFormations'
 import { useSitePartners } from '../hooks/useSitePartners'
+import { useBlogPosts } from '../hooks/useBlogPosts'
 import { formatFormationDate, formationPath } from '../lib/formationDisplay'
 import { resolveFormationRegistrationStatus } from '../lib/formationStatus'
 
@@ -31,6 +32,7 @@ export function Home() {
   const { t, locale } = useI18n()
   const { rows: partners } = useSitePartners()
   const { rows: formationRows, loading: formationsLoading, error: formationsError } = useSiteFormations(locale)
+  const { rows: blogPosts, loading: blogLoading, error: blogError } = useBlogPosts(locale, 3, true, true)
   const heroSlides = [
     '/media/geaco/geaco-24.jpeg',
     '/media/geaco/geaco-29.jpeg',
@@ -45,6 +47,10 @@ export function Home() {
   const safeNews = Array.isArray(newsItems) ? newsItems : []
   const safeStats = Array.isArray(stats) ? stats : []
   const safeMethod = Array.isArray(methodSteps) ? methodSteps : []
+  const latestImageBlogPosts = blogPosts.filter((post) => {
+    const imageUrl = String(post.hero_image_url ?? '').trim()
+    return imageUrl.startsWith('https://') || imageUrl.startsWith('http://') || imageUrl.startsWith('/')
+  })
   const latestFormations = formationRows
     .slice()
     .sort((left, right) => {
@@ -273,6 +279,42 @@ export function Home() {
           </p>
         </div>
       </section>
+
+      {blogError ? (
+        <p className="home-blog__error" role="alert">
+          {t('blog.loadError')}
+        </p>
+      ) : null}
+      {!blogLoading && !blogError && latestImageBlogPosts.length ? (
+        <section className="section home-blog" aria-labelledby="home-blog-title">
+          <div className="container">
+            <header className="section__head section__head--wide home-blog__head" data-home-reveal>
+              <h2 id="home-blog-title" className="section__title">
+                {t('home.blogSectionTitle')}
+              </h2>
+            </header>
+            <div className="home-blog__grid">
+              {latestImageBlogPosts.map((post) => {
+                const imageUrl = String(post.hero_image_url ?? '').trim()
+                return (
+                  <article className="home-blog-card" key={post.slug} data-home-reveal>
+                    <Link
+                      className="home-blog-card__link"
+                      to={`/blog/${post.slug}`}
+                      aria-label={post.title}
+                    >
+                      <span className="home-blog-card__media">
+                        <img src={imageUrl} alt="" loading="lazy" decoding="async" />
+                      </span>
+                      <span className="home-blog-card__title">{post.title}</span>
+                    </Link>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section section--muted" aria-labelledby="integrated-title">
         <div className="container home-integrated">
