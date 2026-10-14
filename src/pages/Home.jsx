@@ -42,6 +42,7 @@ export function Home() {
   const heroSlides = [
     '/media/geaco/geaco-24.jpeg',
     '/media/geaco/geaco-29.jpeg',
+    '/media/geaco/equipe.jpg',
     '/media/geaco/geaco-25.jpeg',
     '/media/geaco/geaco-16.jpeg',
   ]
@@ -86,11 +87,11 @@ export function Home() {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
 
-    const intervalId = window.setInterval(() => {
+    const timeoutId = window.setTimeout(() => {
       setActiveHeroSlide((current) => (current + 1) % heroSlides.length)
-    }, 4000)
-    return () => window.clearInterval(intervalId)
-  }, [heroSlides.length])
+    }, 6500)
+    return () => window.clearTimeout(timeoutId)
+  }, [activeHeroSlide, heroSlides.length])
 
   useEffect(() => {
     const revealElements = document.querySelectorAll('[data-home-reveal]')
@@ -151,7 +152,11 @@ export function Home() {
     <>
       <Seo title={t('home.metaTitle')} description={t('home.metaDesc')} path="/" />
 
-      <section className="home-hero-immersive">
+      <section
+        className="home-hero-immersive"
+        aria-label={locale === 'en' ? 'GEACO presentation' : 'Présentation de GEACO'}
+        aria-roledescription="carousel"
+      >
         <div className="home-hero-immersive__media" aria-hidden="true">
           {heroSlides.map((slide, index) => (
             <img
@@ -177,6 +182,55 @@ export function Home() {
             <Link className="btn btn--ghost-on-dark" to="/devis">
               {t('home.ctaQuote')}
             </Link>
+          </div>
+          <div className="home-hero-immersive__controls">
+              <div
+                className="home-hero-immersive__indicators"
+                role="group"
+                aria-label={locale === 'en' ? 'Choose a slide' : 'Choisir une diapositive'}
+              >
+                {heroSlides.map((slide, index) => (
+                  <button
+                    key={slide}
+                    type="button"
+                    className={`home-hero-immersive__indicator${index === activeHeroSlide ? ' is-active' : ''}`}
+                    aria-label={
+                      locale === 'en'
+                        ? `Go to slide ${index + 1} of ${heroSlides.length}`
+                        : `Aller à la diapositive ${index + 1} sur ${heroSlides.length}`
+                    }
+                    aria-pressed={index === activeHeroSlide}
+                    onClick={() => setActiveHeroSlide(index)}
+                  >
+                    <span className="home-hero-immersive__indicator-track" aria-hidden="true" />
+                  </button>
+                ))}
+              </div>
+              <span className="home-hero-immersive__counter" aria-live="polite" aria-atomic="true">
+                {String(activeHeroSlide + 1).padStart(2, '0')}
+                <span aria-hidden="true"> / </span>
+                {String(heroSlides.length).padStart(2, '0')}
+              </span>
+              <div className="home-hero-immersive__arrows">
+                <button
+                  type="button"
+                  className="home-hero-immersive__arrow"
+                  aria-label={locale === 'en' ? 'Previous slide' : 'Diapositive précédente'}
+                  onClick={() =>
+                    setActiveHeroSlide((current) => (current - 1 + heroSlides.length) % heroSlides.length)
+                  }
+                >
+                  <span aria-hidden="true">←</span>
+                </button>
+                <button
+                  type="button"
+                  className="home-hero-immersive__arrow"
+                  aria-label={locale === 'en' ? 'Next slide' : 'Diapositive suivante'}
+                  onClick={() => setActiveHeroSlide((current) => (current + 1) % heroSlides.length)}
+                >
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
           </div>
         </div>
       </section>

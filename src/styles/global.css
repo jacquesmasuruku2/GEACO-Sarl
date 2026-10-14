@@ -738,9 +738,53 @@ html.site-header-topbar-hidden .site-topbar {
   transition: padding-top 0.28s ease;
 }
 
+.page-transition {
+  min-width: 0;
+  transform-origin: center;
+  will-change: opacity, transform;
+}
+
+.page-transition--from-bottom {
+  animation: page-push-in-from-bottom 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.page-transition--from-top {
+  animation: page-push-in-from-top 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes page-push-in-from-bottom {
+  from {
+    opacity: 0.15;
+    transform: translateY(100vh);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes page-push-in-from-top {
+  from {
+    opacity: 0.15;
+    transform: translateY(-100vh);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-main {
     transition: none;
+  }
+
+  .page-transition {
+    animation: none;
+    transform: none;
+    will-change: auto;
   }
 }
 
@@ -8692,7 +8736,133 @@ a.personnel-profile__more {
 
 .home-hero-immersive__media img.is-active {
   opacity: 1;
-  transform: scale(1);
+  z-index: 1;
+  animation: home-hero-slide-reveal 6.5s cubic-bezier(0.2, 0.65, 0.25, 1) both;
+}
+
+@keyframes home-hero-slide-reveal {
+  from {
+    transform: scale(1.13) translateX(2%);
+  }
+
+  to {
+    transform: scale(1.02) translateX(0);
+  }
+}
+
+.home-hero-immersive__controls {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  width: fit-content;
+  max-width: 100%;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 999px;
+  background: rgba(4, 15, 29, 0.58);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.home-hero-immersive__indicators,
+.home-hero-immersive__arrows {
+  display: flex;
+  align-items: center;
+}
+
+.home-hero-immersive__indicators {
+  gap: 0.45rem;
+}
+
+.home-hero-immersive__indicator {
+  display: grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 2.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.home-hero-immersive__indicator-track {
+  display: block;
+  position: relative;
+  width: 1.7rem;
+  height: 0.25rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.58);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.home-hero-immersive__indicator-track::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #ffc34d;
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.home-hero-immersive__indicator.is-active .home-hero-immersive__indicator-track {
+  width: 3.2rem;
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.home-hero-immersive__indicator.is-active .home-hero-immersive__indicator-track::after {
+  animation: home-hero-indicator-progress 6.5s linear both;
+}
+
+@keyframes home-hero-indicator-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.home-hero-immersive__counter {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.home-hero-immersive__arrows {
+  gap: 0.35rem;
+  padding-left: 0.65rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.home-hero-immersive__arrow {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.home-hero-immersive__arrow:hover {
+  transform: translateY(-1px);
+  background: #ffc34d;
+  color: #181a1b;
+}
+
+.home-hero-immersive__controls button:focus-visible {
+  outline: 3px solid #ffc34d;
+  outline-offset: 3px;
 }
 
 .home-hero-immersive__veil {
@@ -9338,6 +9508,39 @@ a.personnel-profile__more {
 
   .home-hero-immersive__inner {
     padding-left: max(0.9rem, env(safe-area-inset-left, 0px));
+  }
+
+  .home-hero-immersive__controls {
+    gap: 0.55rem;
+    padding: 0.45rem 0.55rem;
+  }
+
+  .home-hero-immersive__indicator {
+    min-width: 1.7rem;
+  }
+
+  .home-hero-immersive__indicator-track {
+    width: 1.2rem;
+  }
+
+  .home-hero-immersive__indicator.is-active .home-hero-immersive__indicator-track {
+    width: 2.5rem;
+  }
+
+  .home-hero-immersive__arrows {
+    gap: 0.25rem;
+    padding-left: 0.45rem;
+  }
+
+  .home-hero-immersive__arrow {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .home-hero-immersive__counter {
+    display: none;
   }
 }
 
@@ -11258,6 +11461,22 @@ a.personnel-profile__more {
 
   .home-hero-immersive__media img {
     transition: none;
+    animation: none;
+  }
+
+  .home-hero-immersive__media img.is-active {
+    animation: none;
+    transform: none;
+  }
+
+  .home-hero-immersive__indicator-track,
+  .home-hero-immersive__arrow {
+    transition: none;
+  }
+
+  .home-hero-immersive__indicator.is-active .home-hero-immersive__indicator-track::after {
+    animation: none;
+    transform: scaleX(1);
   }
 
   .home-impact__arrow,
