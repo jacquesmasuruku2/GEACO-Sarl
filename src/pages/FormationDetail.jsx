@@ -90,6 +90,8 @@ export function FormationDetail() {
         title={`${row.title} — GEACO SARL`}
         description={formationSeoDescription(row) || t('formations.metaDesc')}
         path={path}
+        image={cover}
+        type="article"
       />
 
       <article className="formation-article">

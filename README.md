@@ -22,11 +22,11 @@ npm run dev
 
 **Projet Supabase GEACO** (réf. `hopqewazhhhqdgprllpw`) : récupérer **Project URL** et la clé **anon public** dans le dashboard → [API / clés](https://supabase.com/dashboard/project/hopqewazhhhqdgprllpw/settings/api). Les mêmes valeurs doivent figurer dans le fichier **`.env` local** (non versionné) et être **recopiées à l’identique** dans Vercel (Production), car Vite les intègre **au build** — le chat ou un e-mail ne configure pas Vercel tout seul.
 
-Pour les aperçus sociaux des articles, la fonction Vercel `/api/blog-preview/[slug]` lit aussi ces identifiants à l’exécution. Elle accepte `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` ou leurs équivalents `SUPABASE_URL` / `SUPABASE_ANON_KEY` ; seule la clé anon publique est nécessaire, jamais la clé `service_role`.
+Pour les aperçus sociaux des articles et des formations, les fonctions Vercel `/api/blog-preview/[slug]` et `/api/formation-preview/[slug]` lisent aussi ces identifiants à l’exécution. Elles acceptent `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` ou leurs équivalents `SUPABASE_URL` / `SUPABASE_ANON_KEY` ; seule la clé anon publique est nécessaire, jamais la clé `service_role`.
 
 Après avoir rempli `.env`, lancer **`npm run check:env`** pour valider la présence des variables sans afficher les secrets.
 
-Pour `/blog/:slug`, `vercel.json` envoie les robots des médias sociaux vers cette fonction, qui retourne les balises Open Graph et Twitter avec l’image de couverture publiée. Les visiteurs continuent d’utiliser l’application SPA ; le fichier `vercel.json` renvoie ses routes vers `index.html` **sans** intercepter `/assets/*` ni les favicons.
+Pour `/blog/:slug` et `/formations/:slug`, `vercel.json` envoie les robots des médias sociaux vers les fonctions correspondantes, qui retournent les balises Open Graph et Twitter avec l’image publiée de l’article ou de la formation. Les visiteurs continuent d’utiliser l’application SPA ; le fichier `vercel.json` renvoie ses routes vers `index.html` **sans** intercepter `/assets/*` ni les favicons.
 
 ### Formulaires Contact & Partenariats
 

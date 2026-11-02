@@ -13,6 +13,17 @@
       "destination": "/api/blog-preview/:slug"
     },
     {
+      "source": "/formations/:slug",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|skypeuripreview|pinterest).*"
+        }
+      ],
+      "destination": "/api/formation-preview/:slug"
+    },
+    {
       "source": "/((?!assets/|favicon\\.svg|icons\\.svg).*)",
       "destination": "/index.html"
     }
