@@ -17,7 +17,7 @@
         const savedTheme = localStorage.getItem('geaco-theme');
         const theme = savedTheme === 'light' || savedTheme === 'dark'
           ? savedTheme
-          : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          : 'light';
         document.documentElement.dataset.theme = theme;
       } catch {
         document.documentElement.dataset.theme = 'light';
